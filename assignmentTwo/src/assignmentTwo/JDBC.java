@@ -1,4 +1,5 @@
 package assignmentTwo;
+import java.awt.EventQueue;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
@@ -101,7 +102,7 @@ public class JDBC
 	     */
 	     public void testSelectStatements() throws SQLException
 	     {
-	          String selectData = new String("SELECT * FROM JOBS");
+	          String selectData = new String("SELECT * FROM TEST_amin WHERE row1=1");
 	          Statement stmt = m_dbConn.createStatement();
 	          ResultSet rs = stmt.executeQuery(selectData);
 	          while (rs.next())
@@ -110,10 +111,26 @@ public class JDBC
 	          String data = rs.getString(1);
 	          System.out.print(data+" : ");
 	          // Or by column name - advised:
-	          data = rs.getString("Fname");
+	          data = rs.getString("row3");
 	          System.out.println(data);
 	          }
 	      }
+	     
+	     public void showTables() throws SQLException 
+	     {
+	          String selectData = new String("show tables");
+	          Statement stmt = m_dbConn.createStatement();
+	          ResultSet rs = stmt.executeQuery(selectData);
+	          while (rs.next())
+	          {
+	          // You can access values from a ResultSet either by column number - not advised:
+	          String data = rs.getString(1);
+	          System.out.print(data+" : ");
+	          // Or by column name - advised:
+	          data = rs.getString("Tables_in_csc371-01");
+	          System.out.println(data);
+	          }
+	     }
 
 	/**
 	 * This program make insert project and select project
@@ -125,7 +142,22 @@ public class JDBC
 	{
 
 		JDBC object = new JDBC();
-		object.testNonSelectStatements();
+		//object.testSelectStatements();
+		
+		EventQueue.invokeLater(new Runnable()
+		{
+			public void run()
+			{
+				try
+				{
+					tableGui frame = new tableGui();
+					frame.setVisible(true);
+				} catch (Exception e)
+				{
+					e.printStackTrace();
+				}
+			}
+		});
 	
 	}
 
