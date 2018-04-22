@@ -8,9 +8,13 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import java.awt.Font;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.sql.SQLException;
 import java.awt.event.ActionEvent;
 import javax.swing.JTable;
@@ -57,6 +61,34 @@ public class tableGui extends JFrame
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		JDBC jdbc = new JDBC();
+		jdbc.buildTables();
+		jdbc.populateTables();
+		WindowListener exitListener = new WindowAdapter() {
+
+		    @Override
+		    public void windowClosing(WindowEvent e) {
+		        int confirm = JOptionPane.showOptionDialog(
+		             null, "Are You Sure to Close Application?", 
+		             "Exit Confirmation", JOptionPane.YES_NO_OPTION, 
+		             JOptionPane.QUESTION_MESSAGE, null, null, null);
+		        if (confirm == 0) 
+		        {
+		           try {
+					jdbc.dropTables();
+				} catch (SQLException e1) 
+		           {
+					e1.printStackTrace();
+		           }
+		           System.exit(0);
+		        }
+		    }
+		    
+		};
+		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		this.addWindowListener(exitListener);
+		
+		
+		
 
 		JButton btnShowTables = new JButton("Show Tables");
 		btnShowTables.addActionListener(new ActionListener()

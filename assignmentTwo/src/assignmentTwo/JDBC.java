@@ -160,5 +160,45 @@ public class JDBC
 		});
 	
 	}
+	
+	public void buildTables() throws SQLException
+	{
+		String firstHalf = "CREATE TABLE TEST"; 
+		String secondHalf = "(Num1 INT, Num2 INT, str1 CHAR(10), str2 VARCHAR(30), deci DOUBLE, PRIMARY KEY(Num1))";
+		for(int i = 0 ; i < 10; i++)
+		{
+			Statement statement = m_dbConn.createStatement();
+			statement.execute(firstHalf + i +secondHalf);
+		}
+	}
+	
+	public void dropTables() throws SQLException
+	{
+		String s = "DROP TABLE TEST";
+		for (int i = 0; i < 10; i ++)
+		{
+			Statement statement = m_dbConn.createStatement();
+			statement.execute(" " + s + i);
+		}
+	}
+	
+	public void populateTables() throws SQLException
+	{
+		for(int j = 0; j < 10; j++)
+		{
+			String insertData = "INSERT INTO TEST" + j +" (Num1, Num2, str1, str2, deci)VALUES(?,?,?,?,?)";
+			PreparedStatement stmt2 = m_dbConn.prepareStatement(insertData);
 
+	    	 for (int i = 0 ; i < 5; i++)
+	    	 {
+
+		         stmt2.setInt(1, i);
+		         stmt2.setInt(2, i+1);
+		         stmt2.setString(3, "this" + i );
+		         stmt2.setString(4, "that" + i);
+		         stmt2.setFloat(5,i);
+		         stmt2.executeUpdate();
+	    	 }
+		}
+	}
 }
