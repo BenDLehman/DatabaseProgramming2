@@ -34,7 +34,7 @@ public class tableGui extends JFrame implements MouseListener
 	private JButton btnDelete;
 	private JButton btnUpdate;
 	private JButton btnInsert;
-	
+	private JDBC jdbc;
 
 	/**
 	 * Launch the application.
@@ -69,7 +69,7 @@ public class tableGui extends JFrame implements MouseListener
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		JDBC jdbc = new JDBC();
+		jdbc = new JDBC();
 		if(tablesExist)
 			try {
 					jdbc.dropTables();
