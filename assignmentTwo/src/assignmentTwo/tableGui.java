@@ -12,6 +12,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import java.awt.Font;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -20,13 +22,18 @@ import java.awt.event.ActionEvent;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
 
-public class tableGui extends JFrame
+public class tableGui extends JFrame implements MouseListener
 {
 
 	private JPanel contentPane;
 	private JTextField query;
 	private JTable table;
 	boolean tablesExist = true;
+	private JButton btnShowTables;
+	private JButton btnSelect;
+	private JButton btnDelete;
+	private JButton btnUpdate;
+	private JButton btnInsert;
 	
 
 	/**
@@ -99,7 +106,7 @@ public class tableGui extends JFrame
 		
 		
 
-		JButton btnShowTables = new JButton("Show Tables");
+		btnShowTables = new JButton("Show Tables");
 		btnShowTables.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -117,7 +124,7 @@ public class tableGui extends JFrame
 		btnShowTables.setBounds(10, 35, 108, 23);
 		contentPane.add(btnShowTables);
 
-		JButton btnSelect = new JButton("Select");
+		btnSelect = new JButton("Select");
 		btnSelect.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -128,7 +135,7 @@ public class tableGui extends JFrame
 		btnSelect.setBounds(128, 35, 89, 23);
 		contentPane.add(btnSelect);
 
-		JButton btnDelete = new JButton("Delete");
+		btnDelete = new JButton("Delete");
 		btnDelete.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -140,7 +147,7 @@ public class tableGui extends JFrame
 		btnDelete.setBounds(909, 35, 89, 23);
 		contentPane.add(btnDelete);
 
-		JButton btnUpdate = new JButton("Update");
+		btnUpdate = new JButton("Update");
 		btnUpdate.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -152,7 +159,7 @@ public class tableGui extends JFrame
 		btnUpdate.setBounds(810, 35, 89, 23);
 		contentPane.add(btnUpdate);
 
-		JButton btnInsert = new JButton("Insert");
+		btnInsert = new JButton("Insert");
 		btnInsert.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -185,5 +192,65 @@ public class tableGui extends JFrame
 		
 		table = new JTable();
 		scrollPane.setViewportView(table);
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent event)
+	{
+		JButton selection = (JButton) event.getSource();
+		String text = selection.getText();
+		
+		if(text.equals(btnShowTables.getText()))
+		{
+			System.out.println("Show Tables was pressed");
+		}
+		else if (text.equals(btnSelect.getText()))
+		{
+			System.out.println("Select was pressed");
+		}
+		else if (text.equals(btnDelete.getText()))
+		{
+			System.out.println("Delete was pressed");
+		}
+		else if (text.equals(btnUpdate.getText()))
+		{
+			System.out.println("Update was pressed");
+		}
+		else if (text.equals(btnInsert.getText()))
+		{
+			System.out.println("Insert was pressed");
+		}
+		else 
+		{
+			System.out.println("A button was not pressed");
+		}
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent arg0)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent arg0)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent arg0)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent arg0)
+	{
+		// TODO Auto-generated method stub
+		
 	}
 }
