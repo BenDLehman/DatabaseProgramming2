@@ -26,6 +26,8 @@ public class tableGui extends JFrame
 	private JPanel contentPane;
 	private JTextField query;
 	private JTable table;
+	boolean tablesExist = true;
+	
 
 	/**
 	 * Launch the application.
@@ -61,6 +63,13 @@ public class tableGui extends JFrame
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		JDBC jdbc = new JDBC();
+		if(tablesExist)
+			try {
+					jdbc.dropTables();
+			}
+		catch(SQLException e1) {
+			
+		}
 		jdbc.buildTables();
 		jdbc.populateTables();
 		WindowListener exitListener = new WindowAdapter() {
