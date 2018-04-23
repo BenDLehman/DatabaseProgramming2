@@ -10,7 +10,7 @@ import javax.swing.JTextField;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class deleteGui
+public class deleteGui extends State
 {
 
 	private JFrame frame;
@@ -62,7 +62,7 @@ public class deleteGui
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize()
+	public void initialize()
 	{
 		frame = new JFrame();
 		frame.setBounds(100, 100, 759, 516);
@@ -147,6 +147,13 @@ public class deleteGui
 		frame.getContentPane().add(btnDelete_1);
 		
 
+	}
+
+	@Override
+	public void handle()
+	{
+		// TODO Auto-generated method stub
+		
 	}
 
 }

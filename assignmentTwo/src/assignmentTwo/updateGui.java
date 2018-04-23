@@ -8,7 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-public class updateGui
+public class updateGui extends State
 {
 
 	private JFrame frame;
@@ -58,7 +58,7 @@ public class updateGui
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize()
+	public void initialize()
 	{
 		frame = new JFrame();
 		frame.setBounds(100, 100, 759, 516);
@@ -141,6 +141,13 @@ public class updateGui
 
 		
 
+	}
+
+	@Override
+	public void handle()
+	{
+		// TODO Auto-generated method stub
+		
 	}
 
 }

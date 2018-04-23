@@ -22,7 +22,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
 
-public class tableGui extends JFrame implements MouseListener, ActionListener
+public class tableGui extends State implements MouseListener, ActionListener
 {
 
 	private JPanel contentPane;
@@ -103,6 +103,33 @@ public class tableGui extends JFrame implements MouseListener, ActionListener
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		this.addWindowListener(exitListener);
 
+		createActionButtons();
+
+		JLabel lblEnterQueryTo = new JLabel("Enter query to see results below:");
+		lblEnterQueryTo.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblEnterQueryTo.setBounds(10, 87, 218, 14);
+		contentPane.add(lblEnterQueryTo);
+
+		query = new JTextField();
+		query.setBounds(10, 112, 705, 20);
+		contentPane.add(query);
+		query.setColumns(10);
+
+		JLabel lblResults = new JLabel("Results:");
+		lblResults.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblResults.setBounds(10, 144, 63, 23);
+		contentPane.add(lblResults);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 179, 705, 383);
+		contentPane.add(scrollPane);
+		
+		table = new JTable();
+		scrollPane.setViewportView(table);
+	}
+	
+	public void createActionButtons()
+	{
 		btnShowTables = new JButton("Show Tables");
 		btnShowTables.addActionListener(this);
 		btnShowTables.setBounds(10, 35, 108, 23);
@@ -127,28 +154,6 @@ public class tableGui extends JFrame implements MouseListener, ActionListener
 		btnInsert.addActionListener(this);
 		btnInsert.setBounds(711, 35, 89, 23);
 		contentPane.add(btnInsert);
-
-		JLabel lblEnterQueryTo = new JLabel("Enter query to see results below:");
-		lblEnterQueryTo.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblEnterQueryTo.setBounds(10, 87, 218, 14);
-		contentPane.add(lblEnterQueryTo);
-
-		query = new JTextField();
-		query.setBounds(10, 112, 705, 20);
-		contentPane.add(query);
-		query.setColumns(10);
-
-		JLabel lblResults = new JLabel("Results:");
-		lblResults.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblResults.setBounds(10, 144, 63, 23);
-		contentPane.add(lblResults);
-		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 179, 705, 383);
-		contentPane.add(scrollPane);
-		
-		table = new JTable();
-		scrollPane.setViewportView(table);
 	}
 
 	@Override
@@ -230,5 +235,12 @@ public class tableGui extends JFrame implements MouseListener, ActionListener
 		{
 			System.out.println("A button was not pressed");
 		}
+	}
+
+	@Override
+	public void handle()
+	{
+		// TODO Auto-generated method stub
+		
 	}
 }

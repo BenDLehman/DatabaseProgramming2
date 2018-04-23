@@ -10,7 +10,7 @@ import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class insertGui
+public class insertGui extends State
 {
 
 	private JFrame frame;
@@ -54,7 +54,7 @@ public class insertGui
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize()
+	public void initialize()
 	{
 		frame = new JFrame();
 		frame.setBounds(100, 100, 759, 516);
@@ -103,6 +103,13 @@ public class insertGui
 		});
 		btnInsert.setBounds(607, 144, 89, 23);
 		frame.getContentPane().add(btnInsert);
+	}
+
+	@Override
+	public void handle()
+	{
+		// TODO Auto-generated method stub
+		
 	}
 
 }
