@@ -84,7 +84,7 @@ public class tableGui extends JFrame implements MouseListener
 		    @Override
 		    public void windowClosing(WindowEvent e) {
 		        int confirm = JOptionPane.showOptionDialog(
-		             null, "Are You Sure to Close Application?", 
+		             null, "Are You Sure You Want to Close Application?", 
 		             "Exit Confirmation", JOptionPane.YES_NO_OPTION, 
 		             JOptionPane.QUESTION_MESSAGE, null, null, null);
 		        if (confirm == 0) 
