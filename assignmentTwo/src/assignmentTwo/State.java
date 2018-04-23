@@ -23,9 +23,8 @@ public abstract class State extends JFrame
 	public abstract void handle();
 
 	/**
-	 * returns the machine
-	 * 
-	 * @return gameUI
+	 * Returns the machine
+	 * @return gui
 	 */
 	public Gui getGui()
 	{
@@ -33,9 +32,9 @@ public abstract class State extends JFrame
 	}
 
 	/**
+	 * /**
 	 * Sets the machine
-	 * 
-	 * @param gameUI The machine
+	 * @param gui
 	 */
 	public void setGui(Gui gui)
 	{
@@ -43,19 +42,14 @@ public abstract class State extends JFrame
 	}
 
 	/**
-	 * Allows a screen to be displayed. If a screen should be maximized, maximize is
-	 * true
-	 * 
-	 * @param maximize Whether the screen should be maximized or not
+	 * Allows a screen to be displayed in a specific size
+	 * @param width The width of the screen
+	 * @param height The height of the screen
 	 */
-	public void display(boolean maximize)
+	public void display(int width, int height)
 	{
-		if (maximize)
-		{
-			this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-		}
-		//this.setLocationRelativeTo(null);
-		this.pack();
+		this.setBounds(100,100,width,height);
+		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 	}
 

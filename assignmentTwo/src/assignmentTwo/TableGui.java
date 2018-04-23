@@ -34,42 +34,21 @@ public class TableGui extends State implements MouseListener, ActionListener
 	private JButton btnDelete;
 	private JButton btnUpdate;
 	private JButton btnInsert;
+	private JButton selection;
 	private JDBC jdbc;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args)
-	{
-		EventQueue.invokeLater(new Runnable()
-		{
-			public void run()
-			{
-				try
-				{
-					TableGui frame = new TableGui();
-					frame.setVisible(true);
-				} catch (Exception e)
-				{
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	private Gui gui;
 
 	/**
 	 * Create the frame.
 	 * @throws Exception 
 	 */
-	public TableGui() throws Exception
+	public TableGui(Gui gui) throws Exception
 	{
-		
+		this.gui = gui;
 	}
 	
 	public void initialize()
 	{
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1024, 624);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -212,7 +191,16 @@ public class TableGui extends State implements MouseListener, ActionListener
 	@Override
 	public void actionPerformed(ActionEvent event)
 	{
-		JButton selection = (JButton) event.getSource();
+		if(event!=null)
+		{
+			selection = (JButton) event.getSource();
+			handle();
+		}
+	}
+
+	@Override
+	public void handle()
+	{
 		String text = selection.getText();
 		
 		if(text.equals(btnShowTables.getText()))
@@ -224,7 +212,6 @@ public class TableGui extends State implements MouseListener, ActionListener
 			}
 			catch (SQLException e)
 			{
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -235,31 +222,21 @@ public class TableGui extends State implements MouseListener, ActionListener
 		else if (text.equals(btnDelete.getText()))
 		{
 			System.out.println("Delete was pressed");
-			DeleteGui delete= new DeleteGui();
-			delete.delete();
+			gui.setState(gui.getState("delete"));
 		}
 		else if (text.equals(btnUpdate.getText()))
 		{
 			System.out.println("Update was pressed");
-			UpdateGui update = new UpdateGui();
-			update.update();
+			gui.setState(gui.getState("update"));
 		}
 		else if (text.equals(btnInsert.getText()))
 		{
 			System.out.println("Insert was pressed");
-			InsertGui insert = new InsertGui();
-			insert.insert();
+			gui.setState(gui.getState("insert"));
 		}
 		else 
 		{
 			System.out.println("A button was not pressed");
 		}
-	}
-
-	@Override
-	public void handle()
-	{
-		// TODO Auto-generated method stub
-		
 	}
 }

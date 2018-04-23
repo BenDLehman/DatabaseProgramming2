@@ -1,5 +1,7 @@
 package assignmentTwo;
 
+import javax.swing.JFrame;
+
 /**
  * Serves as the machine in the state pattern. Allows the user to view different
  * screens based on the current state.
@@ -28,14 +30,14 @@ public class Gui // implements TurnObserver
 	}
 
 	/*
-	 * Initialize all of the states and add the arena to the list of observers
+	 * Initialize all of the states
 	 */
 	public Gui() throws Exception
 	{
-		tableGui = new TableGui();
-		insertGui = new InsertGui();
-		updateGui = new UpdateGui();
-		deleteGui = new DeleteGui();
+		tableGui = new TableGui(this);
+		insertGui = new InsertGui(this);
+		updateGui = new UpdateGui(this);
+		deleteGui = new DeleteGui(this);
 		setState(tableGui);
 	}
 
@@ -48,25 +50,29 @@ public class Gui // implements TurnObserver
 	public void setState(State state)
 	{
 		boolean close = true; // certain screens shouldn't close the application
-		boolean maximize = false; // certain screens should be maximized
+		int width = 759; //  default width of a screen
+		int height = 516; // default height of a screen
 
 		previousScreen = currentScreen;
-
+		
 		if (state == insertGui)
 		{
 			close = false;
-			maximize = false;
 		}
 
 		if (state == deleteGui)
 		{
 			close = false;
-			maximize = false;
 		}
 		if (state == updateGui)
 		{
 			close = false;
-			maximize = false;
+		}
+		
+		if (state == tableGui)
+		{
+			width = 1024;
+			height = 624;
 		}
 
 		if (close && currentScreen != null)
@@ -75,9 +81,18 @@ public class Gui // implements TurnObserver
 		}
 		
 		state.initialize();
+		
+		if(close)
+		{
+			state.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		}
+		else
+		{
+			state.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		}
 
 		currentScreen = state;
-		currentScreen.display(maximize);
+		currentScreen.display(width,height);
 	}
 
 	/**

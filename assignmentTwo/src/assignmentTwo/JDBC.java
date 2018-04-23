@@ -138,7 +138,7 @@ public class JDBC
 	 * @param args
 	 * @throws Exception
 	 */
-	public static void main(String[] args) throws Exception
+	/*public static void main(String[] args) throws Exception
 	{
 
 		JDBC object = new JDBC();
@@ -159,7 +159,7 @@ public class JDBC
 			}
 		});
 	
-	}
+	}*/
 	
 	public void buildTables() throws SQLException
 	{
