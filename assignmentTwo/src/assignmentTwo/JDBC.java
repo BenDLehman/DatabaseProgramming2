@@ -150,7 +150,7 @@ public class JDBC
 			{
 				try
 				{
-					tableGui frame = new tableGui();
+					TableGui frame = new TableGui();
 					frame.setVisible(true);
 				} catch (Exception e)
 				{

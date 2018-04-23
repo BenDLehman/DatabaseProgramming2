@@ -32,10 +32,10 @@ public class Gui // implements TurnObserver
 	 */
 	public Gui() throws Exception
 	{
-		tableGui = new tableGui();
-		insertGui = new insertGui();
-		updateGui = new updateGui();
-		deleteGui = new deleteGui();
+		tableGui = new TableGui();
+		insertGui = new InsertGui();
+		updateGui = new UpdateGui();
+		deleteGui = new DeleteGui();
 		setState(tableGui);
 	}
 

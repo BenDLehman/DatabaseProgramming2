@@ -8,7 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-public class updateGui extends State
+public class UpdateGui extends State
 {
 
 	private JFrame frame;
@@ -37,7 +37,7 @@ public class updateGui extends State
 			{
 				try
 				{
-					updateGui window = new updateGui();
+					UpdateGui window = new UpdateGui();
 					window.frame.setVisible(true);
 				} catch (Exception e)
 				{
@@ -50,7 +50,7 @@ public class updateGui extends State
 	/**
 	 * Create the application.
 	 */
-	public updateGui()
+	public UpdateGui()
 	{
 		initialize();
 	}

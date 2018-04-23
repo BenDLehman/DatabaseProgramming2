@@ -22,7 +22,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
 
-public class tableGui extends State implements MouseListener, ActionListener
+public class TableGui extends State implements MouseListener, ActionListener
 {
 
 	private JPanel contentPane;
@@ -47,7 +47,7 @@ public class tableGui extends State implements MouseListener, ActionListener
 			{
 				try
 				{
-					tableGui frame = new tableGui();
+					TableGui frame = new TableGui();
 					frame.setVisible(true);
 				} catch (Exception e)
 				{
@@ -61,7 +61,7 @@ public class tableGui extends State implements MouseListener, ActionListener
 	 * Create the frame.
 	 * @throws Exception 
 	 */
-	public tableGui() throws Exception
+	public TableGui() throws Exception
 	{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1024, 624);
@@ -216,19 +216,19 @@ public class tableGui extends State implements MouseListener, ActionListener
 		else if (text.equals(btnDelete.getText()))
 		{
 			System.out.println("Delete was pressed");
-			deleteGui delete= new deleteGui();
+			DeleteGui delete= new DeleteGui();
 			delete.delete();
 		}
 		else if (text.equals(btnUpdate.getText()))
 		{
 			System.out.println("Update was pressed");
-			updateGui update = new updateGui();
+			UpdateGui update = new UpdateGui();
 			update.update();
 		}
 		else if (text.equals(btnInsert.getText()))
 		{
 			System.out.println("Insert was pressed");
-			insertGui insert = new insertGui();
+			InsertGui insert = new InsertGui();
 			insert.insert();
 		}
 		else 
