@@ -1,19 +1,13 @@
 package assignmentTwo;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.EventQueue;
 
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
-import javax.swing.ScrollPaneLayout;
 import javax.swing.SwingConstants;
 
 import java.awt.Font;
@@ -27,16 +21,20 @@ import java.awt.event.WindowListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
-import javax.swing.JTable;
 import javax.swing.JTextArea;
-import javax.swing.JScrollPane;
 
+/**
+ * The first gui that a user sees. Allows them to view tables, select tables to
+ * work with, and open new windows for inserting, deleting, and updating. 
+ * 
+ * @author Trevor Kelly, Andy Kim, Christopher Roadcap
+ *
+ */
 public class TableGui extends State implements MouseListener, ActionListener
 {
 
 	private JPanel contentPane;
 	private JTextField query;
-	private JTable table;
 	boolean tablesExist = true;
 	private JButton btnShowTables;
 	private JButton btnSelect;
@@ -53,14 +51,18 @@ public class TableGui extends State implements MouseListener, ActionListener
 	private Gui gui;
 
 	/**
-	 * Create the frame.
-	 * @throws Exception 
+	 * Create the screen
+	 * @param gui 
+	 * @throws Exception
 	 */
 	public TableGui(Gui gui) throws Exception
 	{
 		this.gui = gui;
 	}
 	
+	/**
+	 * Fill the screen with content
+	 */
 	public void initialize()
 	{
 		contentPane = new JPanel();
@@ -105,6 +107,10 @@ public class TableGui extends State implements MouseListener, ActionListener
 		createDisplayLabels();
 	}
 
+	/**
+	 * Allows JDBC methods to be called
+	 * @throws Exception
+	 */
 	private void prepareJDBC() throws Exception
 	{
 		jdbc = new JDBC();
@@ -119,6 +125,9 @@ public class TableGui extends State implements MouseListener, ActionListener
 		jdbc.populateTables();
 	}
 	
+	/**
+	 * Creates labels for the screen
+	 */
 	public void createDisplayLabels()
 	{
 		lblEnterQueryTo = new JLabel("Enter query to see results below:");
@@ -148,6 +157,9 @@ public class TableGui extends State implements MouseListener, ActionListener
 		contentPane.add(jtaSelected);
 	}
 	
+	/**
+	 * Creates buttons for the screen
+	 */
 	private void createActionButtons()
 	{
 		btnShowTables = new JButton("Show Tables");
@@ -176,6 +188,10 @@ public class TableGui extends State implements MouseListener, ActionListener
 		contentPane.add(btnInsert);
 	}
 	
+	/**
+	 * Updates the results panel when a JDBC command is called
+	 * @param list
+	 */
 	public void updateResults(ArrayList<String> list)
 	{
 		pnlResults.setLayout(new GridLayout(list.size(),1));
@@ -190,6 +206,10 @@ public class TableGui extends State implements MouseListener, ActionListener
 		repaint();
 	}
 
+	/**
+	 * Reaction when a JLabel in the results panel is pressed. Tells
+	 * the user what they clicked.
+	 */
 	@Override
 	public void mouseClicked(MouseEvent event)
 	{
@@ -241,6 +261,10 @@ public class TableGui extends State implements MouseListener, ActionListener
 		}
 	}
 
+	/**
+	 * Handles what should happen when a button is pressed and changes
+	 * the state of the Gui
+	 */
 	@Override
 	public void handle()
 	{
