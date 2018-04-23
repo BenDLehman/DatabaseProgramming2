@@ -131,6 +131,23 @@ public class JDBC
 	          System.out.println(data);
 	          }
 	     }
+	     
+	     public ArrayList<String> showTables2() throws SQLException
+	     {
+	    	 ArrayList<String> tables = new ArrayList<String>();
+	    	 
+	    	 String selectData = new String("show tables");
+	         Statement stmt = m_dbConn.createStatement();
+	         ResultSet rs = stmt.executeQuery(selectData);
+	         
+	         while (rs.next())
+	         {
+	        	 tables.add(rs.getString("Tables_in_csc371-01"));
+	        	 System.out.println(rs.getString("Tables_in_csc371-01"));
+	         }
+	         
+	         return tables;
+	     }
 
 	/**
 	 * This program make insert project and select project

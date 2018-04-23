@@ -1,16 +1,23 @@
 package assignmentTwo;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneLayout;
+import javax.swing.SwingConstants;
+
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -18,8 +25,10 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 
 public class TableGui extends State implements MouseListener, ActionListener
@@ -35,6 +44,11 @@ public class TableGui extends State implements MouseListener, ActionListener
 	private JButton btnUpdate;
 	private JButton btnInsert;
 	private JButton selection;
+	private JLabel lblEnterQueryTo;
+	private JLabel lblResults;
+	private JPanel pnlResults;
+	private JTextArea jtaSelected;
+	private String selected;
 	private JDBC jdbc;
 	private Gui gui;
 
@@ -84,32 +98,11 @@ public class TableGui extends State implements MouseListener, ActionListener
 		    }
 		    
 		};
-		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		this.addWindowListener(exitListener);
-
+		
 		createActionButtons();
-
-		JLabel lblEnterQueryTo = new JLabel("Enter query to see results below:");
-		lblEnterQueryTo.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblEnterQueryTo.setBounds(10, 87, 218, 14);
-		contentPane.add(lblEnterQueryTo);
-
-		query = new JTextField();
-		query.setBounds(10, 112, 705, 20);
-		contentPane.add(query);
-		query.setColumns(10);
-
-		JLabel lblResults = new JLabel("Results:");
-		lblResults.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblResults.setBounds(10, 144, 63, 23);
-		contentPane.add(lblResults);
 		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 179, 705, 383);
-		contentPane.add(scrollPane);
-		
-		table = new JTable();
-		scrollPane.setViewportView(table);
+		createDisplayLabels();
 	}
 
 	private void prepareJDBC() throws Exception
@@ -124,6 +117,35 @@ public class TableGui extends State implements MouseListener, ActionListener
 		}
 		jdbc.buildTables();
 		jdbc.populateTables();
+	}
+	
+	public void createDisplayLabels()
+	{
+		lblEnterQueryTo = new JLabel("Enter query to see results below:");
+		lblEnterQueryTo.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblEnterQueryTo.setBounds(10, 87, 218, 14);
+		contentPane.add(lblEnterQueryTo);
+
+		query = new JTextField();
+		query.setBounds(10, 112, 705, 20);
+		contentPane.add(query);
+		query.setColumns(10);
+
+		lblResults = new JLabel("Results:");
+		lblResults.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblResults.setBounds(10, 144, 63, 23);
+		contentPane.add(lblResults);
+		
+		pnlResults = new JPanel();
+		pnlResults.setBackground(Color.lightGray);
+		pnlResults.setBounds(10, 179, 705, 383);
+		contentPane.add(pnlResults);
+		
+		jtaSelected = new JTextArea();
+		jtaSelected.setLineWrap(true);
+		jtaSelected.setBounds(730, 179, 270, 150);
+		jtaSelected.setOpaque(false);
+		contentPane.add(jtaSelected);
 	}
 	
 	private void createActionButtons()
@@ -153,11 +175,32 @@ public class TableGui extends State implements MouseListener, ActionListener
 		btnInsert.setBounds(711, 35, 89, 23);
 		contentPane.add(btnInsert);
 	}
+	
+	public void updateResults(ArrayList<String> list)
+	{
+		pnlResults.setLayout(new GridLayout(list.size(),1));
+		
+		for (String s : list)
+		{	
+			JLabel l = new JLabel(s, SwingConstants.CENTER);
+			pnlResults.add(l);
+			l.addMouseListener(this);
+		}
+		revalidate();
+		repaint();
+	}
 
 	@Override
 	public void mouseClicked(MouseEvent event)
 	{
+		JLabel source = (JLabel) event.getSource();
+		selected = source.getText();
 		
+		System.out.println(selected + " was pressed");	
+		jtaSelected.setText("Press 'Select' to select the "+selected+" table.");
+		
+		revalidate();
+		repaint();
 	}
 
 	@Override
@@ -208,7 +251,7 @@ public class TableGui extends State implements MouseListener, ActionListener
 			System.out.println("Show Tables was pressed");
 			try
 			{
-				jdbc.showTables();
+				updateResults(jdbc.showTables2());
 			}
 			catch (SQLException e)
 			{
@@ -218,6 +261,9 @@ public class TableGui extends State implements MouseListener, ActionListener
 		else if (text.equals(btnSelect.getText()))
 		{
 			System.out.println("Select was pressed");
+			// call the jdbc select function using the
+			// class variable 'selected' which is a string
+			// containing the name of the table clicked.
 		}
 		else if (text.equals(btnDelete.getText()))
 		{
