@@ -4,7 +4,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/MySQL"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/mySQL"/>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="C:/Users/croad/Downloads/mysql-connector-java-5.1.29 (1).tar/mysql-connector-java-5.1.29/mysql-connector-java-5.1.29-bin.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Trevor/Documents/Java/mysql-connector-java-5.1.29/mysql-connector-java-5.1.29-bin.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

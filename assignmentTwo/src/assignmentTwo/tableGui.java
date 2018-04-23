@@ -22,7 +22,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
 
-public class tableGui extends JFrame implements MouseListener
+public class tableGui extends JFrame implements MouseListener, ActionListener
 {
 
 	private JPanel contentPane;
@@ -102,72 +102,29 @@ public class tableGui extends JFrame implements MouseListener
 		};
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		this.addWindowListener(exitListener);
-		
-		
-		
 
 		btnShowTables = new JButton("Show Tables");
-		btnShowTables.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-				try
-				{
-					jdbc.showTables();
-				} catch (SQLException e1)
-				{
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			}
-		});
+		btnShowTables.addActionListener(this);
 		btnShowTables.setBounds(10, 35, 108, 23);
 		contentPane.add(btnShowTables);
 
 		btnSelect = new JButton("Select");
-		btnSelect.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-
-			}
-		});
+		btnSelect.addActionListener(this);
 		btnSelect.setBounds(128, 35, 89, 23);
 		contentPane.add(btnSelect);
 
 		btnDelete = new JButton("Delete");
-		btnDelete.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-				deleteGui delete= new deleteGui();
-				delete.delete();
-			}
-		});
+		btnDelete.addActionListener(this);
 		btnDelete.setBounds(909, 35, 89, 23);
 		contentPane.add(btnDelete);
 
 		btnUpdate = new JButton("Update");
-		btnUpdate.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-				updateGui update = new updateGui();
-				update.update();
-			}
-		});
+		btnUpdate.addActionListener(this);
 		btnUpdate.setBounds(810, 35, 89, 23);
 		contentPane.add(btnUpdate);
 
 		btnInsert = new JButton("Insert");
-		btnInsert.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-				insertGui insert = new insertGui();
-				insert.insert();
-			}
-		});
+		btnInsert.addActionListener(this);
 		btnInsert.setBounds(711, 35, 89, 23);
 		contentPane.add(btnInsert);
 
@@ -197,33 +154,7 @@ public class tableGui extends JFrame implements MouseListener
 	@Override
 	public void mouseClicked(MouseEvent event)
 	{
-		JButton selection = (JButton) event.getSource();
-		String text = selection.getText();
 		
-		if(text.equals(btnShowTables.getText()))
-		{
-			System.out.println("Show Tables was pressed");
-		}
-		else if (text.equals(btnSelect.getText()))
-		{
-			System.out.println("Select was pressed");
-		}
-		else if (text.equals(btnDelete.getText()))
-		{
-			System.out.println("Delete was pressed");
-		}
-		else if (text.equals(btnUpdate.getText()))
-		{
-			System.out.println("Update was pressed");
-		}
-		else if (text.equals(btnInsert.getText()))
-		{
-			System.out.println("Insert was pressed");
-		}
-		else 
-		{
-			System.out.println("A button was not pressed");
-		}
 	}
 
 	@Override
@@ -252,5 +183,52 @@ public class tableGui extends JFrame implements MouseListener
 	{
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent event)
+	{
+		JButton selection = (JButton) event.getSource();
+		String text = selection.getText();
+		
+		if(text.equals(btnShowTables.getText()))
+		{
+			System.out.println("Show Tables was pressed");
+			try
+			{
+				jdbc.showTables();
+			}
+			catch (SQLException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		else if (text.equals(btnSelect.getText()))
+		{
+			System.out.println("Select was pressed");
+		}
+		else if (text.equals(btnDelete.getText()))
+		{
+			System.out.println("Delete was pressed");
+			deleteGui delete= new deleteGui();
+			delete.delete();
+		}
+		else if (text.equals(btnUpdate.getText()))
+		{
+			System.out.println("Update was pressed");
+			updateGui update = new updateGui();
+			update.update();
+		}
+		else if (text.equals(btnInsert.getText()))
+		{
+			System.out.println("Insert was pressed");
+			insertGui insert = new insertGui();
+			insert.insert();
+		}
+		else 
+		{
+			System.out.println("A button was not pressed");
+		}
 	}
 }
