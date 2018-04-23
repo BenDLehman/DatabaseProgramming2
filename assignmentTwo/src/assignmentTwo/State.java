@@ -54,7 +54,7 @@ public abstract class State extends JFrame
 		{
 			this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		}
-		this.setLocationRelativeTo(null);
+		//this.setLocationRelativeTo(null);
 		this.pack();
 		this.setVisible(true);
 	}

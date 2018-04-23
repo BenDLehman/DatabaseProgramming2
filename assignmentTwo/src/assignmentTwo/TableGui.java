@@ -63,22 +63,27 @@ public class TableGui extends State implements MouseListener, ActionListener
 	 */
 	public TableGui() throws Exception
 	{
+		
+	}
+	
+	public void initialize()
+	{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1024, 624);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		jdbc = new JDBC();
-		if(tablesExist)
-			try {
-					jdbc.dropTables();
-			}
-		catch(SQLException e1) {
-			
+		
+		try
+		{
+			prepareJDBC();
 		}
-		jdbc.buildTables();
-		jdbc.populateTables();
+		catch (Exception e2)
+		{
+			e2.printStackTrace();
+		}
+		
 		WindowListener exitListener = new WindowAdapter() {
 
 		    @Override
@@ -127,8 +132,22 @@ public class TableGui extends State implements MouseListener, ActionListener
 		table = new JTable();
 		scrollPane.setViewportView(table);
 	}
+
+	private void prepareJDBC() throws Exception
+	{
+		jdbc = new JDBC();
+		if(tablesExist)
+			try {
+					jdbc.dropTables();
+			}
+		catch(SQLException e1) {
+			
+		}
+		jdbc.buildTables();
+		jdbc.populateTables();
+	}
 	
-	public void createActionButtons()
+	private void createActionButtons()
 	{
 		btnShowTables = new JButton("Show Tables");
 		btnShowTables.addActionListener(this);

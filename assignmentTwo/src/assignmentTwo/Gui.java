@@ -48,26 +48,23 @@ public class Gui // implements TurnObserver
 	public void setState(State state)
 	{
 		boolean close = true; // certain screens shouldn't close the application
-		boolean maximize = true; // certain screens should be maximized
+		boolean maximize = false; // certain screens should be maximized
 
 		previousScreen = currentScreen;
 
 		if (state == insertGui)
 		{
-			insertGui.initialize();
 			close = false;
 			maximize = false;
 		}
 
 		if (state == deleteGui)
 		{
-			deleteGui.initialize();
 			close = false;
 			maximize = false;
 		}
 		if (state == updateGui)
 		{
-			updateGui.initialize();
 			close = false;
 			maximize = false;
 		}
@@ -76,6 +73,8 @@ public class Gui // implements TurnObserver
 		{
 			currentScreen.dispose();
 		}
+		
+		state.initialize();
 
 		currentScreen = state;
 		currentScreen.display(maximize);
