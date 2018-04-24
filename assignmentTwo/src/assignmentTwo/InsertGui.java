@@ -7,7 +7,7 @@ import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class InsertGui extends State
+public class InsertGui extends State implements ActionListener
 {
 
 	private JTextField fields[];
@@ -36,10 +36,7 @@ public class InsertGui extends State
 		createFields();
 		
 		btnInsert = new JButton("INSERT");
-		btnInsert.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
+		btnInsert.addActionListener(this);
 		btnInsert.setBounds(607, 144, 89, 23);
 		getContentPane().add(btnInsert);
 	}
@@ -81,6 +78,13 @@ public class InsertGui extends State
 	public void handle()
 	{
 		gui.setState(gui.getState("table"));
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent event)
+	{
+		// call the jdbc method that prepares and inserts the changes
+		System.out.println("Insert button was pressed");
 	}
 
 }

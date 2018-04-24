@@ -10,7 +10,7 @@ import javax.swing.JTextField;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class DeleteGui extends State
+public class DeleteGui extends State implements ActionListener
 {
 
 	private JTextField textField;
@@ -82,6 +82,7 @@ public class DeleteGui extends State
 		textField_5.setColumns(10);
 		
 		btnDeleteTheWhole = new JButton("DELETE THE WHOLE TABLE");
+		btnDeleteTheWhole.addActionListener(this);
 		btnDeleteTheWhole.setBounds(10, 56, 154, 23);
 		getContentPane().add(btnDeleteTheWhole);
 		
@@ -130,6 +131,13 @@ public class DeleteGui extends State
 	public void handle()
 	{
 		gui.setState(gui.getState("table"));
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent event)
+	{
+		// call the jdbc method that prepares and runs the delete statement
+		System.out.println("Delete all button was pressed");
 	}
 
 }

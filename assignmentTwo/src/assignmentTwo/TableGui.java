@@ -47,6 +47,7 @@ public class TableGui extends State implements MouseListener, ActionListener
 	private JPanel pnlResults;
 	private JTextArea jtaSelected;
 	private String selected;
+	private String activeTable;
 	private JDBC jdbc;
 	private Gui gui;
 
@@ -205,6 +206,15 @@ public class TableGui extends State implements MouseListener, ActionListener
 		revalidate();
 		repaint();
 	}
+	
+	/**
+	 * Get the active table that was selected by mouseclick fron results
+	 * @return the active table
+	 */
+	public String getActiveTable()
+	{
+		return activeTable;
+	}
 
 	/**
 	 * Reaction when a JLabel in the results panel is pressed. Tells
@@ -257,6 +267,7 @@ public class TableGui extends State implements MouseListener, ActionListener
 		if(event!=null)
 		{
 			selection = (JButton) event.getSource();
+			activeTable = selection.getText();
 			handle();
 		}
 	}
