@@ -194,6 +194,11 @@ public class TableGui extends State implements MouseListener, ActionListener
 	 */
 	public void updateResults(ArrayList<String> list)
 	{
+		if(pnlResults.getComponentCount()>0)
+		{
+			pnlResults.removeAll();
+		}
+		
 		pnlResults.setLayout(new GridLayout(list.size(),1));
 		
 		for (String s : list)
