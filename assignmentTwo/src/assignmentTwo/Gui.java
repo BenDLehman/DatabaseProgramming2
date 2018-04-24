@@ -16,6 +16,7 @@ public class Gui // implements TurnObserver
 	private State deleteGui;
 	private State currentScreen;
 	private State previousScreen;
+	private String activeTable;
 	boolean forcedSelect = false;
 
 	/**
@@ -93,6 +94,20 @@ public class Gui // implements TurnObserver
 
 		currentScreen = state;
 		currentScreen.display(width,height);
+	}
+	
+	/**
+	 * Get the active table that was selected by mouseclick fron results
+	 * @return the active table
+	 */
+	public String getActiveTable()
+	{
+		return activeTable;
+	}
+	
+	public void setActiveTable(String table)
+	{
+		activeTable = table;
 	}
 
 	/**
