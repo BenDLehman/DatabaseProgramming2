@@ -3,6 +3,8 @@ package assignmentTwo;
 import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.JTextField;
+
+import java.awt.Container;
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -13,6 +15,7 @@ public class InsertGui extends State implements ActionListener
 	private JTextField fields[];
 	private JButton btnInsert;
 	private Gui gui;
+	JLabel lblInsertingInto = null;
 
 	/**
 	 * Create the application.
@@ -31,18 +34,22 @@ public class InsertGui extends State implements ActionListener
 		
 		// Get the table name and display the title or tell the user to select a table
 		String table = gui.getActiveTable();
-		JLabel lblInsertingInto = new JLabel();
-		if(table!=null)
+		
+		if (table != null)
 		{
-			lblInsertingInto.setText("Inserting into "+table);
+			if(lblInsertingInto!=null)
+			{
+				getContentPane().remove(lblInsertingInto);
+			}
+			lblInsertingInto = new JLabel("Inserting into " + table);
 		}
 		else
 		{
-			lblInsertingInto.setText("Please select a table to modify on previous screen");
+			lblInsertingInto = new JLabel("Please select a table to modify on previous screen");
 		}
 		
 		lblInsertingInto.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblInsertingInto.setBounds(10, 25, 192, 20);
+		lblInsertingInto.setBounds(10, 25, 500, 20);
 		getContentPane().add(lblInsertingInto);
 		
 		createFields();
