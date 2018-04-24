@@ -46,10 +46,21 @@ public class DeleteGui extends State implements ActionListener
 	{
 		getContentPane().setLayout(null);
 		
-		JLabel lblInsertingInto = new JLabel("Delete <table name>");
-		lblInsertingInto.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblInsertingInto.setBounds(10, 25, 192, 20);
-		getContentPane().add(lblInsertingInto);
+		// Get the table name and display the title or tell the user to select a table
+		String table = gui.getActiveTable();
+		JLabel lblDeletingFrom = new JLabel();
+		if (table != null)
+		{
+			lblDeletingFrom.setText("Deleting from " + table);
+		}
+		else
+		{
+			lblDeletingFrom.setText("Please select a table to modify on previous screen");
+		}
+		
+		lblDeletingFrom.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblDeletingFrom.setBounds(10, 25, 192, 20);
+		getContentPane().add(lblDeletingFrom);
 		
 		textField = new JTextField();
 		textField.setBounds(10, 145, 86, 20);

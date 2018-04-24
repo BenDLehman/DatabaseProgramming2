@@ -28,7 +28,19 @@ public class InsertGui extends State implements ActionListener
 	public void initialize()
 	{
 		getContentPane().setLayout(null);
-		JLabel lblInsertingInto = new JLabel("Inserting into <table name>");
+		
+		// Get the table name and display the title or tell the user to select a table
+		String table = gui.getActiveTable();
+		JLabel lblInsertingInto = new JLabel();
+		if(table!=null)
+		{
+			lblInsertingInto.setText("Inserting into "+table);
+		}
+		else
+		{
+			lblInsertingInto.setText("Please select a table to modify on previous screen");
+		}
+		
 		lblInsertingInto.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lblInsertingInto.setBounds(10, 25, 192, 20);
 		getContentPane().add(lblInsertingInto);

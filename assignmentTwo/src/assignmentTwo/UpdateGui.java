@@ -42,10 +42,21 @@ public class UpdateGui extends State
 	{
 		getContentPane().setLayout(null);
 		
-		JLabel lblInsertingInto = new JLabel("Updating <table name>");
-		lblInsertingInto.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblInsertingInto.setBounds(10, 25, 192, 20);
-		getContentPane().add(lblInsertingInto);
+		// Get the table name and display the title or tell the user to select a table
+		String table = gui.getActiveTable();
+		JLabel lblUpdating = new JLabel();
+		if (table != null)
+		{
+			lblUpdating.setText("Updating " + table);
+		}
+		else
+		{
+			lblUpdating.setText("Please select a table to modify on previous screen");
+		}
+				
+		lblUpdating.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblUpdating.setBounds(10, 25, 192, 20);
+		getContentPane().add(lblUpdating);
 		
 		textField = new JTextField();
 		textField.setBounds(10, 145, 86, 20);

@@ -217,6 +217,7 @@ public class TableGui extends State implements MouseListener, ActionListener
 	{
 		JLabel source = (JLabel) event.getSource();
 		selected = source.getText();
+		gui.setActiveTable(selected);
 		
 		System.out.println(selected + " was pressed");	
 		jtaSelected.setText("Press 'Select' to select the "+selected+" table.");
@@ -259,7 +260,6 @@ public class TableGui extends State implements MouseListener, ActionListener
 		if(event!=null)
 		{
 			selection = (JButton) event.getSource();
-			gui.setActiveTable(selection.getText());
 			handle();
 		}
 	}
