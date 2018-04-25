@@ -46,7 +46,7 @@ public class TableGui extends State implements MouseListener, ActionListener
 	private JLabel lblResults;
 	private JPanel pnlResults;
 	private JTextArea jtaSelected;
-	private String selected;
+	private JLabel selected;
 	private JDBC jdbc;
 	private Gui gui;
 
@@ -102,9 +102,12 @@ public class TableGui extends State implements MouseListener, ActionListener
 		};
 		this.addWindowListener(exitListener);
 		
-		createActionButtons();
+		if(selected==null) {
+			createActionButtons();
+			
+			createDisplayLabels();
+		}
 		
-		createDisplayLabels();
 	}
 
 	/**
@@ -168,21 +171,25 @@ public class TableGui extends State implements MouseListener, ActionListener
 		contentPane.add(btnShowTables);
 
 		btnSelect = new JButton("Select");
+		btnSelect.setEnabled(false);
 		btnSelect.addActionListener(this);
 		btnSelect.setBounds(128, 35, 89, 23);
 		contentPane.add(btnSelect);
 
 		btnDelete = new JButton("Delete");
+		btnDelete.setEnabled(false);
 		btnDelete.addActionListener(this);
 		btnDelete.setBounds(909, 35, 89, 23);
 		contentPane.add(btnDelete);
 
 		btnUpdate = new JButton("Update");
+		btnUpdate.setEnabled(false);
 		btnUpdate.addActionListener(this);
 		btnUpdate.setBounds(810, 35, 89, 23);
 		contentPane.add(btnUpdate);
 
 		btnInsert = new JButton("Insert");
+		btnInsert.setEnabled(false);
 		btnInsert.addActionListener(this);
 		btnInsert.setBounds(711, 35, 89, 23);
 		contentPane.add(btnInsert);
@@ -228,14 +235,24 @@ public class TableGui extends State implements MouseListener, ActionListener
 	@Override
 	public void mouseClicked(MouseEvent event)
 	{
-		JLabel source = (JLabel) event.getSource();
-		selected = source.getText();
-		source.setBackground(Color.white);
-		source.setOpaque(true);
-		gui.setActiveTable(selected);
+		// If there is a highlighted table already, make it normal again
+		if(selected!=null)
+		{
+			selected.setOpaque(false);
+		}
 		
-		System.out.println(selected + " was pressed");	
-		jtaSelected.setText("Press 'Select' to select the "+selected+" table.");
+		selected = (JLabel) event.getSource();
+		selected.setBackground(Color.white);
+		selected.setOpaque(true);
+		gui.setActiveTable(selected.getText());
+		
+		System.out.println(selected.getText() + " was pressed");	
+		jtaSelected.setText("Press 'Select' to view the contents of "+selected.getText());
+		
+		btnSelect.setEnabled(true);
+		btnUpdate.setEnabled(true);
+		btnInsert.setEnabled(true);
+		btnDelete.setEnabled(true);
 		
 		revalidate();
 		repaint();
