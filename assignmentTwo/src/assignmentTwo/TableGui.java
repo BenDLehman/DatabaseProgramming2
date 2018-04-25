@@ -199,7 +199,15 @@ public class TableGui extends State implements MouseListener, ActionListener
 			pnlResults.removeAll();
 		}
 		
-		pnlResults.setLayout(new GridLayout(list.size(),1));
+		if(list.size()<11)
+		{
+			pnlResults.setLayout(new GridLayout(list.size(),1));
+		}
+		else
+		{
+			pnlResults.setLayout(new GridLayout(list.size()/2,2));
+		}
+		
 		
 		for (String s : list)
 		{	
@@ -222,6 +230,8 @@ public class TableGui extends State implements MouseListener, ActionListener
 	{
 		JLabel source = (JLabel) event.getSource();
 		selected = source.getText();
+		source.setBackground(Color.white);
+		source.setOpaque(true);
 		gui.setActiveTable(selected);
 		
 		System.out.println(selected + " was pressed");	
