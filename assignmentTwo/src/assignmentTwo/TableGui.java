@@ -246,7 +246,7 @@ public class TableGui extends State implements MouseListener, ActionListener
 		int numColumns = list.get(0).getNumColums();
 		
 		// reset the grid size
-		pnlResults.setLayout(new GridLayout(list.size(),numColumns));
+		pnlResults.setLayout(new GridLayout(0,numColumns));
 		
 		// get the data from the list
 		for(int x = 0; x < numColumns; x++)
@@ -257,9 +257,12 @@ public class TableGui extends State implements MouseListener, ActionListener
 		}
 		for(int x = 0; x < list.size(); x++)
 		{
-			JLabel l = new JLabel(list.get(x).getValues().toString(), SwingConstants.CENTER);
-			pnlResults.add(l);
-			l.addMouseListener(this);
+			for(int y = 0; y < numColumns; y++)
+			{
+				JLabel l = new JLabel(list.get(x).getValue(y).toString(), SwingConstants.CENTER);
+				pnlResults.add(l);
+				l.addMouseListener(this); 
+			}
 		}
 		
 		revalidate();
@@ -277,6 +280,7 @@ public class TableGui extends State implements MouseListener, ActionListener
 		if(selected!=null)
 		{
 			selected.setOpaque(false);
+			selected = null;
 		}
 		
 		selected = (JLabel) event.getSource();
@@ -360,7 +364,7 @@ public class TableGui extends State implements MouseListener, ActionListener
 			System.out.println("Select was pressed");
 			try
 			{
-				updateResultsData(jdbc.select("*", "LOCATION", null, null));
+				updateResultsData(jdbc.select("*", selected.getText(), null, null));
 			}
 			catch (SQLException | IOException e)
 			{
