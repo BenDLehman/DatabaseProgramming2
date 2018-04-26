@@ -249,7 +249,7 @@ public class TableGui extends State implements MouseListener, ActionListener
 		pnlResults.setLayout(new GridLayout(0,numColumns));
 		
 		// get the data from the list
-		for(int x = 0; x < numColumns; x++)
+		for(int x = 0; x < numColumns-1; x++)
 		{
 			JLabel l = new JLabel(list.get(x).getColumnLabel(x), SwingConstants.CENTER);
 			//pnlResults.add(l);
