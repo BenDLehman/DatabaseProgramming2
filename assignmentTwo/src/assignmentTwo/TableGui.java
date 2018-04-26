@@ -4,6 +4,9 @@ import java.awt.Color;
 
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import com.mysql.jdbc.DatabaseMetaData;
+
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -18,6 +21,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
@@ -117,7 +121,7 @@ public class TableGui extends State implements MouseListener, ActionListener
 	private void prepareJDBC() throws Exception
 	{
 		jdbc = new JDBC();
-		if(tablesExist)
+		/*if(tablesExist)
 			try {
 					jdbc.dropTables();
 			}
@@ -125,7 +129,7 @@ public class TableGui extends State implements MouseListener, ActionListener
 			
 		}
 		jdbc.buildTables();
-		jdbc.populateTables();
+		jdbc.populateTables();*/
 	}
 	
 	/**
@@ -196,10 +200,11 @@ public class TableGui extends State implements MouseListener, ActionListener
 	}
 	
 	/**
-	 * Updates the results panel when a JDBC command is called
-	 * @param list
+	 * Updates the results panel when a JDBC command is called which
+	 * returns an ArrayList of strings
+	 * @param list The ArrayList of strings to update the results panel with
 	 */
-	public void updateResults(ArrayList<String> list)
+	public void updateResultsStrings(ArrayList<String> list)
 	{
 		if(pnlResults.getComponentCount()>0)
 		{
@@ -226,7 +231,33 @@ public class TableGui extends State implements MouseListener, ActionListener
 		repaint();
 	}
 	
-	
+	/**
+	 * Updates the results panel when a JDBC command is called
+	 * @param list
+	 */
+	public void updateResultsData(ArrayList<DatabaseMetaData> list)
+	{
+		// remove old data from gui
+		if(pnlResults.getComponentCount()>0)
+		{
+			pnlResults.removeAll();
+		}
+		// reset the grid size
+		pnlResults.setLayout(new GridLayout(list.size(),1));
+		
+		// get the data from the list
+		//for ( )
+		
+		// create labels from the data
+		/*for (String s : list)
+		{	
+			JLabel l = new JLabel(s, SwingConstants.CENTER);
+			pnlResults.add(l);
+			l.addMouseListener(this);
+		}*/
+		revalidate();
+		repaint();
+	}
 
 	/**
 	 * Reaction when a JLabel in the results panel is pressed. Tells
@@ -310,7 +341,7 @@ public class TableGui extends State implements MouseListener, ActionListener
 			System.out.println("Show Tables was pressed");
 			try
 			{
-				updateResults(jdbc.showTables2());
+				updateResultsStrings(jdbc.showTables());
 			}
 			catch (SQLException e)
 			{
@@ -320,9 +351,15 @@ public class TableGui extends State implements MouseListener, ActionListener
 		else if (text.equals(btnSelect.getText()))
 		{
 			System.out.println("Select was pressed");
-			// call the jdbc select function using the
-			// class variable 'selected' which is a string
-			// containing the name of the table clicked.
+			/*try
+			{
+				updateResults(jdbc.select("*", selected.getText(), null, null));
+			}
+			catch (SQLException | IOException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}*/
 		}
 		else if (text.equals(btnDelete.getText()))
 		{
