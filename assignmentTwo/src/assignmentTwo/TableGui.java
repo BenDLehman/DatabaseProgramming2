@@ -244,14 +244,15 @@ public class TableGui extends State implements MouseListener, ActionListener
 		}
 		
 		int numColumns = list.get(0).getNumColums();
+		System.out.println(numColumns);
 		
 		// reset the grid size
 		pnlResults.setLayout(new GridLayout(0,numColumns));
 		
 		// get the data from the list
-		for(int x = 0; x < numColumns-1; x++)
+		for(int x = 0; x < numColumns; x++)
 		{
-			JLabel l = new JLabel(list.get(x).getColumnLabel(x), SwingConstants.CENTER);
+			JLabel l = new JLabel(list.get(0).getColumnLabel(x), SwingConstants.CENTER);
 			//pnlResults.add(l);
 			pnlResults.add(l, x);
 		}
