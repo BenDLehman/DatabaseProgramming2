@@ -7,6 +7,7 @@ public class DBRow
 	private ArrayList<String> columnLabels;
 	private ArrayList<String> types;
 	private ArrayList<String> values;
+	private int numColumns;
 	
 	public DBRow ()
 	{
@@ -28,6 +29,31 @@ public class DBRow
 	public ArrayList<String> getValues()
 	{
 		return values;
+	}
+	
+	public String getColumnLabel(int index)
+	{
+		return columnLabels.get(index);
+	}
+	
+	public String getType(int index)
+	{
+		return types.get(index);
+	}
+	
+	public String getValue(int index)
+	{
+		return values.get(index);
+	}
+	
+	public int getNumColums()
+	{
+		return numColumns;
+	}
+	
+	public void setNumColumns(int num)
+	{
+		numColumns = num;
 	}
 	
 	public void addColumLabel(String columnLabel)

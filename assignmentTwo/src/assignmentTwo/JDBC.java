@@ -196,6 +196,7 @@ public class JDBC
 		while(results.next())
 		{
 			data.add(new DBRow());
+			data.get(count).setNumColumns(metadata.getColumnCount());
 			
 			System.out.println(data.size());
 			

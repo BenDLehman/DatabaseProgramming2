@@ -91,7 +91,7 @@ public class TableGui extends State implements MouseListener, ActionListener
 		             null, "Are You Sure You Want to Close Application?", 
 		             "Exit Confirmation", JOptionPane.YES_NO_OPTION, 
 		             JOptionPane.QUESTION_MESSAGE, null, null, null);
-		        if (confirm == 0) 
+		        /*if (confirm == 0) 
 		        {
 		           try {
 					jdbc.dropTables();
@@ -100,7 +100,7 @@ public class TableGui extends State implements MouseListener, ActionListener
 					e1.printStackTrace();
 		           }
 		           System.exit(0);
-		        }
+		        }*/
 		    }
 		    
 		};
@@ -235,26 +235,33 @@ public class TableGui extends State implements MouseListener, ActionListener
 	 * Updates the results panel when a JDBC command is called
 	 * @param list
 	 */
-	public void updateResultsData(ArrayList<DatabaseMetaData> list)
+	public void updateResultsData(ArrayList<DBRow> list)
 	{
 		// remove old data from gui
 		if(pnlResults.getComponentCount()>0)
 		{
 			pnlResults.removeAll();
 		}
+		
+		int numColumns = list.get(0).getNumColums();
+		
 		// reset the grid size
-		pnlResults.setLayout(new GridLayout(list.size(),1));
+		pnlResults.setLayout(new GridLayout(list.size(),numColumns));
 		
 		// get the data from the list
-		//for ( )
-		
-		// create labels from the data
-		/*for (String s : list)
-		{	
-			JLabel l = new JLabel(s, SwingConstants.CENTER);
+		for(int x = 0; x < numColumns; x++)
+		{
+			JLabel l = new JLabel(list.get(x).getColumnLabel(x), SwingConstants.CENTER);
+			//pnlResults.add(l);
+			pnlResults.add(l, x);
+		}
+		for(int x = 0; x < list.size(); x++)
+		{
+			JLabel l = new JLabel(list.get(x).getValues().toString(), SwingConstants.CENTER);
 			pnlResults.add(l);
 			l.addMouseListener(this);
-		}*/
+		}
+		
 		revalidate();
 		repaint();
 	}
@@ -351,15 +358,15 @@ public class TableGui extends State implements MouseListener, ActionListener
 		else if (text.equals(btnSelect.getText()))
 		{
 			System.out.println("Select was pressed");
-			/*try
+			try
 			{
-				updateResults(jdbc.select("*", selected.getText(), null, null));
+				updateResultsData(jdbc.select("*", "LOCATION", null, null));
 			}
 			catch (SQLException | IOException e)
 			{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}*/
+			}
 		}
 		else if (text.equals(btnDelete.getText()))
 		{
