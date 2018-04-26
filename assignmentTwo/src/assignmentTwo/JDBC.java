@@ -125,7 +125,7 @@ public class JDBC
 		}
 	}
 	
-	public static void main(String[] args)
+	/*public static void main(String[] args)
 	{
 		JDBC j = new JDBC();
 		j.activateJDBC();
@@ -143,7 +143,7 @@ public class JDBC
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
+	}*/
 
 	public ArrayList<DBRow> select(String what, String from, String whereKey, String whereValue) throws SQLException, IOException
 	{
