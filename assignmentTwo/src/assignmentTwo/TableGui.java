@@ -368,7 +368,6 @@ public class TableGui extends State implements MouseListener, ActionListener
 			}
 			catch (SQLException | IOException e)
 			{
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

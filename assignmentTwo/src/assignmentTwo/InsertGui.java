@@ -1,12 +1,27 @@
 package assignmentTwo;
 
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GraphicsEnvironment;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Insets;
+import java.awt.Rectangle;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
 public class InsertGui extends State implements ActionListener
@@ -15,7 +30,11 @@ public class InsertGui extends State implements ActionListener
 	private JTextField fields[];
 	private JButton btnInsert;
 	private Gui gui;
-	JLabel lblInsertingInto = null;
+	private JLabel lblInsertingInto = null;
+	private JDBC jdbc;
+	private ArrayList<DBRow> data;
+	private String tableName;
+	private int numColumns;
 
 	/**
 	 * Create the application.
@@ -23,6 +42,7 @@ public class InsertGui extends State implements ActionListener
 	public InsertGui(Gui gui)
 	{
 		this.gui = gui;
+		jdbc = new JDBC();
 	}
 
 	/**
@@ -30,67 +50,92 @@ public class InsertGui extends State implements ActionListener
 	 */
 	public void initialize()
 	{
-		getContentPane().setLayout(null);
-		
-		// Get the table name and display the title or tell the user to select a table
-		String table = gui.getActiveTable();
-		
-		if (table != null)
+		tableName = gui.getActiveTable();
+
+		try
 		{
-			if(lblInsertingInto!=null)
+			data = jdbc.select("*", tableName, null, null);
+			numColumns = data.get(0).getNumColums();
+		}
+		catch (SQLException | IOException e1)
+		{
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		
+		getContentPane().setLayout(new GridLayout(2,0));
+		JPanel controls = new JPanel(new GridLayout());
+		controls.setMaximumSize(new Dimension(700,20));
+
+		if (tableName != null)
+		{
+			if (lblInsertingInto != null)
 			{
-				getContentPane().remove(lblInsertingInto);
+				controls.remove(lblInsertingInto);
 			}
-			lblInsertingInto = new JLabel("Inserting into " + table);
+			lblInsertingInto = new JLabel("Inserting into " + tableName);
 		}
 		else
 		{
 			lblInsertingInto = new JLabel("Please select a table to modify on previous screen");
 		}
-		
+
 		lblInsertingInto.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblInsertingInto.setBounds(10, 25, 500, 20);
-		getContentPane().add(lblInsertingInto);
-		
-		createFields();
+		controls.add(lblInsertingInto);
 		
 		btnInsert = new JButton("INSERT");
 		btnInsert.addActionListener(this);
-		btnInsert.setBounds(607, 144, 89, 23);
-		getContentPane().add(btnInsert);
-	}
-	
-	/**
-	 * Dynamically creates the fields and places them in the gui based off of how many
-	 * columns/attributes are in the table/relation.
-	 */
-	public void createFields()
-	{
+		btnInsert.setMaximumSize(new Dimension(100,20));
+		controls.add(btnInsert);
 		
-		int cols = 5; // Needs to call the jdbc method returning metadata and get num cols
-		fields = new JTextField[cols];
-		// Positions and dimensions of the first field
-		int xPos = 10;
-		int yPos = 145;
-		int fieldWidth = 86;
-		int fieldHeight = 20;
-		// Where the line should break
-		int maxWidth = 575;
-			
-		for (int i = 0; i < cols; i++)
+		getContentPane().add(controls, 0);
+
+		try
 		{
-			fields[i] = new JTextField();
-			if(xPos+fieldWidth >= maxWidth) // line break
-			{
-				xPos = 50;
-				yPos = 145;
-			}
-			fields[i].setBounds(xPos,yPos,fieldWidth,fieldHeight);
-			getContentPane().add(fields[i]);
-			fields[i].setColumns(10);
-			xPos+=96; // move the positions over for the next field
+			createFields();
+		}
+		catch (SQLException | IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Dynamically creates the fields and places them in the gui based off of how
+	 * many columns/attributes are in the table/relation.
+	 * @throws IOException
+	 * @throws SQLException
+	 */
+	public void createFields() throws SQLException, IOException
+	{
+		JPanel content = new JPanel(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.weightx = 0.5;
+		c.insets = new Insets(10,10,10,10);
+		fields = new JTextField[numColumns];
+		
+		getContentPane().add(content, 1);
+
+		for (int j = 0; j < numColumns; j++)
+		{
+			JLabel l = new JLabel(data.get(0).getColumnLabel(j),SwingConstants.CENTER);
+			c.gridx = j;
+			c.gridy = 0;
+			content.add(l,c);
 		}
 		
+		c.weightx = 0.0;
+		
+		for (int i = 0; i < numColumns; i ++)
+		{
+			fields[i] = new JTextField();
+			c.gridx=i;
+			c.gridy=1;
+			content.add(fields[i],c);
+		}
 	}
 
 	@Override
@@ -107,4 +152,3 @@ public class InsertGui extends State implements ActionListener
 	}
 
 }
-
