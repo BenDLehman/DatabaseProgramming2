@@ -200,7 +200,7 @@ public class InsertGui extends State implements ActionListener
 	{
 		// call the jdbc method that prepares and inserts the changes
 		System.out.println("Insert button was pressed");
-		updateResult(true);
+		updateResult(jdbc.wasLastQuerySuccessful());
 	}
 
 }

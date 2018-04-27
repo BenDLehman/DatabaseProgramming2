@@ -21,6 +21,7 @@ public class JDBC
 	public static final String LOGIN_NAME = "csc371-01";
 	public static final String PASSWORD = "Password01";
 	protected Connection m_dbConn = null;
+	private boolean lastQuerySuccessful;
 
 	/**
 	 * This is the recommended way to activate the JDBC drivers, but is only setup
@@ -71,6 +72,11 @@ public class JDBC
 		{
 			createConnection();
 		}
+	}
+	
+	public boolean wasLastQuerySuccessful()
+	{
+		return lastQuerySuccessful;
 	}
 
 	/**
@@ -190,6 +196,8 @@ public class JDBC
 		// Execute the query
 		results = stmt.executeQuery();
 		m_dbConn.commit();
+		
+		lastQuerySuccessful = (results!=null) ? true : false;
 		
 		int count = 0;
 		ResultSetMetaData metadata = results.getMetaData();
