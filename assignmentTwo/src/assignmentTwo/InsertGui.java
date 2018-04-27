@@ -63,43 +63,54 @@ public class InsertGui extends State implements ActionListener
 			e1.printStackTrace();
 		}
 		
-		
-		getContentPane().setLayout(new GridLayout(2,0));
-		JPanel controls = new JPanel(new GridLayout());
-		controls.setMaximumSize(new Dimension(700,20));
+		getContentPane().setLayout(new GridBagLayout());
+		//JPanel controls = new JPanel(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+		//c.fill = GridBagConstraints.HORIZONTAL;
+		c.weightx = 0;
+		c.insets = new Insets(10,10,10,10);	
 
-		if (tableName != null)
+		/*if (tableName != null)
 		{
 			if (lblInsertingInto != null)
 			{
-				controls.remove(lblInsertingInto);
+				getContentPane().remove(lblInsertingInto);
 			}
 			lblInsertingInto = new JLabel("Inserting into " + tableName);
 		}
 		else
 		{
 			lblInsertingInto = new JLabel("Please select a table to modify on previous screen");
-		}
+		}*/
+		
+		this.setTitle("Inserting into " + tableName);
 
-		lblInsertingInto.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		controls.add(lblInsertingInto);
+		/*lblInsertingInto.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		c.gridx = 0;
+		c.gridy = 0;
+		getContentPane().add(lblInsertingInto, c);*/
 		
-		btnInsert = new JButton("INSERT");
-		btnInsert.addActionListener(this);
-		btnInsert.setMaximumSize(new Dimension(100,20));
-		controls.add(btnInsert);
 		
-		getContentPane().add(controls, 0);
+		//System.out.println(controls);
+		//getContentPane().add(controls, 0);
 
 		try
 		{
-			createFields();
+			c.gridx=0;
+			c.gridy=0;
+			getContentPane().add(createFields(), c);
 		}
 		catch (SQLException | IOException e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		btnInsert = new JButton("INSERT");
+		btnInsert.addActionListener(this);
+		c.gridx = 0;
+		c.gridy = 1;
+		getContentPane().add(btnInsert, c);
 	}
 
 	/**
@@ -108,22 +119,21 @@ public class InsertGui extends State implements ActionListener
 	 * @throws IOException
 	 * @throws SQLException
 	 */
-	public void createFields() throws SQLException, IOException
+	public JPanel createFields() throws SQLException, IOException
 	{
 		JPanel content = new JPanel(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.weightx = 0.5;
-		c.insets = new Insets(10,10,10,10);
+		c.insets = new Insets(1,10,1,10);
 		fields = new JTextField[numColumns];
-		
-		getContentPane().add(content, 1);
 
 		for (int j = 0; j < numColumns; j++)
 		{
 			JLabel l = new JLabel(data.get(0).getColumnLabel(j),SwingConstants.CENTER);
 			c.gridx = j;
 			c.gridy = 0;
+			l.setPreferredSize(new Dimension(100,20));
 			content.add(l,c);
 		}
 		
@@ -136,6 +146,8 @@ public class InsertGui extends State implements ActionListener
 			c.gridy=1;
 			content.add(fields[i],c);
 		}
+		
+		return content;
 	}
 
 	@Override
