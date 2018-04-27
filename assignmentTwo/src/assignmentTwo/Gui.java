@@ -56,18 +56,10 @@ public class Gui // implements TurnObserver
 
 		previousScreen = currentScreen;
 		
-		if (state == insertGui)
+		if (state == insertGui || state == deleteGui || state == updateGui)
 		{
 			close = false;
-		}
-
-		if (state == deleteGui)
-		{
-			close = false;
-		}
-		if (state == updateGui)
-		{
-			close = false;
+			state.clear();
 		}
 		
 		if (state == tableGui)

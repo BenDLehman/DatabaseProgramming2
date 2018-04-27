@@ -52,6 +52,11 @@ public abstract class State extends JFrame
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 	}
+	
+	public void clear()
+	{
+		this.getContentPane().removeAll();
+	}
 
 	/**
 	 * Used for filling the screen after the state is created
