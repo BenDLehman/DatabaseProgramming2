@@ -6,6 +6,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -35,6 +36,8 @@ public class InsertGui extends State implements ActionListener
 	private ArrayList<DBRow> data;
 	private String tableName;
 	private int numColumns;
+	private JPanel pnlResults;
+	private JLabel lblResults;
 
 	/**
 	 * Create the application.
@@ -68,6 +71,7 @@ public class InsertGui extends State implements ActionListener
 		GridBagConstraints c = new GridBagConstraints();
 		//c.fill = GridBagConstraints.HORIZONTAL;
 		c.weightx = 0;
+		c.gridx = 0;
 		c.insets = new Insets(10,10,10,10);	
 
 		/*if (tableName != null)
@@ -96,7 +100,6 @@ public class InsertGui extends State implements ActionListener
 
 		try
 		{
-			c.gridx=0;
 			c.gridy=0;
 			getContentPane().add(createFields(), c);
 		}
@@ -108,9 +111,23 @@ public class InsertGui extends State implements ActionListener
 		
 		btnInsert = new JButton("INSERT");
 		btnInsert.addActionListener(this);
-		c.gridx = 0;
 		c.gridy = 1;
 		getContentPane().add(btnInsert, c);
+		
+		
+		pnlResults = new JPanel();
+		pnlResults.setLayout(new GridLayout(2,0,0,4));
+		c.gridy = 2;
+		getContentPane().add(pnlResults, c);
+		
+		JLabel results = new JLabel("Results:");
+		pnlResults.add(results);
+		
+		lblResults = new JLabel();
+		lblResults.setBorder(new EmptyBorder(10,10,10,10));
+		lblResults.setOpaque(true);
+		lblResults.setBackground(Color.GRAY);
+		pnlResults.add(lblResults);
 	}
 
 	/**
@@ -149,6 +166,28 @@ public class InsertGui extends State implements ActionListener
 		
 		return content;
 	}
+	
+	public void updateResult(Boolean success)
+	{
+		// Going to have to make a way that we can check if the insert
+		// failed or not
+		
+		
+		if(success)
+		{
+			lblResults.setForeground(Color.GREEN);
+			lblResults.setText("Insert was successful");
+		}
+		else
+		{
+			lblResults.setForeground(Color.RED);
+			lblResults.setText("Insert failed");
+		}
+		
+
+		revalidate();
+		repaint();
+	}
 
 	@Override
 	public void handle()
@@ -161,6 +200,7 @@ public class InsertGui extends State implements ActionListener
 	{
 		// call the jdbc method that prepares and inserts the changes
 		System.out.println("Insert button was pressed");
+		updateResult(true);
 	}
 
 }
