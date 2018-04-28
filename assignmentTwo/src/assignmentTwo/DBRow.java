@@ -1,19 +1,23 @@
 package assignmentTwo;
 
+import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
 
 public class DBRow
 {
 	private ArrayList<String> columnLabels;
-	private ArrayList<String> types;
-	private ArrayList<String> values;
+	private ArrayList<String> columnTypes;
+	private ArrayList<String> columnValues;
+	private ArrayList<String> columnConstraints;
+	//private ArrayList<Object> test = new ArrayList<Object>();
+	private ResultSetMetaData metadata;
 	private int numColumns;
 	
 	public DBRow ()
 	{
 		columnLabels = new ArrayList<String>();
-		types = new ArrayList<String>();
-		values = new ArrayList<String>();
+		columnTypes = new ArrayList<String>();
+		columnValues = new ArrayList<String>();
 	}
 	
 	public ArrayList<String> getColumnLabels()
@@ -23,12 +27,24 @@ public class DBRow
 	
 	public ArrayList<String> getTypes()
 	{
-		return types;
+		return columnTypes;
 	}
 	
 	public ArrayList<String> getValues()
 	{
-		return values;
+		return columnValues;
+	}
+	
+	/*public void setMetaData(ResultSetMetaData metadata)
+	{
+		this.metadata = metadata;
+		
+		for(int x = 0; x < numColumns )
+	}*/
+	
+	public ResultSetMetaData getMetadata()
+	{
+		return metadata;
 	}
 	
 	public String getColumnLabel(int index)
@@ -38,12 +54,12 @@ public class DBRow
 	
 	public String getType(int index)
 	{
-		return types.get(index);
+		return columnTypes.get(index);
 	}
 	
 	public String getValue(int index)
 	{
-		return values.get(index);
+		return columnValues.get(index);
 	}
 	
 	public int getNumColums()
@@ -63,11 +79,16 @@ public class DBRow
 	
 	public void addType(String type)
 	{
-		types.add(type);
+		columnTypes.add(type);
 	}
 	
 	public void addValue(String value)
 	{
-		values.add(value);
+		columnValues.add(value);
+	}
+	
+	public void addConstraint(String constraint)
+	{
+		columnConstraints.add(constraint);
 	}
 }

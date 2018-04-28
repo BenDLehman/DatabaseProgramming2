@@ -201,6 +201,7 @@ public class JDBC
 		
 		int count = 0;
 		ResultSetMetaData metadata = results.getMetaData();
+		//parseMetaData(metadata, m_dbConn.getMetaData(), from);
 		while(results.next())
 		{
 			data.add(new DBRow());
@@ -223,30 +224,6 @@ public class JDBC
 			count++;
 			System.out.println("");
 		}
-		
-		
-		// For testing. Will remove when done
-		/*System.out.println("Column Labels");
-		int index = 0;
-		for(String s : data.get(index).getColumnLabels())
-		{
-			System.out.println(s);
-			index++;
-		}
-		System.out.println("Values");
-		index = 0;
-		for(String s : data.get(index).getValues())
-		{
-			System.out.println(s);
-			index++;
-		}
-		System.out.println("Types");
-		index = 0;
-		for(String s : data.get(index).getTypes())
-		{
-			System.out.println(s);
-			index++;
-		}*/
 
 		// End the 'timer' and calculate time
 		long endTime = System.nanoTime();
@@ -257,6 +234,34 @@ public class JDBC
 		stmt.close();
 		System.out.println("done");
 		return data;
+	}
+	
+	public ArrayList<String> parseMetaData(ResultSetMetaData resultsMD, DatabaseMetaData connMD, String table) throws SQLException
+	{
+		ArrayList<String> constraints = new ArrayList<String>();
+		
+		ResultSet pkList = connMD.getPrimaryKeys(null, null, table);
+		
+		for(int x = 1; x < resultsMD.getColumnCount()+1; x++)
+		{
+			String str = new String();
+			
+			if(resultsMD.isNullable(x) == connMD.columnNoNulls || resultsMD.isNullable(x) == connMD.columnNullableUnknown)
+			{
+				str+="NOT NULL";
+			}
+			
+			if(resultsMD.getColumnLabel(x).equals(pkList.getString(x)))
+			{
+				str+=" Primary Key";
+			}
+			
+			constraints.add(str);
+			
+			System.out.println(str);
+		}
+		
+		return constraints;
 	}
 
 	public ArrayList<String> showTables() throws SQLException
