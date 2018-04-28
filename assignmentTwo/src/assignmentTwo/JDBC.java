@@ -151,6 +151,8 @@ public class JDBC
 		}
 	}*/
 
+	
+	
 	public ArrayList<DBRow> select(String what, String from, String whereKey, String whereValue) throws SQLException, IOException
 	{
 		checkConnection();
@@ -312,6 +314,62 @@ public class JDBC
 		System.out.println("Done");
 		
 	}
+ 	
+	public void delete( String from, String whereKey, String whereValue) throws SQLException, IOException 
+	{
+		checkConnection();
+		ArrayList<DBRow> data = new ArrayList<DBRow>();
+		boolean whereClause = (whereKey!=null && whereValue!=null) ? true : false;
+		
+		// Prepare the statements.
+		String sql = "DELETE FROM " + from;
+		
+		if(whereClause)
+		{
+			 sql += " WHERE " + whereKey + " = ?";
+		}
+		PreparedStatement stmt = m_dbConn.prepareStatement(sql);
+		m_dbConn.setAutoCommit(false);
+		
+		if (whereClause)
+		{
+			// Decide whether whereValue is an int, and prepare statement appropriately
+			int whereValueInt;
+			boolean whereValueIsInt = isNumeric(whereValue);
+			if (whereValueIsInt)
+			{
+				whereValueInt = Integer.parseInt(whereValue);
+				stmt.setInt(1, whereValueInt);
+			}
+			else
+			{
+				stmt.setString(1, whereValue);
+			}
+		}
+		
+		System.out.println("Executing statement:\n\t"+stmt);
+
+		System.out.println("deleting data...");
+		int results;
+		
+		// Start the 'timer'
+		long startTime = System.nanoTime();
+
+		// Execute the query
+		results = stmt.executeUpdate();
+		m_dbConn.commit();
+		
+		lastQuerySuccessful = (results==1) ? true : false;
+		
+		// End the 'timer' and calculate time
+		long endTime = System.nanoTime();
+		calculateElapsedTime(startTime, endTime);
+		System.out.println();
+				
+		// Close the statement and finish up
+		stmt.close();
+		System.out.println("Done");
+	}
    
 	public ArrayList<String> parseMetaData(ResultSetMetaData resultsMD, DatabaseMetaData connMD, String table) throws SQLException
 	{
@@ -450,4 +508,6 @@ public class JDBC
 			}
 		}
 	}
+
+
 }
