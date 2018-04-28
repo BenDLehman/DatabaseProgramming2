@@ -236,6 +236,83 @@ public class JDBC
 		return data;
 	}
 	
+ 	public void insert(String table, ArrayList<String> columnList, ArrayList<String> valueList) throws SQLException, IOException
+	{
+		checkConnection();
+		
+		String insertStatement = "INSERT INTO " + table + " (";
+		
+		//Adds each column name to the statement
+		for(int i = 0; i < columnList.size(); i++)
+		{
+			if(i == columnList.size()-1)
+			{
+				insertStatement += (columnList.get(i) + ") ");
+			}
+			else
+			{
+				insertStatement += (columnList.get(i) + ",");
+			}
+		}
+		
+		insertStatement += "VALUES (";
+		
+		//Adds a question mark for each value
+		for(int i = 0; i < valueList.size(); i++)
+		{
+			if(i == valueList.size()-1)
+			{
+				insertStatement += ("?);");
+			}
+			else
+			{
+				insertStatement += ("?,");
+			}
+		}
+		
+		PreparedStatement stmt = m_dbConn.prepareStatement(insertStatement);
+		m_dbConn.setAutoCommit(false);
+		
+		for(int i = 0; i < valueList.size(); i++)
+		{
+			// Decide whether whereValue is an int, and prepare statement appropriately
+			int whereValueInt;
+			boolean whereValueIsInt = isNumeric(valueList.get(i));
+			if (whereValueIsInt)
+			{
+				whereValueInt = Integer.parseInt(valueList.get(i));
+				stmt.setInt((i+1), whereValueInt);
+			}
+			else
+			{
+				stmt.setString((i+1), valueList.get(i));
+			}
+		}
+		System.out.println("Executing statement:\n\t"+stmt);
+
+		System.out.println("Inserting data...");
+		int results;
+		
+		// Start the 'timer'
+		long startTime = System.nanoTime();
+
+		// Execute the query
+		results = stmt.executeUpdate();
+		m_dbConn.commit();
+		
+		lastQuerySuccessful = (results==1) ? true : false;
+		
+		// End the 'timer' and calculate time
+		long endTime = System.nanoTime();
+		calculateElapsedTime(startTime, endTime);
+		System.out.println();
+				
+		// Close the statement and finish up
+		stmt.close();
+		System.out.println("Done");
+		
+	}
+   
 	public ArrayList<String> parseMetaData(ResultSetMetaData resultsMD, DatabaseMetaData connMD, String table) throws SQLException
 	{
 		ArrayList<String> constraints = new ArrayList<String>();
