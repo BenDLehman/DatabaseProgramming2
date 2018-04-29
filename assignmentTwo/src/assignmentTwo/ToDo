@@ -1,0 +1,8 @@
+Todo:
+
+1.	JDBC lastQuerySuccessful is not working as expected. If a query fails, it still returns true. 
+	We need to get this to return the error instead.
+2.	In TableGui once you've selected a table, you can still click on individual tuples and get a 
+	message saying you can "click it to select it". We need to either get rid of it, or use it to
+	create a little window/message giving more detail about the tuple. Maybe the constraints?
+3.	Finish parseMetaData() in JDBC and connect it to the guis

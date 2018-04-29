@@ -374,6 +374,7 @@ public class TableGui extends State implements MouseListener, ActionListener
 					}
 				};
 			select.run();
+			jtaSelected.setText("");
 		}
 		else if (text.equals(btnDelete.getText()))
 		{

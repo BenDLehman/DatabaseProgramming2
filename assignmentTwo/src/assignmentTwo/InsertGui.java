@@ -2,34 +2,31 @@ package assignmentTwo;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GraphicsEnvironment;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
-import java.awt.Rectangle;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
-public class InsertGui extends State implements ActionListener//, WindowListener
+/**
+ * Allows the user to insert new data into the table/relation that was selected
+ * in the TableGui. 
+ * @author Trevor Kelly
+ *
+ */
+public class InsertGui extends State implements ActionListener
 {
-
 	private ArrayList<JTextField> fields;
 	private ArrayList<JLabel> labels;
 	private JButton btnInsert;
@@ -55,10 +52,12 @@ public class InsertGui extends State implements ActionListener//, WindowListener
 	 */
 	public void initialize()
 	{		
+		this.setTitle("Inserting into " + tableName);
 		tableName = gui.getActiveTable();
 		labels = new ArrayList<JLabel>();
 		fields = new ArrayList<JTextField>();
 
+		// Get the columns from the table that was selected
 		try
 		{
 			data = jdbc.select("*", tableName, null, null);
@@ -66,7 +65,6 @@ public class InsertGui extends State implements ActionListener//, WindowListener
 		}
 		catch (SQLException | IOException e1)
 		{
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		
@@ -75,9 +73,8 @@ public class InsertGui extends State implements ActionListener//, WindowListener
 		c.weightx = 0;
 		c.gridx = 0;
 		c.insets = new Insets(10,10,10,10);	
-		
-		this.setTitle("Inserting into " + tableName);
 
+		// Add the columns and text fields to the gui
 		try
 		{
 			c.gridy=0;
@@ -88,6 +85,7 @@ public class InsertGui extends State implements ActionListener//, WindowListener
 			e.printStackTrace();
 		}
 		
+		// Add the insert button and the results panel
 		btnInsert = new JButton("INSERT");
 		btnInsert.addActionListener(this);
 		c.gridy = 1;
@@ -98,10 +96,10 @@ public class InsertGui extends State implements ActionListener//, WindowListener
 		c.gridy = 2;
 		getContentPane().add(pnlResults, c);
 		
-		JLabel results = new JLabel("Results:");
+		JLabel results = new JLabel("Results:"); // label for results
 		pnlResults.add(results);
 		
-		lblResults = new JLabel();
+		lblResults = new JLabel(); // where user will be updated with success or fail
 		lblResults.setBorder(new EmptyBorder(10,10,10,10));
 		lblResults.setOpaque(true);
 		lblResults.setBackground(Color.GRAY);
@@ -123,6 +121,7 @@ public class InsertGui extends State implements ActionListener//, WindowListener
 		c.weightx = 0.5;
 		c.insets = new Insets(1,10,1,10);
 
+		// Add the column lables
 		for (int j = 0; j < numColumns; j++)
 		{
 			JLabel l = new JLabel(data.get(0).getColumnLabel(j),SwingConstants.CENTER);
@@ -135,6 +134,7 @@ public class InsertGui extends State implements ActionListener//, WindowListener
 		
 		c.weightx = 0.0;
 		
+		// Add the text fields
 		for (int i = 0; i < numColumns; i ++)
 		{
 			JTextField j = new JTextField();
@@ -147,6 +147,10 @@ public class InsertGui extends State implements ActionListener//, WindowListener
 		return content;
 	}
 	
+	/**
+	 * Updates the gui with a failure or success message
+	 * @param success Success or fail messages based off this boolean
+	 */
 	public void updateResult(Boolean success)
 	{
 		if(success)
@@ -160,15 +164,24 @@ public class InsertGui extends State implements ActionListener//, WindowListener
 			lblResults.setText("Insert failed");
 		}
 		
-		refresh();
+		refresh(); // refresh the screen
 	}
 
+	/**
+	 * Change the state of the machine
+	 */
 	@Override
 	public void handle()
 	{
 		gui.setState(gui.getState("table"));
 	}
 
+	/**
+	 * Listens for when the Insert button is pressed and sends the
+	 * information to JDBC for processing. Once finished, updates the
+	 * gui with a success or failure message, and refreshed the TableGui
+	 * screen to include the new row.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent event)
 	{
@@ -177,6 +190,7 @@ public class InsertGui extends State implements ActionListener//, WindowListener
 		ArrayList<String> columns = new ArrayList<String>();
 		ArrayList<String> values = new ArrayList<String>();
 		
+		// Collect the strings from labels and fields
 		for(JLabel j : labels)
 		{
 			columns.add(j.getText());
@@ -186,6 +200,7 @@ public class InsertGui extends State implements ActionListener//, WindowListener
 			values.add(t.getText());
 		}
 		
+		// Call jdbc insert method
 		try
 		{
 			jdbc.insert(tableName, columns, values);
@@ -195,6 +210,7 @@ public class InsertGui extends State implements ActionListener//, WindowListener
 			e.printStackTrace();
 		}
 		
+		// Update the guis
 		TableGui table = (TableGui) gui.getState("table");
 		table.select.run();
 		updateResult(jdbc.wasLastQuerySuccessful());
