@@ -232,22 +232,31 @@ public class ModifyGui extends State implements ActionListener
 		if(source.equals(btnUpdate.getText()))
 		{
 			System.out.println(source + " button was pressed");
+			/*try
+			{
+				jdbc.update(tableName, columns, values, wheres);
+			}
+			catch (SQLException | IOException e)
+			{
+				e.printStackTrace();
+			}*/
 		}
 		else if (source.equals(btnDelete.getText()))
 		{
 			System.out.println(source + " button was pressed");
+			/*try
+			{
+				jdbc.delete(tableName, columns, values, wheres);
+			}
+			catch (SQLException | IOException e)
+			{
+				e.printStackTrace();
+			}*/
 		}
-		/*try
-		{
-			jdbc.update(tableName, columns, values, wheres);
-		}
-		catch (SQLException | IOException e)
-		{
-			e.printStackTrace();
-		}*/
 		
 		// Update the guis
 		TableGui table = (TableGui) gui.getState("table");
+		// will uncomment once ToDo #4 is complete.
 		//table.select.run();
 		updateResult(jdbc.wasLastQuerySuccessful());		
 	}
