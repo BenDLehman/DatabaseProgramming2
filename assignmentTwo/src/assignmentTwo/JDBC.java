@@ -370,6 +370,44 @@ public class JDBC
 		stmt.close();
 		System.out.println("Done");
 	}
+	
+	public void update(String tableName,String setKey, String setValue, String whereKey, String whereValue) throws SQLException
+	{
+		checkConnection();
+		String query ="UPDATE " + tableName + " SET " + setKey + " = "  + "?" + " WHERE " + whereKey + " = " + "?";
+		PreparedStatement stmt = m_dbConn.prepareStatement(query);
+		//m_dbConn.setAutoCommit(false);
+		System.out.println(stmt.toString());
+	
+		int setValueInt;
+		boolean setValueIsInt = isNumeric(setValue);
+		int whereValueInt;
+		boolean whereValueIsInt = isNumeric(setValue);
+
+		if (setValueIsInt)
+		{
+			setValueInt = Integer.parseInt(setValue);
+			stmt.setInt(1, setValueInt);
+		}
+		else
+		{
+			stmt.setString(1, setValue);
+		}
+		if (whereValueIsInt)
+		{
+			whereValueInt = Integer.parseInt(whereValue);
+			stmt.setInt(2, whereValueInt);
+		}
+		else
+		{
+			stmt.setString(2, whereValue);
+		}
+		stmt.executeUpdate();
+		
+		System.out.println(setKey + "Has been updated to " + setValue);	
+		
+	}
+
    
 	public ArrayList<String> parseMetaData(ResultSetMetaData resultsMD, DatabaseMetaData connMD, String table) throws SQLException
 	{
