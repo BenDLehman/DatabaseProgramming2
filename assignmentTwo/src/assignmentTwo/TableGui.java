@@ -227,8 +227,7 @@ public class TableGui extends State implements MouseListener, ActionListener
 			pnlResults.add(l);
 			l.addMouseListener(this);
 		}
-		revalidate();
-		repaint();
+		refresh();
 	}
 	
 	/**
@@ -266,8 +265,7 @@ public class TableGui extends State implements MouseListener, ActionListener
 			}
 		}
 		
-		revalidate();
-		repaint();
+		refresh();
 	}
 
 	/**
@@ -297,8 +295,7 @@ public class TableGui extends State implements MouseListener, ActionListener
 		btnInsert.setEnabled(true);
 		btnDelete.setEnabled(true);
 		
-		revalidate();
-		repaint();
+		refresh();
 	}
 
 	@Override

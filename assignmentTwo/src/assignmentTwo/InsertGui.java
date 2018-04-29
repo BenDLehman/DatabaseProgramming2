@@ -20,18 +20,19 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
-public class InsertGui extends State implements ActionListener
+public class InsertGui extends State implements ActionListener//, WindowListener
 {
 
 	private JTextField fields[];
 	private JButton btnInsert;
 	private Gui gui;
-	private JLabel lblInsertingInto = null;
 	private JDBC jdbc;
 	private ArrayList<DBRow> data;
 	private String tableName;
@@ -52,7 +53,7 @@ public class InsertGui extends State implements ActionListener
 	 * Initialize the contents of the frame.
 	 */
 	public void initialize()
-	{
+	{		
 		tableName = gui.getActiveTable();
 
 		try
@@ -67,36 +68,12 @@ public class InsertGui extends State implements ActionListener
 		}
 		
 		getContentPane().setLayout(new GridBagLayout());
-		//JPanel controls = new JPanel(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
-		//c.fill = GridBagConstraints.HORIZONTAL;
 		c.weightx = 0;
 		c.gridx = 0;
 		c.insets = new Insets(10,10,10,10);	
-
-		/*if (tableName != null)
-		{
-			if (lblInsertingInto != null)
-			{
-				getContentPane().remove(lblInsertingInto);
-			}
-			lblInsertingInto = new JLabel("Inserting into " + tableName);
-		}
-		else
-		{
-			lblInsertingInto = new JLabel("Please select a table to modify on previous screen");
-		}*/
 		
 		this.setTitle("Inserting into " + tableName);
-
-		/*lblInsertingInto.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		c.gridx = 0;
-		c.gridy = 0;
-		getContentPane().add(lblInsertingInto, c);*/
-		
-		
-		//System.out.println(controls);
-		//getContentPane().add(controls, 0);
 
 		try
 		{
@@ -105,7 +82,6 @@ public class InsertGui extends State implements ActionListener
 		}
 		catch (SQLException | IOException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -113,7 +89,6 @@ public class InsertGui extends State implements ActionListener
 		btnInsert.addActionListener(this);
 		c.gridy = 1;
 		getContentPane().add(btnInsert, c);
-		
 		
 		pnlResults = new JPanel();
 		pnlResults.setLayout(new GridLayout(2,0,0,4));
@@ -127,6 +102,7 @@ public class InsertGui extends State implements ActionListener
 		lblResults.setBorder(new EmptyBorder(10,10,10,10));
 		lblResults.setOpaque(true);
 		lblResults.setBackground(Color.GRAY);
+		
 		pnlResults.add(lblResults);
 	}
 
@@ -169,10 +145,6 @@ public class InsertGui extends State implements ActionListener
 	
 	public void updateResult(Boolean success)
 	{
-		// Going to have to make a way that we can check if the insert
-		// failed or not
-		
-		
 		if(success)
 		{
 			lblResults.setForeground(Color.GREEN);
@@ -184,9 +156,7 @@ public class InsertGui extends State implements ActionListener
 			lblResults.setText("Insert failed");
 		}
 		
-
-		revalidate();
-		repaint();
+		refresh();
 	}
 
 	@Override
@@ -198,9 +168,7 @@ public class InsertGui extends State implements ActionListener
 	@Override
 	public void actionPerformed(ActionEvent event)
 	{
-		// call the jdbc method that prepares and inserts the changes
 		System.out.println("Insert button was pressed");
 		updateResult(jdbc.wasLastQuerySuccessful());
 	}
-
 }

@@ -56,10 +56,10 @@ public class Gui // implements TurnObserver
 
 		previousScreen = currentScreen;
 		
+		
 		if (state == insertGui || state == deleteGui || state == updateGui)
 		{
 			close = false;
-			state.clear();
 		}
 		
 		if (state == tableGui)
@@ -73,6 +73,7 @@ public class Gui // implements TurnObserver
 			currentScreen.dispose();
 		}
 		
+		state.clear();
 		state.initialize();
 		
 		if(close)

@@ -57,6 +57,12 @@ public abstract class State extends JFrame
 	{
 		this.getContentPane().removeAll();
 	}
+	
+	public void refresh()
+	{
+		this.revalidate();
+		this.repaint();
+	}
 
 	/**
 	 * Used for filling the screen after the state is created
