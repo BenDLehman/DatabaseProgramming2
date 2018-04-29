@@ -53,7 +53,7 @@ public class ModifyGui extends State implements ActionListener
 	public void initialize()
 	{
 		tableName = gui.getActiveTable();
-		this.setTitle("Updating into " + tableName);	
+		this.setTitle("Modifying " + tableName);	
 		labels = new ArrayList<JLabel>();
 		valueFields = new ArrayList<JTextField>();
 		whereFields = new ArrayList<JTextField>();
@@ -221,7 +221,7 @@ public class ModifyGui extends State implements ActionListener
 		if(source.equals(btnUpdate.getText()))
 		{
 			
-			ArrayList<String> columns = new ArrayList<String>();
+			/*ArrayList<String> columns = new ArrayList<String>();
 			ArrayList<String> values = new ArrayList<String>();
 			ArrayList<String> wheres = new ArrayList<String>();
 			
@@ -237,7 +237,32 @@ public class ModifyGui extends State implements ActionListener
 			for(JTextField w : whereFields)
 			{
 				wheres.add(w.getText());
+			}*/
+			
+			String setKey = new String();
+			String setValue = new String();
+			String whereKey = new String();
+			String whereValue = new String();
+			
+			for(int x = 0; x < numColumns; x++)
+			{
+				if(!(valueFields.get(x).getText().equals("")))
+				{
+					setValue = valueFields.get(x).getText();
+					setKey = labels.get(x).getText();
+				}
 			}
+			
+			for(int x = 0; x < numColumns; x++)
+			{
+				if(!(whereFields.get(x).getText().equals("")))
+				{
+					whereValue = whereFields.get(x).getText();
+					whereKey = labels.get(x).getText();
+				}
+			}
+			
+			System.out.println(setKey + " " + setValue + " " + whereKey + " " + whereValue);
 			/*try
 			{
 				jdbc.update(tableName, columns, values, wheres);
@@ -284,7 +309,6 @@ public class ModifyGui extends State implements ActionListener
 		
 		// Update the guis
 		TableGui table = (TableGui) gui.getState("table");
-		// will uncomment once ToDo #4 is complete.
 		table.select.run();
 		updateResult(jdbc.wasLastQuerySuccessful());		
 	}

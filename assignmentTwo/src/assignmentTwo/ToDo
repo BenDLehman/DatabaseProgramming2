@@ -6,6 +6,4 @@ Todo:
 	message saying you can "click it to select it". We need to either get rid of it, or use it to
 	create a little window/message giving more detail about the tuple. Maybe the constraints?
 3.	Finish parseMetaData() in JDBC and connect it to the guis
-4.	Make insert/update/delete buttons disabled into table is selected
-5.	Finish update method in JDBC
-6.	Fix window titles
+4.	Finish update method in JDBC
