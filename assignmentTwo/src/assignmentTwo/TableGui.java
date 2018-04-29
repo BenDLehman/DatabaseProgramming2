@@ -42,8 +42,7 @@ public class TableGui extends State implements MouseListener, ActionListener
 	boolean tablesExist = true;
 	private JButton btnShowTables;
 	private JButton btnSelect;
-	private JButton btnDelete;
-	private JButton btnUpdate;
+	private JButton btnModify;
 	private JButton btnInsert;
 	private JButton selection;
 	private JLabel lblEnterQueryTo;
@@ -181,17 +180,11 @@ public class TableGui extends State implements MouseListener, ActionListener
 		btnSelect.setBounds(128, 35, 89, 23);
 		contentPane.add(btnSelect);
 
-		btnDelete = new JButton("Delete");
-		btnDelete.setEnabled(false);
-		btnDelete.addActionListener(this);
-		btnDelete.setBounds(909, 35, 89, 23);
-		contentPane.add(btnDelete);
-
-		btnUpdate = new JButton("Update");
-		btnUpdate.setEnabled(false);
-		btnUpdate.addActionListener(this);
-		btnUpdate.setBounds(810, 35, 89, 23);
-		contentPane.add(btnUpdate);
+		btnModify = new JButton("Modify");
+		btnModify.setEnabled(false);
+		btnModify.addActionListener(this);
+		btnModify.setBounds(810, 35, 89, 23);
+		contentPane.add(btnModify);
 
 		btnInsert = new JButton("Insert");
 		btnInsert.setEnabled(false);
@@ -292,9 +285,8 @@ public class TableGui extends State implements MouseListener, ActionListener
 		jtaSelected.setText("Press 'Select' to view the contents of "+selected.getText());
 		
 		btnSelect.setEnabled(true);
-		btnUpdate.setEnabled(true);
+		btnModify.setEnabled(true);
 		btnInsert.setEnabled(true);
-		btnDelete.setEnabled(true);
 		
 		refresh();
 	}
@@ -345,10 +337,10 @@ public class TableGui extends State implements MouseListener, ActionListener
 	public void handle()
 	{
 		String text = selection.getText();
+		System.out.println(text + " was pressed");
 		
 		if(text.equals(btnShowTables.getText()))
 		{
-			System.out.println("Show Tables was pressed");
 			try
 			{
 				updateResultsStrings(jdbc.showTables());
@@ -360,7 +352,6 @@ public class TableGui extends State implements MouseListener, ActionListener
 		}
 		else if (text.equals(btnSelect.getText()))
 		{
-			System.out.println("Select was pressed");
 			select = new Runnable() {
 					public void run() {
 						try
@@ -376,24 +367,9 @@ public class TableGui extends State implements MouseListener, ActionListener
 			select.run();
 			jtaSelected.setText("");
 		}
-		else if (text.equals(btnDelete.getText()))
+		else if (text.equals(btnModify.getText()) || text.equals(btnInsert.getText()))
 		{
-			System.out.println("Delete was pressed");
-			gui.setState(gui.getState("delete"));
-		}
-		else if (text.equals(btnUpdate.getText()))
-		{
-			System.out.println("Update was pressed");
-			gui.setState(gui.getState("update"));
-		}
-		else if (text.equals(btnInsert.getText()))
-		{
-			System.out.println("Insert was pressed");
-			gui.setState(gui.getState("insert"));
-		}
-		else 
-		{
-			System.out.println("A button was not pressed");
-		}
+			gui.setState(gui.getState(text.toLowerCase()));
+		}		
 	}
 }

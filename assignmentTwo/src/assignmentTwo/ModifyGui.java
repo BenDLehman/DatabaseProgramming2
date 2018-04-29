@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -22,12 +23,13 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-public class UpdateGui extends State implements ActionListener
+public class ModifyGui extends State implements ActionListener
 {
 	private ArrayList<JTextField> whereFields;
 	private ArrayList<JTextField> valueFields;
 	private ArrayList<JLabel> labels;
 	private JButton btnUpdate;
+	private JButton btnDelete;
 	private Gui gui;
 	private JDBC jdbc;
 	private ArrayList<DBRow> data;
@@ -39,7 +41,7 @@ public class UpdateGui extends State implements ActionListener
 	/**
 	 * Create the application.
 	 */
-	public UpdateGui(Gui gui)
+	public ModifyGui(Gui gui)
 	{
 		this.gui = gui;
 		jdbc = new JDBC();
@@ -51,7 +53,7 @@ public class UpdateGui extends State implements ActionListener
 	public void initialize()
 	{
 		tableName = gui.getActiveTable();
-		this.setTitle("Inserting into " + tableName);	
+		this.setTitle("Updating into " + tableName);	
 		labels = new ArrayList<JLabel>();
 		valueFields = new ArrayList<JTextField>();
 		whereFields = new ArrayList<JTextField>();
@@ -87,11 +89,18 @@ public class UpdateGui extends State implements ActionListener
 		// Add the update button and the results panel
 		btnUpdate = new JButton("UPDATE");
 		btnUpdate.addActionListener(this);
+		c.gridx = 0;
 		c.gridy = 1;
 		getContentPane().add(btnUpdate, c);
 		
+		btnDelete = new JButton("DELETE");
+		btnDelete.addActionListener(this);
+		c.gridx = 1;
+		getContentPane().add(btnDelete, c);
+		
 		pnlResults = new JPanel();
 		pnlResults.setLayout(new GridLayout(2,0,0,4));
+		c.gridx = 0;
 		c.gridy = 2;
 		getContentPane().add(pnlResults, c);
 		
@@ -125,7 +134,6 @@ public class UpdateGui extends State implements ActionListener
 		{
 			JLabel l = new JLabel(data.get(0).getColumnLabel(j),SwingConstants.CENTER);
 			c.gridx = j+1;
-			c.gridy = 0;
 			l.setPreferredSize(new Dimension(100,20));
 			labels.add(l);
 			content.add(l,c);
@@ -198,9 +206,9 @@ public class UpdateGui extends State implements ActionListener
 	 * screen to include the updated rows.
 	 */
 	@Override
-	public void actionPerformed(ActionEvent arg0)
+	public void actionPerformed(ActionEvent event)
 	{
-		System.out.println("Insert button was pressed");
+		String source = ((JButton)event.getSource()).getText();
 		
 		ArrayList<String> columns = new ArrayList<String>();
 		ArrayList<String> values = new ArrayList<String>();
@@ -221,18 +229,26 @@ public class UpdateGui extends State implements ActionListener
 		}
 		
 		// Call jdbc update method
-		try
+		if(source.equals(btnUpdate.getText()))
+		{
+			System.out.println(source + " button was pressed");
+		}
+		else if (source.equals(btnDelete.getText()))
+		{
+			System.out.println(source + " button was pressed");
+		}
+		/*try
 		{
 			jdbc.update(tableName, columns, values, wheres);
 		}
 		catch (SQLException | IOException e)
 		{
 			e.printStackTrace();
-		}
+		}*/
 		
 		// Update the guis
 		TableGui table = (TableGui) gui.getState("table");
-		table.select.run();
+		//table.select.run();
 		updateResult(jdbc.wasLastQuerySuccessful());		
 	}
 

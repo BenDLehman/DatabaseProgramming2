@@ -12,8 +12,7 @@ public class Gui // implements TurnObserver
 {
 	private State tableGui;
 	private State insertGui;
-	private State updateGui;
-	private State deleteGui;
+	private State modifyGui;
 	private State currentScreen;
 	private State previousScreen;
 	private String activeTable;
@@ -37,8 +36,7 @@ public class Gui // implements TurnObserver
 	{
 		tableGui = new TableGui(this);
 		insertGui = new InsertGui(this);
-		updateGui = new UpdateGui(this);
-		deleteGui = new DeleteGui(this);
+		modifyGui = new ModifyGui(this);
 		setState(tableGui);
 	}
 
@@ -57,7 +55,7 @@ public class Gui // implements TurnObserver
 		previousScreen = currentScreen;
 		
 		
-		if (state == insertGui || state == deleteGui || state == updateGui)
+		if (state == insertGui || state == modifyGui )
 		{
 			close = false;
 		}
@@ -131,11 +129,8 @@ public class Gui // implements TurnObserver
 		case "insert":
 			state = insertGui;
 			break;
-		case "update":
-			state = updateGui;
-			break;
-		case "delete":
-			state = deleteGui;
+		case "modify":
+			state = modifyGui;
 			break;
 		default:
 			state = tableGui;
