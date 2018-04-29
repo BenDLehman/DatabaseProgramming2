@@ -86,17 +86,23 @@ public class ModifyGui extends State implements ActionListener
 			e.printStackTrace();
 		}
 
+		JPanel controls = new JPanel(new GridBagLayout());
+		
 		// Add the update button and the results panel
 		btnUpdate = new JButton("UPDATE");
 		btnUpdate.addActionListener(this);
 		c.gridx = 0;
-		c.gridy = 1;
-		getContentPane().add(btnUpdate, c);
+		c.gridy = 0;
+		controls.add(btnUpdate, c);
 		
 		btnDelete = new JButton("DELETE");
 		btnDelete.addActionListener(this);
 		c.gridx = 1;
-		getContentPane().add(btnDelete, c);
+		controls.add(btnDelete, c);
+		
+		c.gridx = 0;
+		c.gridy = 1;
+		getContentPane().add(controls, c);
 		
 		pnlResults = new JPanel();
 		pnlResults.setLayout(new GridLayout(2,0,0,4));
