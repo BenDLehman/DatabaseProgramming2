@@ -7,3 +7,6 @@ Todo:
 	create a little window/message giving more detail about the tuple. Maybe the constraints?
 3.	Finish parseMetaData() in JDBC and connect it to the guis
 4.	Finish update method in JDBC
+5.	Code the custom query bar
+6.	Code for checking constraints in queries
+7.	Automate creation and filling of tables
