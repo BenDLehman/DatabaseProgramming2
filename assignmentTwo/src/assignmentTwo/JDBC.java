@@ -411,7 +411,43 @@ public class JDBC
 		
 	}
 
-   
+	public void customQuery(String query) throws SQLException, IOException
+	{
+		checkConnection();
+		
+		PreparedStatement stmt = m_dbConn.prepareStatement(query);
+		m_dbConn.setAutoCommit(false);
+		long startTime;
+		ResultSet selectResults;
+		int otherResults = 0;
+		
+		
+		if(query.contains("SELECT"))
+		{
+			startTime = System.nanoTime();
+			selectResults = stmt.executeQuery();
+			m_dbConn.commit();
+			lastQuerySuccessful = (selectResults!=null) ? true : false;
+		}
+		else 
+		{
+			startTime = System.nanoTime();
+			otherResults = stmt.executeUpdate();
+			m_dbConn.commit();
+			lastQuerySuccessful = (otherResults==1) ? true : false;
+		}
+		
+		
+		
+		// End the 'timer' and calculate time
+		long endTime = System.nanoTime();
+		calculateElapsedTime(startTime, endTime);
+		System.out.println();
+				
+		// Close the statement and finish up
+		stmt.close();
+		System.out.println("Done");
+	}
 	public ArrayList<String> parseMetaData(ResultSetMetaData resultsMD, DatabaseMetaData connMD, String table) throws SQLException
 	{
 		ArrayList<String> constraints = new ArrayList<String>();
