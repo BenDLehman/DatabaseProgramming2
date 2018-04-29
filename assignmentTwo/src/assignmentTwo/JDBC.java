@@ -376,13 +376,13 @@ public class JDBC
 		checkConnection();
 		String query ="UPDATE " + tableName + " SET " + setKey + " = "  + "?" + " WHERE " + whereKey + " = " + "?";
 		PreparedStatement stmt = m_dbConn.prepareStatement(query);
-		//m_dbConn.setAutoCommit(false);
+		m_dbConn.setAutoCommit(false);
 		System.out.println(stmt.toString());
 	
 		int setValueInt;
 		boolean setValueIsInt = isNumeric(setValue);
 		int whereValueInt;
-		boolean whereValueIsInt = isNumeric(setValue);
+		boolean whereValueIsInt = isNumeric(whereValue);
 
 		if (setValueIsInt)
 		{
@@ -403,6 +403,9 @@ public class JDBC
 			stmt.setString(2, whereValue);
 		}
 		stmt.executeUpdate();
+		m_dbConn.commit();
+		
+		stmt.close();
 		
 		System.out.println(setKey + "Has been updated to " + setValue);	
 		
