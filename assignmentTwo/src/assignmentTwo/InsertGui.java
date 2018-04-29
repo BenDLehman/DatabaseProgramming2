@@ -30,7 +30,8 @@ import java.awt.event.ActionEvent;
 public class InsertGui extends State implements ActionListener//, WindowListener
 {
 
-	private JTextField fields[];
+	private ArrayList<JTextField> fields;
+	private ArrayList<JLabel> labels;
 	private JButton btnInsert;
 	private Gui gui;
 	private JDBC jdbc;
@@ -55,6 +56,8 @@ public class InsertGui extends State implements ActionListener//, WindowListener
 	public void initialize()
 	{		
 		tableName = gui.getActiveTable();
+		labels = new ArrayList<JLabel>();
+		fields = new ArrayList<JTextField>();
 
 		try
 		{
@@ -119,7 +122,6 @@ public class InsertGui extends State implements ActionListener//, WindowListener
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.weightx = 0.5;
 		c.insets = new Insets(1,10,1,10);
-		fields = new JTextField[numColumns];
 
 		for (int j = 0; j < numColumns; j++)
 		{
@@ -127,6 +129,7 @@ public class InsertGui extends State implements ActionListener//, WindowListener
 			c.gridx = j;
 			c.gridy = 0;
 			l.setPreferredSize(new Dimension(100,20));
+			labels.add(l);
 			content.add(l,c);
 		}
 		
@@ -134,10 +137,11 @@ public class InsertGui extends State implements ActionListener//, WindowListener
 		
 		for (int i = 0; i < numColumns; i ++)
 		{
-			fields[i] = new JTextField();
+			JTextField j = new JTextField();
 			c.gridx=i;
 			c.gridy=1;
-			content.add(fields[i],c);
+			fields.add(j);
+			content.add(j,c);
 		}
 		
 		return content;
@@ -169,6 +173,30 @@ public class InsertGui extends State implements ActionListener//, WindowListener
 	public void actionPerformed(ActionEvent event)
 	{
 		System.out.println("Insert button was pressed");
+		
+		ArrayList<String> columns = new ArrayList<String>();
+		ArrayList<String> values = new ArrayList<String>();
+		
+		for(JLabel j : labels)
+		{
+			columns.add(j.getText());
+		}
+		for(JTextField t : fields)
+		{
+			values.add(t.getText());
+		}
+		
+		try
+		{
+			jdbc.insert(tableName, columns, values);
+		}
+		catch (SQLException | IOException e)
+		{
+			e.printStackTrace();
+		}
+		
+		TableGui table = (TableGui) gui.getState("table");
+		table.select.run();
 		updateResult(jdbc.wasLastQuerySuccessful());
 	}
 }

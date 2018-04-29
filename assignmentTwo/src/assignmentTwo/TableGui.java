@@ -53,6 +53,7 @@ public class TableGui extends State implements MouseListener, ActionListener
 	private JLabel selected;
 	private JDBC jdbc;
 	private Gui gui;
+	public Runnable select;
 
 	/**
 	 * Create the screen
@@ -360,14 +361,19 @@ public class TableGui extends State implements MouseListener, ActionListener
 		else if (text.equals(btnSelect.getText()))
 		{
 			System.out.println("Select was pressed");
-			try
-			{
-				updateResultsData(jdbc.select("*", selected.getText(), null, null));
-			}
-			catch (SQLException | IOException e)
-			{
-				e.printStackTrace();
-			}
+			select = new Runnable() {
+					public void run() {
+						try
+						{
+							updateResultsData(jdbc.select("*", selected.getText(), null, null));
+						}
+						catch (SQLException | IOException e)
+						{
+							e.printStackTrace();
+						}
+					}
+				};
+			select.run();
 		}
 		else if (text.equals(btnDelete.getText()))
 		{
