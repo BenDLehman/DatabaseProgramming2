@@ -1,32 +1,40 @@
 package assignmentTwo;
 
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
 
-public class UpdateGui extends State
+public class UpdateGui extends State implements ActionListener
 {
-
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
-	private JTextField textField_4;
-	private JTextField textField_5;
-	private JTextField textField_6;
-	private JTextField textField_7;
-	private JTextField textField_8;
-	private JTextField textField_9;
-	private JTextField textField_10;
-	private JTextField textField_11;
-	private JButton btnWhere;
+	private ArrayList<JTextField> whereFields;
+	private ArrayList<JTextField> valueFields;
+	private ArrayList<JLabel> labels;
 	private JButton btnUpdate;
 	private Gui gui;
-	private JLabel lblUpdating = null;
+	private JDBC jdbc;
+	private ArrayList<DBRow> data;
+	private String tableName;
+	private int numColumns;
+	private JPanel pnlResults;
+	private JLabel lblResults;
 
 	/**
 	 * Create the application.
@@ -34,6 +42,7 @@ public class UpdateGui extends State
 	public UpdateGui(Gui gui)
 	{
 		this.gui = gui;
+		jdbc = new JDBC();
 	}
 
 	/**
@@ -41,102 +50,190 @@ public class UpdateGui extends State
 	 */
 	public void initialize()
 	{
-		getContentPane().setLayout(null);
-
-		// Get the table name and display the title or tell the user to select a table
-		String table = gui.getActiveTable();
-
-		if (table != null)
+		tableName = gui.getActiveTable();
+		this.setTitle("Inserting into " + tableName);	
+		labels = new ArrayList<JLabel>();
+		valueFields = new ArrayList<JTextField>();
+		whereFields = new ArrayList<JTextField>();
+		
+		// Get the columns from the table that was selected
+		try
 		{
-			if (lblUpdating != null)
-			{
-				getContentPane().remove(lblUpdating);
-			}
-			lblUpdating = new JLabel("Updating " + table);
+			data = jdbc.select("*", tableName, null, null);
+			numColumns = data.get(0).getNumColums();
+		}
+		catch (SQLException | IOException e1)
+		{
+			e1.printStackTrace();
+		}	
+		
+		getContentPane().setLayout(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+		c.weightx = 0;
+		c.gridx = 0;
+		c.insets = new Insets(10,10,10,10);	
+
+		// Add the columns and text fields to the gui
+		try
+		{
+			c.gridy=0;
+			getContentPane().add(createFields(), c);
+		}
+		catch (SQLException | IOException e)
+		{
+			e.printStackTrace();
+		}
+
+		// Add the update button and the results panel
+		btnUpdate = new JButton("UPDATE");
+		btnUpdate.addActionListener(this);
+		c.gridy = 1;
+		getContentPane().add(btnUpdate, c);
+		
+		pnlResults = new JPanel();
+		pnlResults.setLayout(new GridLayout(2,0,0,4));
+		c.gridy = 2;
+		getContentPane().add(pnlResults, c);
+		
+		JLabel results = new JLabel("Results:"); // label for results
+		pnlResults.add(results);
+		
+		lblResults = new JLabel(); // where user will be updated with success or fail
+		lblResults.setBorder(new EmptyBorder(10,10,10,10));
+		lblResults.setOpaque(true);
+		lblResults.setBackground(Color.GRAY);
+		
+		pnlResults.add(lblResults);
+	}
+	
+	/**
+	 * Dynamically creates the fields and places them in the gui based off of how
+	 * many columns/attributes are in the table/relation.
+	 * @throws IOException
+	 * @throws SQLException
+	 */
+	public JPanel createFields() throws SQLException, IOException
+	{
+		JPanel content = new JPanel(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.weightx = 0.5;
+		c.insets = new Insets(1,10,1,10);
+
+		// Add the column labels
+		for (int j = 0; j < numColumns; j++)
+		{
+			JLabel l = new JLabel(data.get(0).getColumnLabel(j),SwingConstants.CENTER);
+			c.gridx = j+1;
+			c.gridy = 0;
+			l.setPreferredSize(new Dimension(100,20));
+			labels.add(l);
+			content.add(l,c);
+		}
+		
+		c.weightx = 0.0;
+		c.gridx = 0;
+		c.gridy = 1;
+		content.add(new JLabel("New Value: "),c);
+		
+		// Add the text fields
+		for (int i = 0; i < numColumns; i ++)
+		{
+			JTextField j = new JTextField();
+			c.gridx=i+1;
+			c.gridy=1;
+			valueFields.add(j);
+			content.add(j,c);
+		}
+		
+		c.gridx = 0;
+		c.gridy = 2;
+		content.add(new JLabel("Where: "),c);
+		
+		for (int x = 0; x < numColumns; x ++)
+		{
+			JTextField j = new JTextField();
+			c.gridx=x+1;
+			c.gridy=2;
+			whereFields.add(j);
+			content.add(j,c);
+		}
+		
+		return content;
+	}
+	
+	/**
+	 * Updates the gui with a failure or success message
+	 * @param success Success or fail messages based off this boolean
+	 */
+	public void updateResult(Boolean success)
+	{
+		if(success)
+		{
+			lblResults.setForeground(Color.GREEN);
+			lblResults.setText("Insert was successful");
 		}
 		else
 		{
-			lblUpdating = new JLabel("Please select a table to modify on previous screen");
+			lblResults.setForeground(Color.RED);
+			lblResults.setText("Insert failed");
 		}
-
-		lblUpdating.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblUpdating.setBounds(10, 25, 500, 20);
-		getContentPane().add(lblUpdating);
-
-		textField = new JTextField();
-		textField.setBounds(10, 145, 86, 20);
-		getContentPane().add(textField);
-		textField.setColumns(10);
-
-		textField_1 = new JTextField();
-		textField_1.setBounds(106, 145, 86, 20);
-		getContentPane().add(textField_1);
-		textField_1.setColumns(10);
-
-		textField_2 = new JTextField();
-		textField_2.setBounds(202, 145, 86, 20);
-		getContentPane().add(textField_2);
-		textField_2.setColumns(10);
-
-		textField_3 = new JTextField();
-		textField_3.setBounds(298, 145, 86, 20);
-		getContentPane().add(textField_3);
-		textField_3.setColumns(10);
-
-		textField_4 = new JTextField();
-		textField_4.setBounds(394, 145, 86, 20);
-		getContentPane().add(textField_4);
-		textField_4.setColumns(10);
-
-		textField_5 = new JTextField();
-		textField_5.setBounds(490, 145, 86, 20);
-		getContentPane().add(textField_5);
-		textField_5.setColumns(10);
-
-		textField_6 = new JTextField();
-		textField_6.setBounds(10, 314, 86, 20);
-		getContentPane().add(textField_6);
-		textField_6.setColumns(10);
-
-		textField_7 = new JTextField();
-		textField_7.setBounds(106, 314, 86, 20);
-		getContentPane().add(textField_7);
-		textField_7.setColumns(10);
-
-		textField_8 = new JTextField();
-		textField_8.setBounds(202, 314, 86, 20);
-		getContentPane().add(textField_8);
-		textField_8.setColumns(10);
-
-		textField_9 = new JTextField();
-		textField_9.setBounds(298, 314, 86, 20);
-		getContentPane().add(textField_9);
-		textField_9.setColumns(10);
-
-		textField_10 = new JTextField();
-		textField_10.setBounds(394, 314, 86, 20);
-		getContentPane().add(textField_10);
-		textField_10.setColumns(10);
-
-		textField_11 = new JTextField();
-		textField_11.setBounds(490, 314, 86, 20);
-		getContentPane().add(textField_11);
-		textField_11.setColumns(10);
-
-		btnWhere = new JButton("WHERE");
-		btnWhere.setBounds(586, 144, 89, 23);
-		getContentPane().add(btnWhere);
-
-		btnUpdate = new JButton("UPDATE");
-		btnUpdate.setBounds(586, 313, 89, 23);
-		getContentPane().add(btnUpdate);
-
+		
+		refresh(); // refresh the screen
 	}
 
+	/**
+	 * Change the state of the machine
+	 */
 	@Override
 	public void handle()
 	{
 		gui.setState(gui.getState("table"));
+	}
+
+	/**
+	 * Listens for when the Update button is pressed and sends the
+	 * information to JDBC for processing. Once finished, updates the
+	 * gui with a success or failure message, and refreshed the TableGui
+	 * screen to include the updated rows.
+	 */
+	@Override
+	public void actionPerformed(ActionEvent arg0)
+	{
+		System.out.println("Insert button was pressed");
+		
+		ArrayList<String> columns = new ArrayList<String>();
+		ArrayList<String> values = new ArrayList<String>();
+		ArrayList<String> wheres = new ArrayList<String>();
+		
+		// Collect the strings from labels and fields
+		for(JLabel j : labels)
+		{
+			columns.add(j.getText());
+		}
+		for(JTextField v : valueFields)
+		{
+			values.add(v.getText());
+		}
+		for(JTextField w : whereFields)
+		{
+			wheres.add(w.getText());
+		}
+		
+		// Call jdbc update method
+		try
+		{
+			jdbc.update(tableName, columns, values, wheres);
+		}
+		catch (SQLException | IOException e)
+		{
+			e.printStackTrace();
+		}
+		
+		// Update the guis
+		TableGui table = (TableGui) gui.getState("table");
+		table.select.run();
+		updateResult(jdbc.wasLastQuerySuccessful());		
 	}
 
 }

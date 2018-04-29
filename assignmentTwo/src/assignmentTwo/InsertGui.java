@@ -52,8 +52,8 @@ public class InsertGui extends State implements ActionListener
 	 */
 	public void initialize()
 	{		
-		this.setTitle("Inserting into " + tableName);
 		tableName = gui.getActiveTable();
+		this.setTitle("Inserting into " + tableName);
 		labels = new ArrayList<JLabel>();
 		fields = new ArrayList<JTextField>();
 
@@ -121,7 +121,7 @@ public class InsertGui extends State implements ActionListener
 		c.weightx = 0.5;
 		c.insets = new Insets(1,10,1,10);
 
-		// Add the column lables
+		// Add the column labels
 		for (int j = 0; j < numColumns; j++)
 		{
 			JLabel l = new JLabel(data.get(0).getColumnLabel(j),SwingConstants.CENTER);
