@@ -263,30 +263,20 @@ public class ModifyGui extends State implements ActionListener
 			}
 			
 			System.out.println(setKey + " " + setValue + " " + whereKey + " " + whereValue);
-			/*try
+			try
 			{
-				jdbc.update(tableName, columns, values, wheres);
+				jdbc.update(tableName, setKey, setValue, whereKey, whereValue);
 			}
-			catch (SQLException | IOException e)
+			catch (SQLException e)
 			{
 				e.printStackTrace();
-			}*/
+			}
 		}
 		else if (source.equals(btnDelete.getText()))
 		{
 			String whereKey = new String();
 			String whereValue = new String();
 			int count = 0;
-			
-			/*for(JTextField w : whereFields)
-			{
-				if(!w.equals(""))
-				{
-					whereValue = w.getText();
-					whereKey = labels.get(count).getText();
-				}
-				count++;
-			}*/
 			
 			for(int x = 0; x < numColumns; x++)
 			{
