@@ -285,8 +285,6 @@ public class TableGui extends State implements MouseListener, ActionListener
 		jtaSelected.setText("Press 'Select' to view the contents of "+selected.getText());
 		
 		btnSelect.setEnabled(true);
-		btnModify.setEnabled(true);
-		btnInsert.setEnabled(true);
 		
 		refresh();
 	}
@@ -341,6 +339,8 @@ public class TableGui extends State implements MouseListener, ActionListener
 		
 		if(text.equals(btnShowTables.getText()))
 		{
+			btnModify.setEnabled(false);
+			btnInsert.setEnabled(false);
 			try
 			{
 				updateResultsStrings(jdbc.showTables());
@@ -366,6 +366,8 @@ public class TableGui extends State implements MouseListener, ActionListener
 				};
 			select.run();
 			jtaSelected.setText("");
+			btnModify.setEnabled(true);
+			btnInsert.setEnabled(true);
 		}
 		else if (text.equals(btnModify.getText()) || text.equals(btnInsert.getText()))
 		{
