@@ -215,29 +215,29 @@ public class ModifyGui extends State implements ActionListener
 	public void actionPerformed(ActionEvent event)
 	{
 		String source = ((JButton)event.getSource()).getText();
-		
-		ArrayList<String> columns = new ArrayList<String>();
-		ArrayList<String> values = new ArrayList<String>();
-		ArrayList<String> wheres = new ArrayList<String>();
-		
-		// Collect the strings from labels and fields
-		for(JLabel j : labels)
-		{
-			columns.add(j.getText());
-		}
-		for(JTextField v : valueFields)
-		{
-			values.add(v.getText());
-		}
-		for(JTextField w : whereFields)
-		{
-			wheres.add(w.getText());
-		}
+		System.out.println(source + " button was pressed");
 		
 		// Call jdbc update method
 		if(source.equals(btnUpdate.getText()))
 		{
-			System.out.println(source + " button was pressed");
+			
+			ArrayList<String> columns = new ArrayList<String>();
+			ArrayList<String> values = new ArrayList<String>();
+			ArrayList<String> wheres = new ArrayList<String>();
+			
+			// Collect the strings from labels and fields
+			for(JLabel j : labels)
+			{
+				columns.add(j.getText());
+			}
+			for(JTextField v : valueFields)
+			{
+				values.add(v.getText());
+			}
+			for(JTextField w : whereFields)
+			{
+				wheres.add(w.getText());
+			}
 			/*try
 			{
 				jdbc.update(tableName, columns, values, wheres);
@@ -249,21 +249,43 @@ public class ModifyGui extends State implements ActionListener
 		}
 		else if (source.equals(btnDelete.getText()))
 		{
-			System.out.println(source + " button was pressed");
-			/*try
+			String whereKey = new String();
+			String whereValue = new String();
+			int count = 0;
+			
+			/*for(JTextField w : whereFields)
 			{
-				jdbc.delete(tableName, columns, values, wheres);
+				if(!w.equals(""))
+				{
+					whereValue = w.getText();
+					whereKey = labels.get(count).getText();
+				}
+				count++;
+			}*/
+			
+			for(int x = 0; x < numColumns; x++)
+			{
+				if(!(whereFields.get(x).getText().equals("")))
+				{
+					whereValue = whereFields.get(x).getText();
+					whereKey = labels.get(x).getText();
+				}
+			}
+			
+			try
+			{
+				jdbc.delete(tableName, whereKey, whereValue);
 			}
 			catch (SQLException | IOException e)
 			{
 				e.printStackTrace();
-			}*/
+			}
 		}
 		
 		// Update the guis
 		TableGui table = (TableGui) gui.getState("table");
 		// will uncomment once ToDo #4 is complete.
-		//table.select.run();
+		table.select.run();
 		updateResult(jdbc.wasLastQuerySuccessful());		
 	}
 
