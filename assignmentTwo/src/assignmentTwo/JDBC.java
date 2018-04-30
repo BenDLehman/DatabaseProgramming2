@@ -137,7 +137,7 @@ public class JDBC
 		j.activateJDBC();
 		try
 		{
-			j.select("*", "TEST_DELETE", null, null);
+			j.select("*", "ARMOR", null, null);
 		}
 		catch (SQLException e)
 		{
@@ -456,6 +456,7 @@ public class JDBC
 		DatabaseMetaData connMD = m_dbConn.getMetaData();
 		ResultSetMetaData metadata = results.getMetaData();
 		ResultSet pkColumns = m_dbConn.getMetaData().getPrimaryKeys(null, null, table);
+		ResultSet fkColumns = m_dbConn.getMetaData().getExportedKeys(null, null, table);
 		
 		int count= 0;
 		while(results.next())
@@ -471,6 +472,7 @@ public class JDBC
 				String name = metadata.getColumnName(x);
 				String nullValue = new String("");
 				String pkValue = new String("");
+				String fkValue = new String("");
 				
 				if(metadata.isNullable(x) == connMD.columnNoNulls || metadata.isNullable(x) == connMD.columnNullableUnknown)
 				{
@@ -485,11 +487,22 @@ public class JDBC
 					}
 				}
 				
+				while(fkColumns.next())
+				{
+					if(fkColumns.getString("FKCOLUMN_NAME").equals(name))
+					{
+						fkValue += (fkValue.equals("")) ? "Foreign Keys:<br>" : "<br>" ;
+						fkValue += "("+fkColumns.getString("FKTABLE_NAME") + "," + fkColumns.getString("FKCOLUMN_NAME")+")";
+					}
+					System.out.println(fkValue);
+				}
+				
 				data.get(count).addType(type);
 				data.get(count).addValue(value);
 				data.get(count).addColumLabel(name);
 				data.get(count).addPkValue(pkValue);
 				data.get(count).addNullValue(nullValue);
+				data.get(count).addFkValue(fkValue);
 			}
 			count++;
 		}

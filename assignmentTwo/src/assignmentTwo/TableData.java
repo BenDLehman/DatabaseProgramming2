@@ -10,6 +10,7 @@ public class TableData
 	private ArrayList<String> columnValues;
 	private ArrayList<String> nullValues;
 	private ArrayList<String> pkValues;
+	private ArrayList<String> fkValues;
 	//private ArrayList<Object> test = new ArrayList<Object>();
 	private ResultSetMetaData metadata;
 	private int numColumns;
@@ -21,6 +22,7 @@ public class TableData
 		columnValues = new ArrayList<String>();
 		nullValues = new ArrayList<String>();
 		pkValues = new ArrayList<String>();
+		fkValues = new ArrayList<String>();
 	}
 	
 	/*public void setMetaData(ResultSetMetaData metadata)
@@ -60,6 +62,11 @@ public class TableData
 		return pkValues.get(index);
 	}
 	
+	public String getFkValue(int index)
+	{
+		return fkValues.get(index);
+	}
+	
 	public int getNumColums()
 	{
 		return numColumns;
@@ -93,5 +100,10 @@ public class TableData
 	public void addPkValue(String pkValue)
 	{
 		pkValues.add(pkValue);
+	}
+	
+	public void addFkValue(String fkValue)
+	{
+		fkValues.add(fkValue);
 	}
 }

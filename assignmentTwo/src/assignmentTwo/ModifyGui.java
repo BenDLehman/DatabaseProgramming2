@@ -176,11 +176,15 @@ public class ModifyGui extends State implements ActionListener
 		// Add the constraints labels
 		for (int j = 0; j < numColumns; j++)
 		{
-			String constraints = new String("<html>"+data.get(0).getNullValue(j) + "<br>" + data.get(0).getPkValue(j));
+			String constraints = new String(
+					"<html>"+ data.get(0).getPkValue(j)) + "<br>"
+							+ data.get(0).getNullValue(j) + "<br>" 
+							+ data.get(0).getFkValue(j) + "</html>";
+			
 			JLabel l = new JLabel(constraints,SwingConstants.CENTER);
 			c.gridx = j+1;
 			c.gridy = 3;
-			l.setPreferredSize(new Dimension(100,50));
+			l.setPreferredSize(new Dimension(100,150));
 			labels.add(l);
 			content.add(l,c);
 		}
