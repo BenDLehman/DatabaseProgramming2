@@ -5,8 +5,6 @@ Todo:
 2.	In TableGui once you've selected a table, you can still click on individual tuples and get a 
 	message saying you can "click it to select it". We need to either get rid of it, or use it to
 	create a little window/message giving more detail about the tuple. Maybe the constraints?
-3.	Finish parseMetaData() in JDBC and connect it to the guis
-4.	Finish update method in JDBC
-5.	Code the custom query bar
+5.	Finish coding the custom query bar (connect to parseResultsSet() in jdbc and connect to gui)
 6.	Code for checking constraints in queries
-7.	Automate creation and filling of tables
+7.	Automate population of tables
