@@ -32,7 +32,7 @@ public class ModifyGui extends State implements ActionListener
 	private JButton btnDelete;
 	private Gui gui;
 	private JDBC jdbc;
-	private ArrayList<DBRow> data;
+	private ArrayList<TableData> data;
 	private String tableName;
 	private int numColumns;
 	private JPanel pnlResults;
@@ -173,6 +173,18 @@ public class ModifyGui extends State implements ActionListener
 			content.add(j,c);
 		}
 		
+		// Add the constraints labels
+		for (int j = 0; j < numColumns; j++)
+		{
+			String constraints = new String("<html>"+data.get(0).getNullValue(j) + "<br>" + data.get(0).getPkValue(j));
+			JLabel l = new JLabel(constraints,SwingConstants.CENTER);
+			c.gridx = j+1;
+			c.gridy = 3;
+			l.setPreferredSize(new Dimension(100,50));
+			labels.add(l);
+			content.add(l,c);
+		}
+		
 		return content;
 	}
 	
@@ -219,26 +231,7 @@ public class ModifyGui extends State implements ActionListener
 		
 		// Call jdbc update method
 		if(source.equals(btnUpdate.getText()))
-		{
-			
-			/*ArrayList<String> columns = new ArrayList<String>();
-			ArrayList<String> values = new ArrayList<String>();
-			ArrayList<String> wheres = new ArrayList<String>();
-			
-			// Collect the strings from labels and fields
-			for(JLabel j : labels)
-			{
-				columns.add(j.getText());
-			}
-			for(JTextField v : valueFields)
-			{
-				values.add(v.getText());
-			}
-			for(JTextField w : whereFields)
-			{
-				wheres.add(w.getText());
-			}*/
-			
+		{		
 			String setKey = new String();
 			String setValue = new String();
 			String whereKey = new String();

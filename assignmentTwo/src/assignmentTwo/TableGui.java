@@ -228,7 +228,7 @@ public class TableGui extends State implements MouseListener, ActionListener
 	 * Updates the results panel when a JDBC command is called
 	 * @param list
 	 */
-	public void updateResultsData(ArrayList<DBRow> list)
+	public void updateResultsData(ArrayList<TableData> list)
 	{
 		// remove old data from gui
 		if(pnlResults.getComponentCount()>0)

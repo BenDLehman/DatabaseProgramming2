@@ -131,13 +131,13 @@ public class JDBC
 		}
 	}
 	
-	/*public static void main(String[] args)
+	public static void main(String[] args)
 	{
 		JDBC j = new JDBC();
 		j.activateJDBC();
 		try
 		{
-			j.select("*", "LOCATION", null, null);
+			j.select("*", "TEST_DELETE", null, null);
 		}
 		catch (SQLException e)
 		{
@@ -149,15 +149,14 @@ public class JDBC
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}*/
+	}
 
 	
 	
-	public ArrayList<DBRow> select(String what, String from, String whereKey, String whereValue) throws SQLException, IOException
+	public ArrayList<TableData> select(String what, String from, String whereKey, String whereValue) throws SQLException, IOException
 	{
 		checkConnection();
 		
-		ArrayList<DBRow> data = new ArrayList<DBRow>();
 		boolean whereClause = (whereKey!=null && whereValue!=null) ? true : false;
 		
 		// Prepare the statements.
@@ -201,12 +200,13 @@ public class JDBC
 		
 		lastQuerySuccessful = (results!=null) ? true : false;
 		
-		int count = 0;
-		ResultSetMetaData metadata = results.getMetaData();
+		//int count = 0;
+		//ResultSetMetaData metadata = results.getMetaData();
 		//parseMetaData(metadata, m_dbConn.getMetaData(), from);
-		while(results.next())
+		ArrayList<TableData> data = parseResultsSet(results, from);
+		/*while(results.next())
 		{
-			data.add(new DBRow());
+			data.add(new TableData());
 			data.get(count).setNumColumns(metadata.getColumnCount());
 			
 			System.out.println(data.size());
@@ -225,7 +225,7 @@ public class JDBC
 			}
 			count++;
 			System.out.println("");
-		}
+		}*/
 
 		// End the 'timer' and calculate time
 		long endTime = System.nanoTime();
@@ -318,7 +318,7 @@ public class JDBC
 	public void delete( String from, String whereKey, String whereValue) throws SQLException, IOException 
 	{
 		checkConnection();
-		ArrayList<DBRow> data = new ArrayList<DBRow>();
+		ArrayList<TableData> data = new ArrayList<TableData>();
 		boolean whereClause = (whereKey!=null && whereValue!=null) ? true : false;
 		
 		// Prepare the statements.
@@ -448,32 +448,53 @@ public class JDBC
 		stmt.close();
 		System.out.println("Done");
 	}
-	public ArrayList<String> parseMetaData(ResultSetMetaData resultsMD, DatabaseMetaData connMD, String table) throws SQLException
+	
+	public ArrayList<TableData> parseResultsSet(ResultSet results, String table) throws SQLException
 	{
-		ArrayList<String> constraints = new ArrayList<String>();
+		System.out.println("Parsing results set");
+		ArrayList<TableData> data = new ArrayList<TableData>();
+		DatabaseMetaData connMD = m_dbConn.getMetaData();
+		ResultSetMetaData metadata = results.getMetaData();
+		ResultSet pkColumns = m_dbConn.getMetaData().getPrimaryKeys(null, null, table);
 		
-		ResultSet pkList = connMD.getPrimaryKeys(null, null, table);
-		
-		for(int x = 1; x < resultsMD.getColumnCount()+1; x++)
+		int count= 0;
+		while(results.next())
 		{
-			String str = new String();
+			data.add(new TableData());
+			data.get(count).setNumColumns(metadata.getColumnCount());
 			
-			if(resultsMD.isNullable(x) == connMD.columnNoNulls || resultsMD.isNullable(x) == connMD.columnNullableUnknown)
+			for(int x = 1; x < metadata.getColumnCount()+1; x++)
 			{
-				str+="NOT NULL";
+				Object object = results.getObject(x);
+				String type = object.getClass().getSimpleName();
+				String value = object.toString();
+				String name = metadata.getColumnName(x);
+				String nullValue = new String("");
+				String pkValue = new String("");
+				
+				if(metadata.isNullable(x) == connMD.columnNoNulls || metadata.isNullable(x) == connMD.columnNullableUnknown)
+				{
+					nullValue += "NOT NULL";				
+				}
+				
+				while(pkColumns.next())
+				{
+					if(pkColumns.getString("COLUMN_NAME").equals(name))
+					{
+						pkValue += "Primary Key";	
+					}
+				}
+				
+				data.get(count).addType(type);
+				data.get(count).addValue(value);
+				data.get(count).addColumLabel(name);
+				data.get(count).addPkValue(pkValue);
+				data.get(count).addNullValue(nullValue);
 			}
-			
-			if(resultsMD.getColumnLabel(x).equals(pkList.getString(x)))
-			{
-				str+=" Primary Key";
-			}
-			
-			constraints.add(str);
-			
-			System.out.println(str);
+			count++;
 		}
 		
-		return constraints;
+		return data;
 	}
 
 	public ArrayList<String> showTables() throws SQLException

@@ -3,36 +3,24 @@ package assignmentTwo;
 import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
 
-public class DBRow
+public class TableData
 {
 	private ArrayList<String> columnLabels;
 	private ArrayList<String> columnTypes;
 	private ArrayList<String> columnValues;
-	private ArrayList<String> columnConstraints;
+	private ArrayList<String> nullValues;
+	private ArrayList<String> pkValues;
 	//private ArrayList<Object> test = new ArrayList<Object>();
 	private ResultSetMetaData metadata;
 	private int numColumns;
 	
-	public DBRow ()
+	public TableData ()
 	{
 		columnLabels = new ArrayList<String>();
 		columnTypes = new ArrayList<String>();
 		columnValues = new ArrayList<String>();
-	}
-	
-	public ArrayList<String> getColumnLabels()
-	{
-		return columnLabels;
-	}
-	
-	public ArrayList<String> getTypes()
-	{
-		return columnTypes;
-	}
-	
-	public ArrayList<String> getValues()
-	{
-		return columnValues;
+		nullValues = new ArrayList<String>();
+		pkValues = new ArrayList<String>();
 	}
 	
 	/*public void setMetaData(ResultSetMetaData metadata)
@@ -62,6 +50,16 @@ public class DBRow
 		return columnValues.get(index);
 	}
 	
+	public String getNullValue(int index)
+	{
+		return nullValues.get(index);
+	}
+	
+	public String getPkValue(int index)
+	{
+		return pkValues.get(index);
+	}
+	
 	public int getNumColums()
 	{
 		return numColumns;
@@ -87,8 +85,13 @@ public class DBRow
 		columnValues.add(value);
 	}
 	
-	public void addConstraint(String constraint)
+	public void addNullValue(String nullValue)
 	{
-		columnConstraints.add(constraint);
+		nullValues.add(nullValue);
+	}
+	
+	public void addPkValue(String pkValue)
+	{
+		pkValues.add(pkValue);
 	}
 }

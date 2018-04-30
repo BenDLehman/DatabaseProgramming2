@@ -32,7 +32,7 @@ public class InsertGui extends State implements ActionListener
 	private JButton btnInsert;
 	private Gui gui;
 	private JDBC jdbc;
-	private ArrayList<DBRow> data;
+	private ArrayList<TableData> data;
 	private String tableName;
 	private int numColumns;
 	private JPanel pnlResults;
