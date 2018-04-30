@@ -49,8 +49,8 @@ public class Gui // implements TurnObserver
 	public void setState(State state)
 	{
 		boolean close = true; // certain screens shouldn't close the application
-		int width = 759; //  default width of a screen
-		int height = 516; // default height of a screen
+		int width = 900; //  default width of a screen
+		int height = 700; // default height of a screen
 
 		previousScreen = currentScreen;
 		

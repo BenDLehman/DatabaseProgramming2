@@ -178,13 +178,22 @@ public class ModifyGui extends State implements ActionListener
 		{
 			String constraints = new String(
 					"<html>"+ data.get(0).getPkValue(j)) + "<br>"
-							+ data.get(0).getNullValue(j) + "<br>" 
-							+ data.get(0).getFkValue(j) + "</html>";
+							+ data.get(0).getNullValue(j) + "<br>";
+			
+			if(!(data.get(0).getFkValue(j).equals("")))
+			{
+				constraints += "Foreign Keys:<br>";
+				String fk = new String("");
+				fk = data.get(0).getFkValue(j).replace(",","<br>");
+				constraints += fk;
+			}
+			
+			constraints += "</html>";
 			
 			JLabel l = new JLabel(constraints,SwingConstants.CENTER);
 			c.gridx = j+1;
 			c.gridy = 3;
-			l.setPreferredSize(new Dimension(100,150));
+			//l.setPreferredSize(new Dimension(150,150));
 			labels.add(l);
 			content.add(l,c);
 		}

@@ -67,6 +67,11 @@ public class TableData
 		return fkValues.get(index);
 	}
 	
+	public ArrayList<String> getFkValues()
+	{
+		return fkValues;
+	}
+	
 	public int getNumColums()
 	{
 		return numColumns;

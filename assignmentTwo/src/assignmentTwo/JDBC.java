@@ -491,8 +491,7 @@ public class JDBC
 				{
 					if(fkColumns.getString("FKCOLUMN_NAME").equals(name))
 					{
-						fkValue += (fkValue.equals("")) ? "Foreign Keys:<br>" : "<br>" ;
-						fkValue += "("+fkColumns.getString("FKTABLE_NAME") + "," + fkColumns.getString("FKCOLUMN_NAME")+")";
+						fkValue += "("+fkColumns.getString("FKTABLE_NAME") + ":" + fkColumns.getString("FKCOLUMN_NAME")+"),";
 					}
 					System.out.println(fkValue);
 				}
