@@ -256,8 +256,20 @@ public class ModifyGui extends State implements ActionListener
 		
 		// Call jdbc update method
 		if(source.equals(btnUpdate.getText()))
-		{		
-			String setKey = new String();
+		{	
+			ArrayList<String> labelValues = new ArrayList<String>();
+			ArrayList<String> newValues = new ArrayList<String>();
+			ArrayList<String> whereValues = new ArrayList<String>();
+			
+			for(int x = 0; x < numColumns; x++)
+			{
+				labelValues.add(labels.get(x).getText());
+				newValues.add(valueFields.get(x).getText());
+				whereValues.add(whereFields.get(x).getText());
+			}
+			
+			jdbc.update(tableName, labelValues, newValues, whereValues);
+			/*String setKey = new String();
 			String setValue = new String();
 			String whereKey = new String();
 			String whereValue = new String();
@@ -287,7 +299,7 @@ public class ModifyGui extends State implements ActionListener
 			{
 				System.out.println(setKey + " " + setValue + " " + whereKey + " " + whereValue);
 				jdbc.update(tableName, setKey, setValue, whereKey, whereValue);
-			}
+			}*/
 		}
 		else if (source.equals(btnDelete.getText()))
 		{
