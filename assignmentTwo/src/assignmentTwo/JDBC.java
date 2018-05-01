@@ -529,7 +529,8 @@ public class JDBC
 		DatabaseMetaData connMD = m_dbConn.getMetaData();
 		ResultSetMetaData metadata = results.getMetaData();
 		ResultSet pkColumns = m_dbConn.getMetaData().getPrimaryKeys(null, null, table);
-		ResultSet fkColumns = m_dbConn.getMetaData().getExportedKeys(null, null, table);
+		ResultSet fkExportedColumns = m_dbConn.getMetaData().getExportedKeys(null, null, table);
+		ResultSet fkImportedColumns = m_dbConn.getMetaData().getImportedKeys(null, null, table);
 		
 		int count= 0;
 		while(results.next())
@@ -561,11 +562,20 @@ public class JDBC
 					}
 				}
 				
-				while(fkColumns.next())
+				while(fkExportedColumns.next())
 				{
-					if(fkColumns.getString("FKCOLUMN_NAME").equals(name))
+					if(fkExportedColumns.getString("FKCOLUMN_NAME").equals(name))
 					{
-						fkValue += "("+fkColumns.getString("FKTABLE_NAME") + ":" + fkColumns.getString("FKCOLUMN_NAME")+"),";
+						fkValue += "&#x25B2;("+fkExportedColumns.getString("FKTABLE_NAME") + ":" + fkExportedColumns.getString("FKCOLUMN_NAME")+"),";
+					}
+					System.out.println(fkValue);
+				}
+				
+				while(fkImportedColumns.next())
+				{
+					if(fkImportedColumns.getString("FKCOLUMN_NAME").equals(name))
+					{
+						fkValue += "&#x25BC;("+fkImportedColumns.getString("FKTABLE_NAME") + ":" + fkImportedColumns.getString("FKCOLUMN_NAME")+"),";
 					}
 					System.out.println(fkValue);
 				}

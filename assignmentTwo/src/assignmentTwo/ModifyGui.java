@@ -308,7 +308,7 @@ public class ModifyGui extends State implements ActionListener
 		}
 		else if (source.equals(btnDelete.getText()))
 		{
-			String whereKey = new String();
+			/*String whereKey = new String();
 			String whereValue = new String();
 			int count = 0;
 			
@@ -327,6 +327,21 @@ public class ModifyGui extends State implements ActionListener
 			}
 			catch (SQLException | IOException e)
 			{
+				e.printStackTrace();
+			}*/
+			ArrayList<String> labelValues = new ArrayList<String>();
+			ArrayList<String> whereValues = new ArrayList<String>();
+			
+			for(int x = 0; x < numColumns; x++)
+			{
+				labelValues.add(labels.get(x).getText());
+				whereValues.add(whereFields.get(x).getText());
+			}
+			
+			try {
+				jdbc.delete(tableName, labelValues, whereValues);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

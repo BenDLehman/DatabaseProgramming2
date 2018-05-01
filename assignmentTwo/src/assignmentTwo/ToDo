@@ -6,12 +6,5 @@ Todo:
 12.	Add "instructions" on all the pages
 14.	Remove Window Close confirmation 
 15.	Remove testSelect functions from JDBC when we're done using them as examples
-16. Fix issue where gui will let you insert into a column that's not there
-		modify
-		num				WordsAndShit			Yeet
-		-				something				-
-		6				-						-
-	Returns a successful query even though there is no num 6 in table (does not actually update table with new row):
-	com.mysql.jdbc.JDBC4PreparedStatement@5296204b: UPDATE TEST_DELETE SET WordsAndShit = 'something' WHERE Num = 6
 17.	Clean up code (comments, remove unnecessary code etc)
 	
