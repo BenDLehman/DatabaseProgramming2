@@ -315,61 +315,150 @@ public class JDBC
 		
 	}
  	
-	public void delete( String from, String whereKey, String whereValue) throws SQLException, IOException 
+	public void delete( String tableName, ArrayList<String> columns, ArrayList<String>whereValues) throws SQLException, IOException 
 	{
 		checkConnection();
-		ArrayList<TableData> data = new ArrayList<TableData>();
-		boolean whereClause = (whereKey!=null && whereValue!=null) ? true : false;
-		
-		// Prepare the statements.
-		String sql = "DELETE FROM " + from;
-		
-		if(whereClause)
-		{
-			 sql += " WHERE " + whereKey + " = ?";
-		}
-		PreparedStatement stmt = m_dbConn.prepareStatement(sql);
-		m_dbConn.setAutoCommit(false);
-		
-		if (whereClause)
-		{
-			// Decide whether whereValue is an int, and prepare statement appropriately
-			int whereValueInt;
-			boolean whereValueIsInt = isNumeric(whereValue);
-			if (whereValueIsInt)
-			{
-				whereValueInt = Integer.parseInt(whereValue);
-				stmt.setInt(1, whereValueInt);
-			}
-			else
-			{
-				stmt.setString(1, whereValue);
-			}
-		}
-		
-		System.out.println("Executing statement:\n\t"+stmt);
+		   ArrayList<UpdateHelper> whereHelperList = new ArrayList<UpdateHelper>();
+	  
+	   
+	        for(int i = 0; i < whereValues.size(); i++)
+	        {
+	            if (!whereValues.get(i).equals(""))
+	            {
+	                whereHelperList.add(new UpdateHelper(columns.get(i), whereValues.get(i)));
+	            }
+	            
+	        }
+	        
+	        String query ="DELETE FROM " + tableName + " WHERE ";
 
-		System.out.println("deleting data...");
-		int results;
-		
-		// Start the 'timer'
-		long startTime = System.nanoTime();
+	        boolean isNotLastWhere = true;
+	
+	        for(int i = 0; i < whereHelperList.size(); i++)
+	        {
+	        	if(i == whereHelperList.size() - 1)
+	        	{
+	        		isNotLastWhere = false;
+	        	}
+	        	if(isNotLastWhere)
+	        	{
+	        		query += whereHelperList.get(i).columns+ " = " + " ? " + " AND ";        		
+	        	}
+	        	else
+	        	{
+	        		query += whereHelperList.get(i).columns+ " = " + " ? ";
+	        	}
+	        }
+	        
+	        PreparedStatement stmt = m_dbConn.prepareStatement(query);
+			m_dbConn.setAutoCommit(false);
+	        	
+	        	 
+        	 for(int i = 0; i < whereHelperList.size(); i++)
+        	 {
+        		 boolean num = isNumeric(whereHelperList.get(i).data);
+             
+             if(num)
+             {
+                 int temp = Integer.parseInt(whereHelperList.get(i).data);
+                 stmt.setInt(i+1, temp);
+             }
+             else
+             {
+                 stmt.setString(i+1, whereHelperList.get(i).data);
+             }
+        	 }
+             
+             
+             
+             System.out.println("Executing statement:\n\t"+stmt);
 
-		// Execute the query
-		results = stmt.executeUpdate();
-		m_dbConn.commit();
+     		System.out.println("deleting data...");
+     		int results;
+     		
+     		// Start the 'timer'
+     		long startTime = System.nanoTime();
+
+     		// Execute the query
+     		results = stmt.executeUpdate();
+     		m_dbConn.commit();
+     		
+     		lastQuerySuccessful = (results==1) ? true : false;
+     		
+     		// End the 'timer' and calculate time
+     		long endTime = System.nanoTime();
+     		calculateElapsedTime(startTime, endTime);
+     		System.out.println();
+     				
+     		// Close the statement and finish up
+     		stmt.close();
+     		System.out.println("Done");
+	            
+	        }
+	        
+	        
 		
-		lastQuerySuccessful = (results==1) ? true : false;
 		
-		// End the 'timer' and calculate time
-		long endTime = System.nanoTime();
-		calculateElapsedTime(startTime, endTime);
-		System.out.println();
-				
-		// Close the statement and finish up
-		stmt.close();
-		System.out.println("Done");
-	}
+		
+		
+		
+		
+		
+		
+		
+//		
+//		ArrayList<TableData> data = new ArrayList<TableData>();
+//		boolean whereClause = (whereKey!=null && whereValue!=null) ? true : false;
+//		
+//		// Prepare the statements.
+//		String sql = "DELETE FROM " + from;
+//		
+//		if(whereClause)
+//		{
+//			 sql += " WHERE " + whereKey + " = ?";
+//		}
+//		PreparedStatement stmt = m_dbConn.prepareStatement(sql);
+//		m_dbConn.setAutoCommit(false);
+//		
+//		if (whereClause)
+//		{
+//			// Decide whether whereValue is an int, and prepare statement appropriately
+//			int whereValueInt;
+//			boolean whereValueIsInt = isNumeric(whereValue);
+//			if (whereValueIsInt)
+//			{
+//				whereValueInt = Integer.parseInt(whereValue);
+//				stmt.setInt(1, whereValueInt);
+//			}
+//			else
+//			{
+//				stmt.setString(1, whereValue);
+//			}
+//		}
+		
+//		System.out.println("Executing statement:\n\t"+stmt);
+//
+//		System.out.println("deleting data...");
+//		int results;
+//		
+//		// Start the 'timer'
+//		long startTime = System.nanoTime();
+//
+//		// Execute the query
+//		results = stmt.executeUpdate();
+//		m_dbConn.commit();
+//		
+//		lastQuerySuccessful = (results==1) ? true : false;
+//		
+//		// End the 'timer' and calculate time
+//		long endTime = System.nanoTime();
+//		calculateElapsedTime(startTime, endTime);
+//		System.out.println();
+//				
+//		// Close the statement and finish up
+//		stmt.close();
+//		System.out.println("Done");
+//	}
 	
 	public void update(String tableName,ArrayList<String> columns, ArrayList<String> setValues, ArrayList<String> whereValues) throws SQLException
     {

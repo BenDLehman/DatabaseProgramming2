@@ -339,7 +339,12 @@ public class ModifyGui extends State implements ActionListener
 			}
 			
 			try {
-				jdbc.delete(tableName, labelValues, whereValues);
+				try {
+					jdbc.delete(tableName, labelValues, whereValues);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
