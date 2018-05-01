@@ -249,6 +249,7 @@ public class ModifyGui extends State implements ActionListener
 			String setValue = new String();
 			String whereKey = new String();
 			String whereValue = new String();
+			boolean execute = false;
 			
 			for(int x = 0; x < numColumns; x++)
 			{
@@ -257,19 +258,24 @@ public class ModifyGui extends State implements ActionListener
 					setValue = valueFields.get(x).getText();
 					setKey = labels.get(x).getText();
 				}
-			}
-			
-			for(int x = 0; x < numColumns; x++)
-			{
 				if(!(whereFields.get(x).getText().equals("")))
 				{
 					whereValue = whereFields.get(x).getText();
 					whereKey = labels.get(x).getText();
 				}
-			}
-			
-			System.out.println(setKey + " " + setValue + " " + whereKey + " " + whereValue);
-			jdbc.update(tableName, setKey, setValue, whereKey, whereValue);
+				
+				if(setValue.length()>0 && setKey.length()>0 &&
+						whereValue.length()>0 && whereKey.length()>0)
+				{
+					execute = true;
+				}
+				
+				if(execute)
+				{
+					System.out.println(setKey + " " + setValue + " " + whereKey + " " + whereValue);
+					jdbc.update(tableName, setKey, setValue, whereKey, whereValue);
+				}
+			}		
 		}
 		else if (source.equals(btnDelete.getText()))
 		{
