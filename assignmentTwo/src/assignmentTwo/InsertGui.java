@@ -179,7 +179,7 @@ public class InsertGui extends State implements ActionListener
 			c.gridx = j + 1;
 			c.gridy = 3;
 			// l.setPreferredSize(new Dimension(150,150));
-			labels.add(l);
+			//labels.add(l);
 			content.add(l, c);
 		}
 		
