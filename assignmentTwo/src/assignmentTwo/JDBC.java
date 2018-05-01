@@ -486,7 +486,7 @@ public class JDBC
         }
     }
 
-	public ArrayList<TableData> customQuery(String query) throws SQLException, IOException
+	public void customQuery(String query) throws SQLException, IOException
 	{
 		checkConnection();
 		
@@ -495,7 +495,6 @@ public class JDBC
 		long startTime;
 		ResultSet selectResults;
 		int otherResults = 0;
-		ArrayList<TableData> tableData = new ArrayList<TableData>();
 		
 		
 		if(query.contains("SELECT"))
@@ -504,24 +503,6 @@ public class JDBC
 			selectResults = stmt.executeQuery();
 			m_dbConn.commit();
 			lastQuerySuccessful = (selectResults!=null) ? true : false;
-			
-			ResultSet tables = m_dbConn.getMetaData().getTables(null, null, "%", null);
-			ArrayList<String> tableArray = new ArrayList<String>();
-			String tableName= "";
-			while (tables.next()) 
-			{
-				tableArray.add(tables.getString(3));
-			}
-			
-			for(int i =0; i < tableArray.size(); i++)
-			{
-				if(query.contains(tableArray.get(i)))
-				{
-					tableName = tableArray.get(i);
-				}
-			}
-			tableData = parseResultsSet(selectResults, tableName);
-			
 		}
 		else 
 		{
@@ -539,7 +520,6 @@ public class JDBC
 		// Close the statement and finish up
 		stmt.close();
 		System.out.println("Done");
-		return tableData;
 	}
 	
 	public ArrayList<TableData> parseResultsSet(ResultSet results, String table) throws SQLException
@@ -549,7 +529,8 @@ public class JDBC
 		DatabaseMetaData connMD = m_dbConn.getMetaData();
 		ResultSetMetaData metadata = results.getMetaData();
 		ResultSet pkColumns = m_dbConn.getMetaData().getPrimaryKeys(null, null, table);
-		ResultSet fkColumns = m_dbConn.getMetaData().getExportedKeys(null, null, table);
+		ResultSet fkExportedColumns = m_dbConn.getMetaData().getExportedKeys(null, null, table);
+		ResultSet fkImportedColumns = m_dbConn.getMetaData().getImportedKeys(null, null, table);
 		
 		int count= 0;
 		while(results.next())
@@ -581,11 +562,20 @@ public class JDBC
 					}
 				}
 				
-				while(fkColumns.next())
+				while(fkExportedColumns.next())
 				{
-					if(fkColumns.getString("FKCOLUMN_NAME").equals(name))
+					if(fkExportedColumns.getString("FKCOLUMN_NAME").equals(name))
 					{
-						fkValue += "("+fkColumns.getString("FKTABLE_NAME") + ":" + fkColumns.getString("FKCOLUMN_NAME")+"),";
+						fkValue += "&#x25B2;("+fkExportedColumns.getString("FKTABLE_NAME") + ":" + fkExportedColumns.getString("FKCOLUMN_NAME")+"),";
+					}
+					System.out.println(fkValue);
+				}
+				
+				while(fkImportedColumns.next())
+				{
+					if(fkImportedColumns.getString("FKCOLUMN_NAME").equals(name))
+					{
+						fkValue += "&#x25BC;("+fkImportedColumns.getString("FKTABLE_NAME") + ":" + fkImportedColumns.getString("FKCOLUMN_NAME")+"),";
 					}
 					System.out.println(fkValue);
 				}
