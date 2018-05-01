@@ -486,7 +486,7 @@ public class JDBC
         }
     }
 
-	public void customQuery(String query) throws SQLException, IOException
+	public ArrayList<TableData> customQuery(String query) throws SQLException, IOException
 	{
 		checkConnection();
 		
@@ -495,6 +495,7 @@ public class JDBC
 		long startTime;
 		ResultSet selectResults;
 		int otherResults = 0;
+		ArrayList<TableData> tableData = new ArrayList<TableData>();
 		
 		
 		if(query.contains("SELECT"))
@@ -503,6 +504,24 @@ public class JDBC
 			selectResults = stmt.executeQuery();
 			m_dbConn.commit();
 			lastQuerySuccessful = (selectResults!=null) ? true : false;
+			
+			ResultSet tables = m_dbConn.getMetaData().getTables(null, null, "%", null);
+			ArrayList<String> tableArray = new ArrayList<String>();
+			String tableName= "";
+			while (tables.next()) 
+			{
+				tableArray.add(tables.getString(3));
+			}
+			
+			for(int i =0; i < tableArray.size(); i++)
+			{
+				if(query.contains(tableArray.get(i)))
+				{
+					tableName = tableArray.get(i);
+				}
+			}
+			tableData = parseResultsSet(selectResults, tableName);
+			
 		}
 		else 
 		{
@@ -520,6 +539,7 @@ public class JDBC
 		// Close the statement and finish up
 		stmt.close();
 		System.out.println("Done");
+		return tableData;
 	}
 	
 	public ArrayList<TableData> parseResultsSet(ResultSet results, String table) throws SQLException
