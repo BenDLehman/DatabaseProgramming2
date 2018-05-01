@@ -8,6 +8,7 @@ import javax.swing.border.EmptyBorder;
 import com.mysql.jdbc.DatabaseMetaData;
 
 import javax.swing.JButton;
+import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -48,7 +49,7 @@ public class TableGui extends State implements MouseListener, ActionListener
 	private JLabel lblEnterQueryTo;
 	private JLabel lblResults;
 	private JPanel pnlResults;
-	private JTextArea jtaSelected;
+	private JLabel lblSelected;
 	private JLabel selected;
 	private JDBC jdbc;
 	private Gui gui;
@@ -152,16 +153,15 @@ public class TableGui extends State implements MouseListener, ActionListener
 		lblResults.setBounds(10, 144, 63, 23);
 		contentPane.add(lblResults);
 		
+		lblSelected = new JLabel();
+		lblSelected.setBounds(80, 144, 500, 23);
+		lblSelected.setOpaque(false);
+		contentPane.add(lblSelected);
+		
 		pnlResults = new JPanel();
 		pnlResults.setBackground(Color.lightGray);
 		pnlResults.setBounds(10, 179, 705, 383);
 		contentPane.add(pnlResults);
-		
-		jtaSelected = new JTextArea();
-		jtaSelected.setLineWrap(true);
-		jtaSelected.setBounds(730, 179, 270, 150);
-		jtaSelected.setOpaque(false);
-		contentPane.add(jtaSelected);
 	}
 	
 	/**
@@ -246,20 +246,42 @@ public class TableGui extends State implements MouseListener, ActionListener
 		for(int x = 0; x < numColumns; x++)
 		{
 			JLabel l = new JLabel(list.get(0).getColumnLabel(x), SwingConstants.CENTER);
-			//pnlResults.add(l);
 			pnlResults.add(l, x);
 		}
 		for(int x = 0; x < list.size(); x++)
 		{
 			for(int y = 0; y < numColumns; y++)
 			{
-				JLabel l = new JLabel(list.get(x).getValue(y).toString(), SwingConstants.CENTER);
+				TableData t = list.get(x);
+				JLabel l = new JLabel(t.getValue(y).toString(), SwingConstants.CENTER);
+				String constraints = new String(t.getPkValue(y)+", "+t.getNullValue(y)+", Foreign Key: "+t.getFkValue(y));
+				// Cut off the last ',' that didn't get replaced because it was at the end
+				constraints = constraints.substring(0, constraints.length()-1);
+				l.setName(constraints);
 				pnlResults.add(l);
 				l.addMouseListener(this); 
 			}
 		}
 		
 		refresh();
+	}
+	
+	public void updateSelectedMessage(JLabel selected)
+	{
+		if (gui.getActiveTable() == null)
+		{
+			lblSelected.setText("Press 'Select' to view the contents of " + selected.getText());
+		}
+		else if (selected == null)
+		{
+			lblSelected.setText("");
+		}
+		else
+		{
+			String details = new String(selected.getText() + " details: ");
+			details += selected.getName();
+			lblSelected.setText(details);
+		}
 	}
 
 	/**
@@ -279,10 +301,10 @@ public class TableGui extends State implements MouseListener, ActionListener
 		selected = (JLabel) event.getSource();
 		selected.setBackground(Color.white);
 		selected.setOpaque(true);
-		gui.setActiveTable(selected.getText());
 		
 		System.out.println(selected.getText() + " was pressed");	
-		jtaSelected.setText("Press 'Select' to view the contents of "+selected.getText());
+		
+		updateSelectedMessage(selected);
 		
 		btnSelect.setEnabled(true);
 		
@@ -339,6 +361,7 @@ public class TableGui extends State implements MouseListener, ActionListener
 		
 		if(text.equals(btnShowTables.getText()))
 		{
+			lblSelected.setText("");
 			btnModify.setEnabled(false);
 			btnInsert.setEnabled(false);
 			try
@@ -352,6 +375,7 @@ public class TableGui extends State implements MouseListener, ActionListener
 		}
 		else if (text.equals(btnSelect.getText()))
 		{
+			gui.setActiveTable(selected.getText());
 			select = new Runnable() {
 					public void run() {
 						try
@@ -365,7 +389,6 @@ public class TableGui extends State implements MouseListener, ActionListener
 					}
 				};
 			select.run();
-			jtaSelected.setText("");
 			btnModify.setEnabled(true);
 			btnInsert.setEnabled(true);
 		}

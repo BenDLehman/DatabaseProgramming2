@@ -62,7 +62,7 @@ public class Gui // implements TurnObserver
 		
 		if (state == tableGui)
 		{
-			width = 1024;
+			width = 1100;
 			height = 624;
 		}
 
