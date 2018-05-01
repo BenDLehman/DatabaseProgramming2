@@ -74,64 +74,15 @@ public class JDBC
 			createConnection();
 		}
 	}
-	
+	/**
+	 * Determines if the last query was successful
+	 * @return whether the last query was successful
+	 */
 	public boolean wasLastQuerySuccessful()
 	{
 		return lastQuerySuccessful;
 	}
 
-	/**
-	 * To execute an SQL statement that is not a SELECT statement.
-	 */
-	public void testNonSelectStatements() throws Exception
-	{
-		// Using Statement to insert a value
-		// Best used when all values are hard coded.
-		Statement stmt = m_dbConn.createStatement();
-		String insertData = new String("INSERT INTO JOBS (Job,Fname) VALUES ('Jobs','Name')");
-		int rowsAffected = stmt.executeUpdate(insertData);
-		if (rowsAffected == 1)
-		{
-			System.out.println("Added");
-		}
-
-		// Using a PreparedStatement to insert a value (best option when providing
-		// values
-		// from variables).
-		// Use place holders '?' to mark where I am going to provide the data.
-		insertData = new String("INSERT INTO JOBS (Job,Fname) VALUES (?,?)");
-		PreparedStatement stmt2 = m_dbConn.prepareStatement(insertData);
-		stmt2.setString(1, "Jobs 'DROP");
-		stmt2.setString(2, "Name");
-		// When I need to set a primitive type as null.
-		// stmt2.setNull(2, java.sql.Types.INTEGER);
-		int rowsAdded = stmt2.executeUpdate();
-		if (rowsAdded == 1)
-		{
-			System.out.println("Added");
-		}
-	}
-
-	/**
-	 * To execute an SQL statement that is a SELECT statement.
-	 * @throws SQLException
-	 */
-	public void testSelectStatements() throws SQLException
-	{
-		String selectData = new String("SELECT * FROM TEST_amin WHERE row1=1");
-		Statement stmt = m_dbConn.createStatement();
-		ResultSet rs = stmt.executeQuery(selectData);
-		while (rs.next())
-		{
-			// You can access values from a ResultSet either by column number - not advised:
-			String data = rs.getString(1);
-			System.out.print(data + " : ");
-			// Or by column name - advised:
-			data = rs.getString("row3");
-			System.out.println(data);
-		}
-	}
-	
 	public static void main(String[] args)
 	{
 		JDBC j = new JDBC();
@@ -152,6 +103,17 @@ public class JDBC
 		}
 	}
 	
+	
+	/**
+	 * Used to select data from a table in the data base
+	 * @param what - What is to be selected from the database
+	 * @param from - The name of the Table to select the data from
+	 * @param whereKey - the column to specify where the where clause will check for a value
+	 * @param whereValue - the value the where clause will check for
+	 * @return the data selected from the table
+	 * @throws SQLException
+	 * @throws IOException
+	 */
 	public ArrayList<TableData> select(String what, String from, String whereKey, String whereValue) throws SQLException, IOException
 	{
 		checkConnection();
@@ -224,6 +186,13 @@ public class JDBC
 		return data;
 	}
 	
+	/**
+	 * Inserts data into a table in the database
+	 * @param table - the name of the table to add data to.
+	 * @param columnList -  the names of all of the columns in the table
+	 * @param valueList - the list of the values to add to the table
+	 * @throws IOException
+	 */
  	public void insert(String table, ArrayList<String> columnList, ArrayList<String> valueList) throws  IOException
 	{
 		try {
@@ -286,7 +255,7 @@ public class JDBC
 		System.out.println("Executing statement:\n\t"+stmt);
 
 		System.out.println("Inserting data...");
-		int results;
+		
 		
 		// Start the 'timer'
 		long startTime = System.nanoTime();
@@ -315,25 +284,35 @@ public class JDBC
 		
 	}
  	
+ 	/**
+ 	 * Handles deleting tuples from the database
+ 	 * @param tableName - the name of the table we wish to delete data from
+ 	 * @param columns - the names of all columns within the table
+ 	 * @param whereValues -  The values that the where clause will check for
+ 	 * @throws SQLException
+ 	 * @throws IOException
+ 	 */
 	public void delete( String tableName, ArrayList<String> columns, ArrayList<String>whereValues) throws SQLException, IOException 
 	{
 		checkConnection();
-		   ArrayList<UpdateHelper> whereHelperList = new ArrayList<UpdateHelper>();
+		   ArrayList<QueryHelper> whereHelperList = new ArrayList<QueryHelper>();
 	  
-	   
+		   //loops and creates an instance of QueryHelper for each text box that 
+		   //contains text in the "WHERE" row of the GUI
 	        for(int i = 0; i < whereValues.size(); i++)
 	        {
 	            if (!whereValues.get(i).equals(""))
 	            {
-	                whereHelperList.add(new UpdateHelper(columns.get(i), whereValues.get(i)));
+	                whereHelperList.add(new QueryHelper(columns.get(i), whereValues.get(i)));
 	            }
-	            
 	        }
 	        
 	        String query ="DELETE FROM " + tableName + " WHERE ";
 
+	        //used to determine whether "AND" should be added to the string
 	        boolean isNotLastWhere = true;
-	
+	        
+	        //adds the correct column and data to the WHERE clause of the query
 	        for(int i = 0; i < whereHelperList.size(); i++)
 	        {
 	        	if(i == whereHelperList.size() - 1)
@@ -352,8 +331,10 @@ public class JDBC
 	        
 	        PreparedStatement stmt = m_dbConn.prepareStatement(query);
 			m_dbConn.setAutoCommit(false);
-	        	
-	        	 
+	        
+			
+			//Determines whether the data is a string or an int
+			//and adds them to the statement appropriately
         	 for(int i = 0; i < whereHelperList.size(); i++)
         	 {
         		 boolean num = isNumeric(whereHelperList.get(i).data);
@@ -369,9 +350,7 @@ public class JDBC
              }
         	 }
              
-             
-             
-             System.out.println("Executing statement:\n\t"+stmt);
+            System.out.println("Executing statement:\n\t"+stmt);
 
      		System.out.println("deleting data...");
      		int results;
@@ -396,70 +375,15 @@ public class JDBC
 	            
 	        }
 	        
-	        
-		
-		
-		
-		
-		
-		
-		
-		
-		
-//		
-//		ArrayList<TableData> data = new ArrayList<TableData>();
-//		boolean whereClause = (whereKey!=null && whereValue!=null) ? true : false;
-//		
-//		// Prepare the statements.
-//		String sql = "DELETE FROM " + from;
-//		
-//		if(whereClause)
-//		{
-//			 sql += " WHERE " + whereKey + " = ?";
-//		}
-//		PreparedStatement stmt = m_dbConn.prepareStatement(sql);
-//		m_dbConn.setAutoCommit(false);
-//		
-//		if (whereClause)
-//		{
-//			// Decide whether whereValue is an int, and prepare statement appropriately
-//			int whereValueInt;
-//			boolean whereValueIsInt = isNumeric(whereValue);
-//			if (whereValueIsInt)
-//			{
-//				whereValueInt = Integer.parseInt(whereValue);
-//				stmt.setInt(1, whereValueInt);
-//			}
-//			else
-//			{
-//				stmt.setString(1, whereValue);
-//			}
-//		}
-		
-//		System.out.println("Executing statement:\n\t"+stmt);
-//
-//		System.out.println("deleting data...");
-//		int results;
-//		
-//		// Start the 'timer'
-//		long startTime = System.nanoTime();
-//
-//		// Execute the query
-//		results = stmt.executeUpdate();
-//		m_dbConn.commit();
-//		
-//		lastQuerySuccessful = (results==1) ? true : false;
-//		
-//		// End the 'timer' and calculate time
-//		long endTime = System.nanoTime();
-//		calculateElapsedTime(startTime, endTime);
-//		System.out.println();
-//				
-//		// Close the statement and finish up
-//		stmt.close();
-//		System.out.println("Done");
-//	}
 	
+	/**
+	 * Method that handles updating values in the database
+	 * @param tableName - the name of the table to be updated
+	 * @param columns - the name of all of the columns in the table
+	 * @param setValues - the new values that will replace the old values
+	 * @param whereValues - The values that the where clause will check for
+	 * @throws SQLException
+	 */
 	public void update(String tableName,ArrayList<String> columns, ArrayList<String> setValues, ArrayList<String> whereValues) throws SQLException
     {
         try {
@@ -468,28 +392,32 @@ public class JDBC
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        ArrayList<UpdateHelper> setHelperList = new ArrayList<UpdateHelper>();
-        ArrayList<UpdateHelper> whereHelperList = new ArrayList<UpdateHelper>();
+        //Used to hold QueryHelper Objects for ease of
+        //retrieving the correct columns and data to manipulate
+        ArrayList<QueryHelper> setHelperList = new ArrayList<QueryHelper>();
+        ArrayList<QueryHelper> whereHelperList = new ArrayList<QueryHelper>();
         ArrayList<String> finalList = new ArrayList<String>();
    
         for(int i = 0; i < setValues.size(); i++)
         {
             if (!setValues.get(i).equals(""))
             {
-                setHelperList.add(new UpdateHelper(columns.get(i), setValues.get(i)));
+                setHelperList.add(new QueryHelper(columns.get(i), setValues.get(i)));
             }
             
             if(!whereValues.get(i).equals(""))
             {
-                whereHelperList.add(new UpdateHelper(columns.get(i), whereValues.get(i)));
-            }
-            
-            
+                whereHelperList.add(new QueryHelper(columns.get(i), whereValues.get(i)));
+            } 
         }
         
+        
+        //determines when to add ',' to the query
         boolean isNotLastSet = true;
+        
         String query = "UPDATE " + tableName + " SET ";
         
+        // Adds the correct columns and data to the SET portion of the query
         for(int i = 0; i < setHelperList.size(); i++)
         {
         	if(i == setHelperList.size() - 1)
@@ -504,12 +432,15 @@ public class JDBC
         	{
         		query += setHelperList.get(i).columns+ " = " + " ? ";
         	}
-            //finalList.add(setHelperList.get(i).columns);
+
             finalList.add(setHelperList.get(i).data);
         }
         
         query += " WHERE ";
+        //determines when to add " WHERE " to the query
         boolean isNotLastWhere = true;
+        
+        //adds the correct column and data to the WHERE clause of the query
         for(int i = 0; i < whereHelperList.size(); i++)
         {
             if(i == whereHelperList.size() -1 )
@@ -524,14 +455,18 @@ public class JDBC
             else
             {
                 query += whereHelperList.get(i).columns + " = "  + " ? " + ";";
-                //finalList.add(whereHelperList.get(i).columns);
+             
                 finalList.add(whereHelperList.get(i).data);
             }
         }
+        
         try {
             PreparedStatement stmt = m_dbConn.prepareStatement(query);
             m_dbConn.setAutoCommit(false);
         
+            
+        //Determines if data is a string or an int, adds them to the
+        //statement appropriately
         for(int i = 0; i < finalList.size(); i++)
         {
             boolean num = isNumeric(finalList.get(i));
@@ -566,6 +501,8 @@ public class JDBC
         }
         
         lastQuerySuccessful= true;
+        
+        //closes the statement
         stmt.close();
     
         }catch (SQLException e)
@@ -574,7 +511,14 @@ public class JDBC
             lastQuerySuccessful= false;
         }
     }
-
+	
+/**
+ * Handles custom queries input by the user
+ * @param query the string entered by the user
+ * @return TableData
+ * @throws SQLException
+ * @throws IOException
+ */
 	public ArrayList<TableData> customQuery(String query) throws SQLException, IOException
 	{
 		checkConnection();
@@ -752,70 +696,11 @@ public class JDBC
 		
 		return result;
 	}
-	
-	/**
-	 * This program make insert project and select project
-	 * 
-	 * @param args
-	 * @throws Exception
-	 */
-	/*
-	 * public static void main(String[] args) throws Exception {
-	 * 
-	 * JDBC object = new JDBC(); //object.testSelectStatements();
-	 * 
-	 * EventQueue.invokeLater(new Runnable() { public void run() { try { TableGui
-	 * frame = new TableGui(); frame.setVisible(true); } catch (Exception e) {
-	 * e.printStackTrace(); } } });
-	 * 
-	 * }
-	 */
 
-	public void buildTables() throws SQLException
-	{
-		String firstHalf = "CREATE TABLE TEST";
-		String secondHalf = "(Num1 INT, Num2 INT, str1 CHAR(10), str2 VARCHAR(30), deci DOUBLE, PRIMARY KEY(Num1))";
-		for (int i = 0; i < 10; i++)
-		{
-			Statement statement = m_dbConn.createStatement();
-			statement.execute(firstHalf + i + secondHalf);
-		}
-	}
-
-	public void dropTables() throws SQLException
-	{
-		String s = "DROP TABLE TEST";
-		for (int i = 0; i < 10; i++)
-		{
-			Statement statement = m_dbConn.createStatement();
-			statement.execute(" " + s + i);
-		}
-	}
-
-	public void populateTables() throws SQLException
-	{
-		for (int j = 0; j < 10; j++)
-		{
-			String insertData = "INSERT INTO TEST" + j + " (Num1, Num2, str1, str2, deci)VALUES(?,?,?,?,?)";
-			PreparedStatement stmt2 = m_dbConn.prepareStatement(insertData);
-
-			for (int i = 0; i < 5; i++)
-			{
-
-				stmt2.setInt(1, i);
-				stmt2.setInt(2, i + 1);
-				stmt2.setString(3, "this" + i);
-				stmt2.setString(4, "that" + i);
-				stmt2.setFloat(5, i);
-				stmt2.executeUpdate();
-			}
-		}
-	}
-	
 	/*
 	 * Creates an ArrayList of SQL strings, is passed to
 	 * buildDataTables();
-	 * @return - the arraylist filled with sql create strings
+	 * @return - the ArrayList filled with SQL create strings
 	 */
 	public ArrayList<String> buildTableList() throws SQLException
 	{
@@ -850,7 +735,8 @@ public class JDBC
 	}
 	
 	/*
-	 * Builds tables in the database
+	 * Builds tables in the database utilizing the ArrayList created by 
+	 * buildTableList()
 	 */
 	public void buildDataTables(ArrayList<String> tables) throws SQLException
 	{
