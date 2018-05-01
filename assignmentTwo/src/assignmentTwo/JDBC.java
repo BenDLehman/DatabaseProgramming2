@@ -201,8 +201,15 @@ public class JDBC
 		m_dbConn.commit();
 		
 		lastQuerySuccessful = (results!=null) ? true : false;
-		lastQueryWarning += "Warnings\n"+results.getWarnings();
-		System.out.println(lastQueryWarning);
+		
+		if(results.getWarnings()!=null)
+		{
+			lastQueryWarning += "Warnings\n";
+			lastQueryWarning += results.getWarnings().getMessage();
+			lastQueryWarning += results.getWarnings().getSQLState();
+			lastQueryWarning += results.getWarnings().getErrorCode();
+			System.out.println(lastQueryWarning);
+		}
 		
 		ArrayList<TableData> data = parseResultsSet(results, from);
 
@@ -404,8 +411,20 @@ public class JDBC
 		
 		System.out.println(stmt.toString());
 		stmt.executeUpdate();
+		
 		m_dbConn.commit();
 		
+		
+		lastQueryWarning = "Warnings\n";
+		System.out.println(lastQueryWarning);
+		if(stmt.getWarnings()!=null)
+		{
+			
+			lastQueryWarning += stmt.getWarnings().getMessage();
+			lastQueryWarning += stmt.getWarnings().getSQLState();
+			lastQueryWarning += stmt.getWarnings().getErrorCode();
+			System.out.println(lastQueryWarning);
+		}
 		
 		lastQuerySuccessful= true;
 		System.out.println(setKey + "Has been updated to " + setValue);	

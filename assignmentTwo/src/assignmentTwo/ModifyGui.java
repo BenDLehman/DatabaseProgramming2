@@ -281,13 +281,13 @@ public class ModifyGui extends State implements ActionListener
 				{
 					execute = true;
 				}
-				
-				if(execute)
-				{
-					System.out.println(setKey + " " + setValue + " " + whereKey + " " + whereValue);
-					jdbc.update(tableName, setKey, setValue, whereKey, whereValue);
-				}
 			}		
+			
+			if(execute)
+			{
+				System.out.println(setKey + " " + setValue + " " + whereKey + " " + whereValue);
+				jdbc.update(tableName, setKey, setValue, whereKey, whereValue);
+			}
 		}
 		else if (source.equals(btnDelete.getText()))
 		{
