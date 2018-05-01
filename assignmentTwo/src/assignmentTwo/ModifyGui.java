@@ -3,6 +3,7 @@ package assignmentTwo;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -155,7 +156,6 @@ public class ModifyGui extends State implements ActionListener
 		{
 			JTextField j = new JTextField();
 			c.gridx=i+1;
-			c.gridy=1;
 			valueFields.add(j);
 			content.add(j,c);
 		}
@@ -176,21 +176,33 @@ public class ModifyGui extends State implements ActionListener
 		// Add the constraints labels
 		for (int j = 0; j < numColumns; j++)
 		{
-			String constraints = new String(
-					"<html>"+ data.get(0).getPkValue(j)) + "<br>"
-							+ data.get(0).getNullValue(j) + "<br>";
+			String constraints = new String("<html>");
+			
+			if(!(data.get(0).getType(j).equals("")))
+			{
+				constraints += data.get(0).getType(j) + "<br>";
+			}
+			if(!(data.get(0).getPkValue(j).equals("")))
+			{
+				constraints += data.get(0).getPkValue(j) + "<br>";
+			}
+			if(!(data.get(0).getNullValue(j).equals("")))
+			{
+				constraints += data.get(0).getNullValue(j) + "<br>";
+			}
 			
 			if(!(data.get(0).getFkValue(j).equals("")))
 			{
 				constraints += "Foreign Keys:<br>";
 				String fk = new String("");
-				fk = data.get(0).getFkValue(j).replace(",","<br>");
+				fk = "  "+data.get(0).getFkValue(j).replace(",","<br>");
 				constraints += fk;
 			}
 			
 			constraints += "</html>";
 			
 			JLabel l = new JLabel(constraints,SwingConstants.CENTER);
+			c.anchor = GridBagConstraints.NORTHWEST;
 			c.gridx = j+1;
 			c.gridy = 3;
 			//l.setPreferredSize(new Dimension(150,150));
@@ -215,7 +227,7 @@ public class ModifyGui extends State implements ActionListener
 		else
 		{
 			lblResults.setForeground(Color.RED);
-			lblResults.setText("Modify failed");
+			lblResults.setText("Modify failed: "+jdbc.lastQueryWarning);
 		}
 		
 		refresh(); // refresh the screen

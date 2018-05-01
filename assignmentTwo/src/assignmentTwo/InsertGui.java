@@ -119,29 +119,68 @@ public class InsertGui extends State implements ActionListener
 		GridBagConstraints c = new GridBagConstraints();
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.weightx = 0.5;
+		c.gridy = 0;
 		c.insets = new Insets(1,10,1,10);
 
 		// Add the column labels
 		for (int j = 0; j < numColumns; j++)
 		{
 			JLabel l = new JLabel(data.get(0).getColumnLabel(j),SwingConstants.CENTER);
-			c.gridx = j;
-			c.gridy = 0;
+			c.gridx = j+1;
 			l.setPreferredSize(new Dimension(100,20));
 			labels.add(l);
 			content.add(l,c);
 		}
 		
 		c.weightx = 0.0;
+		c.gridx = 0;
+		c.gridy = 1;
+		content.add(new JLabel("Enter Value: "),c);
 		
 		// Add the text fields
 		for (int i = 0; i < numColumns; i ++)
 		{
 			JTextField j = new JTextField();
-			c.gridx=i;
-			c.gridy=1;
+			c.gridx=i+1;
 			fields.add(j);
 			content.add(j,c);
+		}
+		
+		// Add the constraints labels
+		for (int j = 0; j < numColumns; j++)
+		{
+			String constraints = new String("<html>");
+
+			if (!(data.get(0).getType(j).equals("")))
+			{
+				constraints += data.get(0).getType(j) + "<br>";
+			}
+			if (!(data.get(0).getPkValue(j).equals("")))
+			{
+				constraints += data.get(0).getPkValue(j) + "<br>";
+			}
+			if (!(data.get(0).getNullValue(j).equals("")))
+			{
+				constraints += data.get(0).getNullValue(j) + "<br>";
+			}
+
+			if (!(data.get(0).getFkValue(j).equals("")))
+			{
+				constraints += "Foreign Keys:<br>";
+				String fk = new String("");
+				fk = "  " + data.get(0).getFkValue(j).replace(",", "<br>");
+				constraints += fk;
+			}
+
+			constraints += "</html>";
+
+			JLabel l = new JLabel(constraints, SwingConstants.CENTER);
+			c.anchor = GridBagConstraints.NORTHWEST;
+			c.gridx = j + 1;
+			c.gridy = 3;
+			// l.setPreferredSize(new Dimension(150,150));
+			labels.add(l);
+			content.add(l, c);
 		}
 		
 		return content;

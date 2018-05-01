@@ -154,7 +154,7 @@ public class TableGui extends State implements MouseListener, ActionListener
 		contentPane.add(lblResults);
 		
 		lblSelected = new JLabel();
-		lblSelected.setBounds(80, 144, 500, 23);
+		lblSelected.setBounds(80, 144, 550, 23);
 		lblSelected.setOpaque(false);
 		contentPane.add(lblSelected);
 		
@@ -254,9 +254,35 @@ public class TableGui extends State implements MouseListener, ActionListener
 			{
 				TableData t = list.get(x);
 				JLabel l = new JLabel(t.getValue(y).toString(), SwingConstants.CENTER);
-				String constraints = new String(t.getPkValue(y)+", "+t.getNullValue(y)+", Foreign Key: "+t.getFkValue(y));
+				String constraints = new String();
+				if(!(t.getType(y).equals("")))
+				{
+					constraints += t.getType(y) + ", ";
+				}
+				if(!(t.getPkValue(y).equals("")))
+				{
+					constraints += t.getPkValue(y) + ", ";
+				}
+				if(!(t.getNullValue(y).equals("")))
+				{
+					constraints += t.getNullValue(y) + ", ";
+				}
+				if(!(t.getFkValue(y).equals("")))
+				{
+					constraints += "Foreign Key";
+				}
+				
 				// Cut off the last ',' that didn't get replaced because it was at the end
-				constraints = constraints.substring(0, constraints.length()-1);
+				if(constraints.charAt(constraints.length()-2)==',')
+				{
+					constraints = constraints.substring(0, constraints.length()-2);
+				}
+				// and cut off the first character if it is a ','
+				if(constraints.charAt(0)==',')
+				{
+					constraints = constraints.substring(1, constraints.length());
+				}
+				
 				l.setName(constraints);
 				pnlResults.add(l);
 				l.addMouseListener(this); 
@@ -278,7 +304,7 @@ public class TableGui extends State implements MouseListener, ActionListener
 		}
 		else
 		{
-			String details = new String(selected.getText() + " details: ");
+			String details = new String("Details("+selected.getText() + "): ");
 			details += selected.getName();
 			lblSelected.setText(details);
 		}
@@ -389,6 +415,7 @@ public class TableGui extends State implements MouseListener, ActionListener
 					}
 				};
 			select.run();
+			updateSelectedMessage(null);
 			btnModify.setEnabled(true);
 			btnInsert.setEnabled(true);
 		}

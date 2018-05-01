@@ -22,6 +22,7 @@ public class JDBC
 	public static final String PASSWORD = "Password01";
 	protected Connection m_dbConn = null;
 	private boolean lastQuerySuccessful;
+	public String lastQueryWarning;
 
 	/**
 	 * This is the recommended way to activate the JDBC drivers, but is only setup
@@ -137,7 +138,7 @@ public class JDBC
 		j.activateJDBC();
 		try
 		{
-			j.select("*", "ARMOR", null, null);
+			j.select("*", "TEST_DELETE", null, null);
 		}
 		catch (SQLException e)
 		{
@@ -150,8 +151,6 @@ public class JDBC
 			e.printStackTrace();
 		}
 	}
-
-	
 	
 	public ArrayList<TableData> select(String what, String from, String whereKey, String whereValue) throws SQLException, IOException
 	{
@@ -193,39 +192,19 @@ public class JDBC
 		
 		// Start the 'timer'
 		long startTime = System.nanoTime();
+		
+		// Keeps returning null currently
+		lastQueryWarning = new String();
 
 		// Execute the query
 		results = stmt.executeQuery();
 		m_dbConn.commit();
 		
 		lastQuerySuccessful = (results!=null) ? true : false;
+		lastQueryWarning += "Warnings\n"+results.getWarnings();
+		System.out.println(lastQueryWarning);
 		
-		//int count = 0;
-		//ResultSetMetaData metadata = results.getMetaData();
-		//parseMetaData(metadata, m_dbConn.getMetaData(), from);
 		ArrayList<TableData> data = parseResultsSet(results, from);
-		/*while(results.next())
-		{
-			data.add(new TableData());
-			data.get(count).setNumColumns(metadata.getColumnCount());
-			
-			System.out.println(data.size());
-			
-			for(int x = 1; x < metadata.getColumnCount()+1; x++)
-			{
-				Object object = results.getObject(x);
-				String type = object.getClass().getSimpleName();
-				String value = object.toString();
-				String name = metadata.getColumnName(x);
-				
-				System.out.println(type + " " + value + " " + name);
-				data.get(count).addType(type);
-				data.get(count).addValue(value);
-				data.get(count).addColumLabel(name);
-			}
-			count++;
-			System.out.println("");
-		}*/
 
 		// End the 'timer' and calculate time
 		long endTime = System.nanoTime();
@@ -398,7 +377,6 @@ public class JDBC
 		try {
 		PreparedStatement stmt = m_dbConn.prepareStatement(query);
 		m_dbConn.setAutoCommit(false);
-		System.out.println(stmt.toString());
 	
 		int setValueInt;
 		boolean setValueIsInt = isNumeric(setValue);
@@ -424,7 +402,7 @@ public class JDBC
 			stmt.setString(2, whereValue);
 		}
 		
-		
+		System.out.println(stmt.toString());
 		stmt.executeUpdate();
 		m_dbConn.commit();
 		
@@ -467,8 +445,6 @@ public class JDBC
 			lastQuerySuccessful = (otherResults==1) ? true : false;
 		}
 		
-		
-		
 		// End the 'timer' and calculate time
 		long endTime = System.nanoTime();
 		calculateElapsedTime(startTime, endTime);
@@ -497,7 +473,8 @@ public class JDBC
 			for(int x = 1; x < metadata.getColumnCount()+1; x++)
 			{
 				Object object = results.getObject(x);
-				String type = object.getClass().getSimpleName();
+				String size = Integer.toString(metadata.getColumnDisplaySize(x));
+				String type = object.getClass().getSimpleName()+"("+size+")";
 				String value = object.toString();
 				String name = metadata.getColumnName(x);
 				String nullValue = new String("");

@@ -46,10 +46,10 @@ public abstract class State extends JFrame
 	 * @param width The width of the screen
 	 * @param height The height of the screen
 	 */
-	public void display(int width, int height)
+	public void display(int xPos, int yPos, int width, int height)
 	{
-		this.setBounds(100,100,width,height);
-		this.setLocationRelativeTo(null);
+		this.setBounds(xPos,yPos,width,height);
+		//this.setLocationRelativeTo(null);
 		this.setVisible(true);
 	}
 	

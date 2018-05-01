@@ -49,8 +49,10 @@ public class Gui // implements TurnObserver
 	public void setState(State state)
 	{
 		boolean close = true; // certain screens shouldn't close the application
-		int width = 900; //  default width of a screen
-		int height = 700; // default height of a screen
+		int xPos = 50;
+		int yPos = 50; // starting x and y positions of the screen
+		int width = 1024; //  default width of a screen
+		int height = 624; // default height of a screen
 
 		previousScreen = currentScreen;
 		
@@ -58,12 +60,9 @@ public class Gui // implements TurnObserver
 		if (state == insertGui || state == modifyGui )
 		{
 			close = false;
-		}
-		
-		if (state == tableGui)
-		{
-			width = 1100;
-			height = 624;
+			xPos += width-10;
+			width = 800;
+			height = 500;
 		}
 
 		if (close && currentScreen != null)
@@ -84,7 +83,7 @@ public class Gui // implements TurnObserver
 		}
 
 		currentScreen = state;
-		currentScreen.display(width,height);
+		currentScreen.display(xPos, yPos, width,height);
 	}
 	
 	/**
