@@ -210,12 +210,12 @@ public class ModifyGui extends State implements ActionListener
 		if(success)
 		{
 			lblResults.setForeground(Color.GREEN);
-			lblResults.setText("Insert was successful");
+			lblResults.setText("Modify was successful");
 		}
 		else
 		{
 			lblResults.setForeground(Color.RED);
-			lblResults.setText("Insert failed");
+			lblResults.setText("Modify failed");
 		}
 		
 		refresh(); // refresh the screen
@@ -269,14 +269,7 @@ public class ModifyGui extends State implements ActionListener
 			}
 			
 			System.out.println(setKey + " " + setValue + " " + whereKey + " " + whereValue);
-			try
-			{
-				jdbc.update(tableName, setKey, setValue, whereKey, whereValue);
-			}
-			catch (SQLException e)
-			{
-				e.printStackTrace();
-			}
+			jdbc.update(tableName, setKey, setValue, whereKey, whereValue);
 		}
 		else if (source.equals(btnDelete.getText()))
 		{

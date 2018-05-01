@@ -238,9 +238,14 @@ public class JDBC
 		return data;
 	}
 	
- 	public void insert(String table, ArrayList<String> columnList, ArrayList<String> valueList) throws SQLException, IOException
+ 	public void insert(String table, ArrayList<String> columnList, ArrayList<String> valueList) throws  IOException
 	{
-		checkConnection();
+		try {
+			checkConnection();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		String insertStatement = "INSERT INTO " + table + " (";
 		
@@ -272,6 +277,8 @@ public class JDBC
 			}
 		}
 		
+		try
+		{
 		PreparedStatement stmt = m_dbConn.prepareStatement(insertStatement);
 		m_dbConn.setAutoCommit(false);
 		
@@ -302,7 +309,7 @@ public class JDBC
 		results = stmt.executeUpdate();
 		m_dbConn.commit();
 		
-		lastQuerySuccessful = (results==1) ? true : false;
+		lastQuerySuccessful = true;
 		
 		// End the 'timer' and calculate time
 		long endTime = System.nanoTime();
@@ -311,7 +318,14 @@ public class JDBC
 				
 		// Close the statement and finish up
 		stmt.close();
+		}
+		catch (SQLException e)
+		{
+			lastQuerySuccessful=false;
+			
+		}
 		System.out.println("Done");
+		
 		
 	}
  	
@@ -371,10 +385,17 @@ public class JDBC
 		System.out.println("Done");
 	}
 	
-	public void update(String tableName,String setKey, String setValue, String whereKey, String whereValue) throws SQLException
+	public void update(String tableName,String setKey, String setValue, String whereKey, String whereValue) 
 	{
-		checkConnection();
+		try {
+			checkConnection();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		String query ="UPDATE " + tableName + " SET " + setKey + " = "  + "?" + " WHERE " + whereKey + " = " + "?";
+		try {
 		PreparedStatement stmt = m_dbConn.prepareStatement(query);
 		m_dbConn.setAutoCommit(false);
 		System.out.println(stmt.toString());
@@ -402,12 +423,21 @@ public class JDBC
 		{
 			stmt.setString(2, whereValue);
 		}
+		
+		
 		stmt.executeUpdate();
 		m_dbConn.commit();
 		
-		stmt.close();
 		
+		lastQuerySuccessful= true;
 		System.out.println(setKey + "Has been updated to " + setValue);	
+		stmt.close();
+		}catch (SQLException e)
+		{
+			lastQuerySuccessful= false;
+		}
+		
+		
 		
 	}
 

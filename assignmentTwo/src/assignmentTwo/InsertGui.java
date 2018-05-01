@@ -205,7 +205,7 @@ public class InsertGui extends State implements ActionListener
 		{
 			jdbc.insert(tableName, columns, values);
 		}
-		catch (SQLException | IOException e)
+		catch (IOException e)
 		{
 			e.printStackTrace();
 		}
