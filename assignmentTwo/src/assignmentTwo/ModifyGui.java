@@ -268,7 +268,12 @@ public class ModifyGui extends State implements ActionListener
 				whereValues.add(whereFields.get(x).getText());
 			}
 			
-			jdbc.update(tableName, labelValues, newValues, whereValues);
+			try {
+				jdbc.update(tableName, labelValues, newValues, whereValues);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			/*String setKey = new String();
 			String setValue = new String();
 			String whereKey = new String();

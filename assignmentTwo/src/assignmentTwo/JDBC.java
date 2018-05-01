@@ -371,72 +371,120 @@ public class JDBC
 		System.out.println("Done");
 	}
 	
-	public void update(String tableName,String setKey, String setValue, String whereKey, String whereValue) 
-	{
-		try {
-			checkConnection();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		String query ="UPDATE " + tableName + " SET " + setKey + " = "  + "?" + " WHERE " + whereKey + " = " + "?";
-		try {
-		PreparedStatement stmt = m_dbConn.prepareStatement(query);
-		m_dbConn.setAutoCommit(false);
-	
-		int setValueInt;
-		boolean setValueIsInt = isNumeric(setValue);
-		int whereValueInt;
-		boolean whereValueIsInt = isNumeric(whereValue);
-
-		if (setValueIsInt)
-		{
-			setValueInt = Integer.parseInt(setValue);
-			stmt.setInt(1, setValueInt);
-		}
-		else
-		{
-			stmt.setString(1, setValue);
-		}
-		if (whereValueIsInt)
-		{
-			whereValueInt = Integer.parseInt(whereValue);
-			stmt.setInt(2, whereValueInt);
-		}
-		else
-		{
-			stmt.setString(2, whereValue);
-		}
-		
-		System.out.println(stmt.toString());
-		stmt.executeUpdate();
-		
-		m_dbConn.commit();
-		
-		
-		lastQueryWarning = "Warnings\n";
-		System.out.println(lastQueryWarning);
-		if(stmt.getWarnings()!=null)
-		{
-			
-			lastQueryWarning += stmt.getWarnings().getMessage();
-			lastQueryWarning += stmt.getWarnings().getSQLState();
-			lastQueryWarning += stmt.getWarnings().getErrorCode();
-			System.out.println(lastQueryWarning);
-		}
-		
-		lastQuerySuccessful= true;
-		System.out.println(setKey + "Has been updated to " + setValue);	
-		stmt.close();
-		}catch (SQLException e)
-		{
-			lastQuerySuccessful= false;
-		}
-		
-		
-		
-	}
+	public void update(String tableName,ArrayList<String> columns, ArrayList<String> setValues, ArrayList<String> whereValues) throws SQLException
+    {
+        try {
+            checkConnection();
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        ArrayList<UpdateHelper> setHelperList = new ArrayList<UpdateHelper>();
+        ArrayList<UpdateHelper> whereHelperList = new ArrayList<UpdateHelper>();
+        ArrayList<String> finalList = new ArrayList<String>();
+   
+        for(int i = 0; i < setValues.size(); i++)
+        {
+            if (!setValues.get(i).equals(""))
+            {
+                setHelperList.add(new UpdateHelper(columns.get(i), setValues.get(i)));
+            }
+            
+            if(!whereValues.get(i).equals(""))
+            {
+                whereHelperList.add(new UpdateHelper(columns.get(i), whereValues.get(i)));
+            }
+            
+            
+        }
+        
+        boolean isNotLastSet = true;
+        String query = "UPDATE " + tableName + " SET ";
+        
+        for(int i = 0; i < setHelperList.size(); i++)
+        {
+        	if(i == setHelperList.size() - 1)
+        	{
+        		isNotLastSet = false;
+        	}
+        	if(isNotLastSet)
+        	{
+        		query += setHelperList.get(i).columns+ " = " + " ? " + ",";        		
+        	}
+        	else
+        	{
+        		query += setHelperList.get(i).columns+ " = " + " ? ";
+        	}
+            //finalList.add(setHelperList.get(i).columns);
+            finalList.add(setHelperList.get(i).data);
+        }
+        
+        query += " WHERE ";
+        boolean isNotLastWhere = true;
+        for(int i = 0; i < whereHelperList.size(); i++)
+        {
+            if(i == whereHelperList.size() -1 )
+            {
+                isNotLastWhere = false;
+            }
+            if(isNotLastWhere)
+            {
+                query += whereHelperList.get(i).columns + " = " + " ? " + " AND ";
+                finalList.add(whereHelperList.get(i).data);
+            }
+            else
+            {
+                query += whereHelperList.get(i).columns + " = "  + " ? " + ";";
+                //finalList.add(whereHelperList.get(i).columns);
+                finalList.add(whereHelperList.get(i).data);
+            }
+        }
+        try {
+            PreparedStatement stmt = m_dbConn.prepareStatement(query);
+            m_dbConn.setAutoCommit(false);
+        
+        for(int i = 0; i < finalList.size(); i++)
+        {
+            boolean num = isNumeric(finalList.get(i));
+            
+            if(num)
+            {
+                int temp = Integer.parseInt(finalList.get(i));
+                stmt.setInt(i+1, temp);
+            }
+            else
+            {
+                stmt.setString(i+1, finalList.get(i));
+            }
+            
+            
+        }
+        System.out.println(stmt.toString());
+        stmt.executeUpdate();
+        
+        m_dbConn.commit();
+        
+        
+        lastQueryWarning = "Warnings\n";
+        System.out.println(lastQueryWarning);
+        if(stmt.getWarnings()!=null)
+        {
+            
+            lastQueryWarning += stmt.getWarnings().getMessage();
+            lastQueryWarning += stmt.getWarnings().getSQLState();
+            lastQueryWarning += stmt.getWarnings().getErrorCode();
+            System.out.println(lastQueryWarning);
+        }
+        
+        lastQuerySuccessful= true;
+        stmt.close();
+    
+        }catch (SQLException e)
+        
+        {
+            lastQuerySuccessful= false;
+        }
+    }
 
 	public void customQuery(String query) throws SQLException, IOException
 	{
