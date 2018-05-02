@@ -261,7 +261,7 @@ public class JDBC
 		long startTime = System.nanoTime();
 
 		// Execute the query
-		results = stmt.executeUpdate();
+		stmt.executeUpdate();
 		m_dbConn.commit();
 		
 		lastQuerySuccessful = true;
