@@ -11,6 +11,7 @@ import com.mysql.jdbc.DatabaseMetaData;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -37,7 +38,7 @@ import javax.swing.JTextArea;
  * @author Trevor Kelly, Andy Kim, Christopher Roadcap
  *
  */
-public class TableGui extends State implements MouseListener, ActionListener
+public class TableGui extends State implements MouseListener, ActionListener, WindowListener
 {
 	private JLabel contentPane;
 	private JTextField query;
@@ -76,34 +77,12 @@ public class TableGui extends State implements MouseListener, ActionListener
 	public void initialize()
 	{
 		this.setTitle("Flaming Turtle SQL Software");
+		addWindowListener(this);
 		contentPane = new JLabel(new ImageIcon("src\\assignmentTwo\\turtle.png"));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		contentPane.setVisible(true);
-		
-		WindowListener exitListener = new WindowAdapter() {
-
-		    @Override
-		    public void windowClosing(WindowEvent e) {
-		        int confirm = JOptionPane.showOptionDialog(
-		             null, "Are You Sure You Want to Close Application?", 
-		             "Exit Confirmation", JOptionPane.YES_NO_OPTION, 
-		             JOptionPane.QUESTION_MESSAGE, null, null, null);
-		        /*if (confirm == 0) 
-		        {
-		           try {
-					jdbc.dropTables();
-				} catch (SQLException e1) 
-		           {
-					e1.printStackTrace();
-		           }
-		           System.exit(0);
-		        }*/
-		    }
-		    
-		};
-		this.addWindowListener(exitListener);
 		
 		if(selected==null) {
 			createActionButtons();
@@ -463,5 +442,62 @@ public class TableGui extends State implements MouseListener, ActionListener
 		{
 			gui.setState(gui.getState(text.toLowerCase()));
 		}		
+	}
+
+	@Override
+	public void windowActivated(WindowEvent arg0)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowClosed(WindowEvent arg0)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowClosing(WindowEvent arg0)
+	{
+		int confirm = JOptionPane.showConfirmDialog(
+	             null, "Are You Sure You Want to Close Application?", 
+	             "Exit Confirmation", JOptionPane.YES_NO_OPTION);
+		if(confirm == JOptionPane.YES_OPTION) {
+        	System.exit(0);
+        }
+		else
+		{
+			this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		}
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent arg0)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowDeiconified(WindowEvent arg0)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowIconified(WindowEvent arg0)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowOpened(WindowEvent arg0)
+	{
+		// TODO Auto-generated method stub
+		
 	}
 }
