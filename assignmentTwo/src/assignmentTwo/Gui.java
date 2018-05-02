@@ -101,6 +101,10 @@ public class Gui // implements TurnObserver
 		return activeTable;
 	}
 	
+	/**
+	 * Sets the gui's current active table
+	 * @param table Active table
+	 */
 	public void setActiveTable(String table)
 	{
 		activeTable = table;

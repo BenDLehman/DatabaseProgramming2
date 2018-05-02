@@ -2,6 +2,11 @@ Todo:
 
 11.	General testing
 17.	Clean up code (comments, remove unnecessary code etc)
+<<<<<<< HEAD
+	- InsertGui
+	- ModifyGui
+	- QueryHelper
+=======
 
 	- TableData
 	- Gui
@@ -9,4 +14,5 @@ Todo:
 
 
 	- State
+>>>>>>> branch 'master' of https://github.com/Gizzytiki/DatabaseProgramming2.git
 18. Change where windows initialize

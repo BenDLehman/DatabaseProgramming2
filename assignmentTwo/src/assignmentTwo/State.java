@@ -1,9 +1,6 @@
 package assignmentTwo;
 
-import java.awt.Color;
-
 import javax.swing.JFrame;
-import javax.swing.JRootPane;
 
 /**
  * Allows classes that extend it to get the same functionality of JFrame as well
@@ -57,11 +54,17 @@ public abstract class State extends JFrame
 		this.setVisible(true);
 	}
 	
+	/**
+	 * Clears all components from the frame
+	 */
 	public void clear()
 	{
 		this.getContentPane().removeAll();
 	}
 	
+	/**
+	 * Revalidates and repaints the screen
+	 */
 	public void refresh()
 	{
 		this.revalidate();
