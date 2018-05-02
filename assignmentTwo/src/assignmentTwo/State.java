@@ -1,6 +1,9 @@
 package assignmentTwo;
 
+import java.awt.Color;
+
 import javax.swing.JFrame;
+import javax.swing.JRootPane;
 
 /**
  * Allows classes that extend it to get the same functionality of JFrame as well
@@ -49,7 +52,8 @@ public abstract class State extends JFrame
 	public void display(int xPos, int yPos, int width, int height)
 	{
 		this.setBounds(xPos,yPos,width,height);
-		//this.setLocationRelativeTo(null);
+		this.setUndecorated(true);
+		this.getRootPane().setWindowDecorationStyle(5); 
 		this.setVisible(true);
 	}
 	
