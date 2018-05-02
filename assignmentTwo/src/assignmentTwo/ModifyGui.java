@@ -243,12 +243,12 @@ public class ModifyGui extends State implements ActionListener
 		if(success)
 		{
 			lblResults.setBackground(new Color(164,245,121,70));
-			lblResults.setText("Modify was successful");
+			lblResults.setText("Query was successful");
 		}
 		else
 		{
 			lblResults.setBackground(new Color(245,121,121,70));
-			lblResults.setText("Modify failed: "+jdbc.lastQueryWarning);
+			lblResults.setText("Query failed");
 		}
 		
 		refresh(); // refresh the screen

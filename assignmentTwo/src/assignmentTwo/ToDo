@@ -1,10 +1,7 @@
 Todo:
 
-5.	Finish coding the custom query bar (connect to parseResultsSet() in jdbc and connect to gui)
-9.	fix success/fail message
 11.	General testing
 12.	Add "instructions" on all the pages
 14.	Remove Window Close confirmation 
-15.	Remove testSelect functions from JDBC when we're done using them as examples
 17.	Clean up code (comments, remove unnecessary code etc)
 	

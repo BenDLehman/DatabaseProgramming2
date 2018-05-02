@@ -51,6 +51,7 @@ public class TableGui extends State implements MouseListener, ActionListener
 	private JLabel lblEnterQueryTo;
 	private JLabel lblResults;
 	private JPanel pnlResults;
+	private JLabel pnlResultsDefault;
 	private JLabel lblSelected;
 	private JLabel selected;
 	private JDBC jdbc;
@@ -139,6 +140,8 @@ public class TableGui extends State implements MouseListener, ActionListener
 		contentPane.add(lblSelected);
 		
 		pnlResults = new JPanel();
+		pnlResultsDefault = new JLabel("Click 'Show Tables' to view tables in the database");
+		pnlResults.add(pnlResultsDefault);
 		pnlResults.setBackground(gui.TRANSPARENT_WHITE);
 		pnlResults.setBounds(10, 179, 705, 383);
 		contentPane.add(pnlResults);
@@ -391,6 +394,11 @@ public class TableGui extends State implements MouseListener, ActionListener
 			lblSelected.setText("");
 			btnModify.setEnabled(false);
 			btnInsert.setEnabled(false);
+			btnSelect.setEnabled(true);
+			if(!(pnlResultsDefault.isOpaque()))
+			{
+				lblSelected.setText(pnlResultsDefault.getText());
+			}
 			try
 			{
 				updateResultsStrings(jdbc.showTables());
@@ -402,7 +410,9 @@ public class TableGui extends State implements MouseListener, ActionListener
 		}
 		else if (text.equals(btnSelect.getText()))
 		{
+			btnSelect.setEnabled(false);
 			gui.setActiveTable(selected.getText());
+			pnlResultsDefault.setOpaque(false);
 			select = new Runnable() {
 					public void run() {
 						try

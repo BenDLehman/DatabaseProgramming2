@@ -22,7 +22,6 @@ public class JDBC
 	public static final String PASSWORD = "Password01";
 	protected Connection m_dbConn = null;
 	private boolean lastQuerySuccessful;
-	public String lastQueryWarning;
 
 	/**
 	 * This is the recommended way to activate the JDBC drivers, but is only setup
@@ -154,24 +153,12 @@ public class JDBC
 		
 		// Start the 'timer'
 		long startTime = System.nanoTime();
-		
-		// Keeps returning null currently
-		lastQueryWarning = new String();
 
 		// Execute the query
 		results = stmt.executeQuery();
 		m_dbConn.commit();
 		
 		lastQuerySuccessful = (results!=null) ? true : false;
-		
-		if(results.getWarnings()!=null)
-		{
-			lastQueryWarning += "Warnings\n";
-			lastQueryWarning += results.getWarnings().getMessage();
-			lastQueryWarning += results.getWarnings().getSQLState();
-			lastQueryWarning += results.getWarnings().getErrorCode();
-			System.out.println(lastQueryWarning);
-		}
 		
 		ArrayList<TableData> data = parseResultsSet(results, from);
 
@@ -487,18 +474,6 @@ public class JDBC
         stmt.executeUpdate();
         
         m_dbConn.commit();
-        
-        
-        lastQueryWarning = "Warnings\n";
-        System.out.println(lastQueryWarning);
-        if(stmt.getWarnings()!=null)
-        {
-            
-            lastQueryWarning += stmt.getWarnings().getMessage();
-            lastQueryWarning += stmt.getWarnings().getSQLState();
-            lastQueryWarning += stmt.getWarnings().getErrorCode();
-            System.out.println(lastQueryWarning);
-        }
         
         lastQuerySuccessful= true;
         
