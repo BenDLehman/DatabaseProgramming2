@@ -10,11 +10,11 @@
 	
 	public class QueryHelper 
 	{
-	    String column; //column that data resides in.
+	    String columns; //column that data resides in.
 	    String data; // the data within the column.
 	    public QueryHelper(String columns, String data )
 	    {
-	        this.column = columns;
+	        this.columns = columns;
 	        this.data = data;
 	    }
 	    

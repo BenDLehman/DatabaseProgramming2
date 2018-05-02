@@ -28,7 +28,8 @@ import javax.swing.border.EmptyBorder;
 
 /**
  * The window that will assist the user updating values within the database, 
- * or delete values from the database.
+ * or delete values from the database. 
+ * @author Trevor Kelley, Chris Roadcap, Andy Kim, Ben Lehman
  */
 public class ModifyGui extends State implements ActionListener
 {
