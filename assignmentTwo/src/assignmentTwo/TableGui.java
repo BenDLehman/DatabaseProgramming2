@@ -1,16 +1,10 @@
 package assignmentTwo;
 
-import java.awt.Color;
-import java.awt.Dimension;
-
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import com.mysql.jdbc.DatabaseMetaData;
-
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -22,14 +16,12 @@ import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
-import javax.swing.JTextArea;
 
 /**
  * The first gui that a user sees. Allows them to view tables, select tables to
