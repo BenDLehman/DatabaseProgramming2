@@ -117,7 +117,23 @@ public class InsertGui extends State implements ActionListener
 		lblResults.setBackground(Color.GRAY);
 		
 		pnlResults.add(lblResults);
+		
+		
+		
+		
+		
+		JPanel pnlInstructions = new JPanel();
+		pnlInstructions.setBounds(702, 462, 300, 100);
+		pnlInstructions.setBackground(gui.TRANSPARENT_WHITE);
+		pnlInstructions.setBorder(new EmptyBorder(4,10,10,4));
+		pnlInstructions.setLayout(new GridLayout(4,0));
+		pnlInstructions.add(new JLabel("New Value - Enter the appropriate value in the correct box"));
+		pnlInstructions.add(new JLabel("Insert - Inserts the data into the selected table"));
+		c.anchor = GridBagConstraints.SOUTH;
+		c.gridx = 2;
+		c.gridy =2;
 	}
+
 
 	/**
 	 * Dynamically creates the fields and places them in the gui based off of how
