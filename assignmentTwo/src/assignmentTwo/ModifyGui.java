@@ -90,6 +90,18 @@ public class ModifyGui extends State implements ActionListener
 		{
 			e.printStackTrace();
 		}
+		
+		JPanel pnlInstructions = new JPanel();
+		pnlInstructions.setBounds(702, 462, 300, 100);
+		pnlInstructions.setBackground(gui.TRANSPARENT_WHITE);
+		pnlInstructions.setBorder(new EmptyBorder(4,10,10,4));
+		pnlInstructions.setLayout(new GridLayout(4,0));
+		pnlInstructions.add(new JLabel("New Value - Enter the appropriate value in the correct Box (Update Only)"));
+		pnlInstructions.add(new JLabel("Where - Enter the appropriate data where the column should be deleted/updated"));
+		pnlInstructions.add(new JLabel("Update - Updates the table with the data and location specified)"));
+		pnlInstructions.add(new JLabel("Delete - deletes the specified data"));
+		c.gridy = 1;
+		getContentPane().add(pnlInstructions, c);
 
 		JPanel controls = new JPanel(new GridBagLayout());
 		controls.setOpaque(false);
@@ -100,7 +112,7 @@ public class ModifyGui extends State implements ActionListener
 		btnUpdate.setBackground(gui.BACKGROUND_DARK);
 		btnUpdate.setForeground(gui.LABEL_FG_LIGHT);
 		c.gridx = 0;
-		c.gridy = 0;
+		c.gridy = 1;
 		controls.add(btnUpdate, c);
 		
 		btnDelete = new JButton("DELETE");
@@ -111,7 +123,7 @@ public class ModifyGui extends State implements ActionListener
 		controls.add(btnDelete, c);
 		
 		c.gridx = 0;
-		c.gridy = 1;
+		c.gridy = 2;
 		getContentPane().add(controls, c);
 		
 		pnlResults = new JPanel();
@@ -119,7 +131,7 @@ public class ModifyGui extends State implements ActionListener
 		pnlResults.setBackground(gui.TRANSPARENT_WHITE);
 		pnlResults.setOpaque(true);
 		c.gridx = 0;
-		c.gridy = 2;
+		c.gridy = 3;
 		getContentPane().add(pnlResults, c);
 		
 		JLabel results = new JLabel("Results:"); // label for results
@@ -133,25 +145,6 @@ public class ModifyGui extends State implements ActionListener
 		lblResults.setForeground(gui.LABEL_BG_DARK);
 		lblResults.setOpaque(false);
 		pnlResults.add(lblResults);
-		
-		
-		JPanel pnlInstructions = new JPanel();
-		pnlInstructions.setBounds(702, 462, 300, 100);
-		pnlInstructions.setBackground(gui.TRANSPARENT_WHITE);
-		pnlInstructions.setBorder(new EmptyBorder(4,10,10,4));
-		pnlInstructions.setLayout(new GridLayout(4,0));
-		pnlInstructions.add(new JLabel("New Value - Enter the appropriate value in the correct Box (Update Only)"));
-		pnlInstructions.add(new JLabel("Where - Enter the appropriate data where the column should be deleted/updated"));
-		pnlInstructions.add(new JLabel("Update - Updates the table with the data and location specified)"));
-		pnlInstructions.add(new JLabel("Delete - deletes the specified data"));
-		contentPane.add(pnlInstructions);
-		c.anchor = GridBagConstraints.SOUTH;
-		c.gridx = 2;
-		c.gridy =2;
-	}
-	
-		
-		
 	}
 	
 	/**
