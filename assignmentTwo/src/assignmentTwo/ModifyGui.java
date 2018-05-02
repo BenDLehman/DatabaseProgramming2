@@ -133,6 +133,25 @@ public class ModifyGui extends State implements ActionListener
 		lblResults.setForeground(gui.LABEL_BG_DARK);
 		lblResults.setOpaque(false);
 		pnlResults.add(lblResults);
+		
+		
+		JPanel pnlInstructions = new JPanel();
+		pnlInstructions.setBounds(702, 462, 300, 100);
+		pnlInstructions.setBackground(gui.TRANSPARENT_WHITE);
+		pnlInstructions.setBorder(new EmptyBorder(4,10,10,4));
+		pnlInstructions.setLayout(new GridLayout(4,0));
+		pnlInstructions.add(new JLabel("New Value - Enter the appropriate value in the correct Box (Update Only)"));
+		pnlInstructions.add(new JLabel("Where - Enter the appropriate data where the column should be deleted/updated"));
+		pnlInstructions.add(new JLabel("Update - Updates the table with the data and location specified)"));
+		pnlInstructions.add(new JLabel("Delete - deletes the specified data"));
+		contentPane.add(pnlInstructions);
+		c.anchor = GridBagConstraints.SOUTH;
+		c.gridx = 2;
+		c.gridy =2;
+	}
+	
+		
+		
 	}
 	
 	/**
