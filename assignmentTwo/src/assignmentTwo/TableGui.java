@@ -33,7 +33,7 @@ import javax.swing.JTextArea;
 
 /**
  * The first gui that a user sees. Allows them to view tables, select tables to
- * work with, and open new windows for inserting, deleting, and updating. 
+ * work with, and open new windows for inserting, deleting, and updating.
  * 
  * @author Trevor Kelly, Andy Kim, Christopher Roadcap
  *
@@ -62,7 +62,7 @@ public class TableGui extends State implements MouseListener, ActionListener, Wi
 
 	/**
 	 * Create the screen
-	 * @param gui 
+	 * @param gui
 	 * @throws Exception
 	 */
 	public TableGui(Gui gui) throws Exception
@@ -70,7 +70,7 @@ public class TableGui extends State implements MouseListener, ActionListener, Wi
 		this.gui = gui;
 		jdbc = new JDBC();
 	}
-	
+
 	/**
 	 * Fill the screen with content
 	 */
@@ -83,67 +83,73 @@ public class TableGui extends State implements MouseListener, ActionListener, Wi
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		contentPane.setVisible(true);
-		
-		if(selected==null) {
+
+		if (selected == null)
+		{
 			createActionButtons();
-			
 			createDisplayLabels();
-		}	
+		}
 	}
-	
+
 	/**
-	 * Creates labels for the screen
+	 * Creates all labels for the screen
 	 */
 	public void createDisplayLabels()
 	{
+		// Label for custom query
 		lblEnterQueryTo = new JLabel("Enter query to see results below:");
 		lblEnterQueryTo.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lblEnterQueryTo.setBounds(10, 87, 218, 14);
 		lblEnterQueryTo.setForeground(gui.LABEL_FG_LIGHT);
 		contentPane.add(lblEnterQueryTo);
 
+		// Field for custom query
 		query = new JTextField();
 		query.setBounds(10, 112, 590, 23);
 		contentPane.add(query);
 		query.setColumns(10);
 
+		// Label for results
 		lblResults = new JLabel("Results:");
 		lblResults.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lblResults.setBounds(10, 144, 63, 23);
 		lblResults.setForeground(gui.LABEL_FG_LIGHT);
 		contentPane.add(lblResults);
-		
+
+		// Informational label for tables, data, and instruction
 		lblSelected = new JLabel();
 		lblSelected.setBounds(80, 144, 550, 23);
 		lblSelected.setOpaque(false);
 		lblSelected.setForeground(gui.LABEL_FG_LIGHT);
 		contentPane.add(lblSelected);
-		
+
+		// Panel where query results will be shown
 		pnlResults = new JPanel();
 		pnlResultsDefault = new JLabel("Click 'Show Tables' to view tables in the database");
 		pnlResults.add(pnlResultsDefault);
 		pnlResults.setBackground(gui.TRANSPARENT_WHITE);
 		pnlResults.setBounds(10, 179, 685, 383);
 		contentPane.add(pnlResults);
-		
+
+		// Instruction panel for users
 		pnlInstructions = new JPanel();
 		pnlInstructions.setBounds(702, 462, 300, 100);
 		pnlInstructions.setBackground(gui.TRANSPARENT_WHITE);
-		pnlInstructions.setBorder(new EmptyBorder(4,4,4,4));
-		pnlInstructions.setLayout(new GridLayout(4,0));
+		pnlInstructions.setBorder(new EmptyBorder(4, 4, 4, 4));
+		pnlInstructions.setLayout(new GridLayout(4, 0));
 		pnlInstructions.add(new JLabel("Show Tables - View all tables in database"));
 		pnlInstructions.add(new JLabel("Select - View the data within the selected table"));
 		pnlInstructions.add(new JLabel("Modify - Update/delete records in the selected table"));
 		pnlInstructions.add(new JLabel("Insert - Insert new records into the selected table"));
 		contentPane.add(pnlInstructions);
-		
 	}
-	
+
 	/**
 	 * Creates buttons for the screen
 	 */
 	private void createActionButtons()
 	{
+		// Shows the tables in the db
 		btnShowTables = new JButton("Show Tables");
 		btnShowTables.addActionListener(this);
 		btnShowTables.setBounds(10, 35, 108, 23);
@@ -152,6 +158,7 @@ public class TableGui extends State implements MouseListener, ActionListener, Wi
 		btnShowTables.setFocusable(false);
 		contentPane.add(btnShowTables);
 
+		// Shows the results of switching to a selected table
 		btnSelect = new JButton("Select");
 		btnSelect.setEnabled(false);
 		btnSelect.addActionListener(this);
@@ -161,6 +168,7 @@ public class TableGui extends State implements MouseListener, ActionListener, Wi
 		btnSelect.setFocusable(false);
 		contentPane.add(btnSelect);
 
+		// Opens a new window for Updating/Deleting records
 		btnModify = new JButton("Modify");
 		btnModify.setEnabled(false);
 		btnModify.addActionListener(this);
@@ -170,6 +178,7 @@ public class TableGui extends State implements MouseListener, ActionListener, Wi
 		btnModify.setFocusable(false);
 		contentPane.add(btnModify);
 
+		// Opens a new window for Inserting new records
 		btnInsert = new JButton("Insert");
 		btnInsert.setEnabled(false);
 		btnInsert.addActionListener(this);
@@ -178,7 +187,8 @@ public class TableGui extends State implements MouseListener, ActionListener, Wi
 		btnInsert.setForeground(gui.LABEL_FG_LIGHT);
 		btnInsert.setFocusable(false);
 		contentPane.add(btnInsert);
-		
+
+		// Submits the custom query from the custom query field
 		btnCustomQuery = new JButton("Submit");
 		btnCustomQuery.addActionListener(this);
 		btnCustomQuery.setBounds(608, 112, 89, 23);
@@ -187,39 +197,41 @@ public class TableGui extends State implements MouseListener, ActionListener, Wi
 		btnCustomQuery.setFocusable(false);
 		contentPane.add(btnCustomQuery);
 	}
-	
+
 	/**
-	 * Updates the results panel when a JDBC command is called which
-	 * returns an ArrayList of strings
+	 * Updates the results panel when a JDBC command is called which returns an
+	 * ArrayList of strings
 	 * @param list The ArrayList of strings to update the results panel with
 	 */
 	public void updateResultsStrings(ArrayList<String> list)
 	{
-		if(pnlResults.getComponentCount()>0)
+		// If this isn't the first time it's been updated, remove old labels
+		if (pnlResults.getComponentCount() > 0)
 		{
 			pnlResults.removeAll();
 		}
-		
-		if(list.size()<11)
+
+		// Decide how many columns to display the results in
+		if (list.size() < 11)
 		{
-			pnlResults.setLayout(new GridLayout(list.size(),1));
+			pnlResults.setLayout(new GridLayout(list.size(), 1));
 		}
 		else
 		{
-			pnlResults.setLayout(new GridLayout(list.size()/2,2));
+			pnlResults.setLayout(new GridLayout(list.size() / 2, 2));
 		}
-		
-		
+
+		// Add the table columns and rows to the results panel
 		for (String s : list)
-		{	
+		{
 			JLabel l = new JLabel(s, SwingConstants.CENTER);
 			l.setForeground(gui.LABEL_BG_DARK);
 			pnlResults.add(l);
 			l.addMouseListener(this);
 		}
-		refresh();
+		refresh(); // repaint the screen
 	}
-	
+
 	/**
 	 * Updates the results panel when a JDBC command is called
 	 * @param list
@@ -227,68 +239,71 @@ public class TableGui extends State implements MouseListener, ActionListener, Wi
 	public void updateResultsData(ArrayList<TableData> list)
 	{
 		// remove old data from gui
-		if(pnlResults.getComponentCount()>0)
+		if (pnlResults.getComponentCount() > 0)
 		{
 			pnlResults.removeAll();
 		}
-		
+
 		int numColumns = list.get(0).getNumColums();
-		
+
 		// reset the grid size
-		pnlResults.setLayout(new GridLayout(0,numColumns));
-		
-		// get the data from the list
-		for(int x = 0; x < numColumns; x++)
+		pnlResults.setLayout(new GridLayout(0, numColumns));
+
+		// get the data from the list and put it in the results
+		for (int x = 0; x < numColumns; x++)
 		{
 			JLabel l = new JLabel(list.get(0).getColumnLabel(x), SwingConstants.CENTER);
 			l.setForeground(gui.LABEL_BG_DARK);
 			pnlResults.add(l, x);
 		}
-		for(int x = 0; x < list.size(); x++)
+		for (int x = 0; x < list.size(); x++)
 		{
-			for(int y = 0; y < numColumns; y++)
+			for (int y = 0; y < numColumns; y++)
 			{
 				TableData t = list.get(x);
 				JLabel l = new JLabel(t.getValue(y).toString(), SwingConstants.CENTER);
 				String constraints = new String();
-				if(!(t.getType(y).equals("")))
+				if (!(t.getType(y).equals("")))
 				{
 					constraints += t.getType(y) + ", ";
 				}
-				if(!(t.getPkValue(y).equals("")))
+				if (!(t.getPkValue(y).equals("")))
 				{
 					constraints += t.getPkValue(y) + ", ";
 				}
-				if(!(t.getNullValue(y).equals("")))
+				if (!(t.getNullValue(y).equals("")))
 				{
 					constraints += t.getNullValue(y) + ", ";
 				}
-				if(!(t.getFkValue(y).equals("")))
+				if (!(t.getFkValue(y).equals("")))
 				{
 					constraints += "Foreign Key";
 				}
-				
+
 				// Cut off the last ',' that didn't get replaced because it was at the end
-				if(constraints.charAt(constraints.length()-2)==',')
+				if (constraints.charAt(constraints.length() - 2) == ',')
 				{
-					constraints = constraints.substring(0, constraints.length()-2);
+					constraints = constraints.substring(0, constraints.length() - 2);
 				}
 				// and cut off the first character if it is a ','
-				if(constraints.charAt(0)==',')
+				if (constraints.charAt(0) == ',')
 				{
 					constraints = constraints.substring(1, constraints.length());
 				}
-				
+
 				l.setName(constraints);
 				l.setForeground(gui.LABEL_BG_DARK);
 				pnlResults.add(l);
-				l.addMouseListener(this); 
+				l.addMouseListener(this);
 			}
 		}
-		
 		refresh();
 	}
-	
+
+	/**
+	 * Updates the gui with which table/tuple was selected
+	 * @param selected
+	 */
 	public void updateSelectedMessage(JLabel selected)
 	{
 		if (gui.getActiveTable() == null)
@@ -297,74 +312,74 @@ public class TableGui extends State implements MouseListener, ActionListener, Wi
 		}
 		else if (selected == null)
 		{
-			lblSelected.setText("Showing '"+gui.getActiveTable()+"'");
+			lblSelected.setText("Showing '" + gui.getActiveTable() + "'");
 		}
 		else
 		{
-			String details = new String("Details("+selected.getText() + "): ");
+			String details = new String("Details(" + selected.getText() + "): ");
 			details += selected.getName();
 			lblSelected.setText(details);
 		}
 	}
 
 	/**
-	 * Reaction when a JLabel in the results panel is pressed. Tells
-	 * the user what they clicked.
+	 * Reaction when a JLabel in the results panel is pressed. Tells the user what
+	 * they clicked.
 	 */
 	@Override
 	public void mouseClicked(MouseEvent event)
 	{
 		// If there is a highlighted table already, make it normal again
-		if(selected!=null)
+		if (selected != null)
 		{
 			selected.setOpaque(false);
 			selected = null;
 		}
-		
+
+		// Store what was pressed and style it
 		selected = (JLabel) event.getSource();
 		selected.setBackground(Gui.TRANSPARENT_WHITE);
 		selected.setOpaque(true);
-		
-		System.out.println(selected.getText() + " was pressed");	
-		
+
+		System.out.println(selected.getText() + " was pressed");
+
+		// Update the gui with what was pressed
 		updateSelectedMessage(selected);
-		
 		btnSelect.setEnabled(true);
-		
 		refresh();
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent event)
 	{
-		
+
 	}
 
 	@Override
 	public void mouseExited(MouseEvent arg0)
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mousePressed(MouseEvent arg0)
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent arg0)
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent event)
 	{
-		if(event!=null)
+		if (event != null)
 		{
 			selection = (JButton) event.getSource();
 			handle();
@@ -372,18 +387,19 @@ public class TableGui extends State implements MouseListener, ActionListener, Wi
 	}
 
 	/**
-	 * Handles what should happen when a button is pressed and changes
-	 * the state of the Gui
+	 * Handles what should happen when a button is pressed and changes the state of
+	 * the Gui
 	 */
 	@Override
 	public void handle()
 	{
 		String text = selection.getText();
 		System.out.println(text + " was pressed");
-		
-		if(text.equals(btnShowTables.getText()))
+
+		// If Show Tables was pressed, show the tables and modify the gui
+		if (text.equals(btnShowTables.getText()))
 		{
-			if(gui.getActiveTable()!=null)
+			if (gui.getActiveTable() != null)
 			{
 				gui.setActiveTable(null);
 			}
@@ -391,7 +407,7 @@ public class TableGui extends State implements MouseListener, ActionListener, Wi
 			btnModify.setEnabled(false);
 			btnInsert.setEnabled(false);
 			btnSelect.setEnabled(true);
-			if(!(pnlResultsDefault.isOpaque()))
+			if (!(pnlResultsDefault.isOpaque()))
 			{
 				lblSelected.setText(pnlResultsDefault.getText());
 			}
@@ -404,69 +420,75 @@ public class TableGui extends State implements MouseListener, ActionListener, Wi
 				e.printStackTrace();
 			}
 		}
+		// If select was pressed, show the table's data and modify the gui
 		else if (text.equals(btnSelect.getText()))
 		{
 			btnSelect.setEnabled(false);
 			gui.setActiveTable(selected.getText());
 			pnlResultsDefault.setOpaque(false);
-			select = new Runnable() {
-					public void run() {
-						try
-						{
-							updateResultsData(jdbc.select("*", selected.getText(), null, null));
-						}
-						catch (SQLException | IOException e)
-						{
-							e.printStackTrace();
-						}
+			select = new Runnable()
+			{
+				public void run()
+				{
+					try
+					{
+						updateResultsData(jdbc.select("*", selected.getText(), null, null));
 					}
-				};
+					catch (SQLException | IOException e)
+					{
+						e.printStackTrace();
+					}
+				}
+			};
 			select.run();
 			updateSelectedMessage(null);
 			btnModify.setEnabled(true);
 			btnInsert.setEnabled(true);
 		}
+		// If submit was pressed, execute the custom query
 		else if (text.equals(btnCustomQuery.getText()))
 		{
 			try
 			{
-				updateResultsData(jdbc.customQuery("SELECT * FROM TEST_DELETE"));
+				updateResultsData(jdbc.customQuery(query.getText()));
 			}
 			catch (SQLException | IOException e)
 			{
 				e.printStackTrace();
 			}
-			
-		}		
+
+		}
+		// If modify/insert was pressed, open the respective window
 		else if (text.equals(btnModify.getText()) || text.equals(btnInsert.getText()))
 		{
 			gui.setState(gui.getState(text.toLowerCase()));
-		}		
+		}
 	}
 
 	@Override
 	public void windowActivated(WindowEvent arg0)
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void windowClosed(WindowEvent arg0)
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void windowClosing(WindowEvent arg0)
 	{
-		int confirm = JOptionPane.showConfirmDialog(
-	             null, "Are You Sure You Want to Close Application?", 
-	             "Exit Confirmation", JOptionPane.YES_NO_OPTION);
-		if(confirm == JOptionPane.YES_OPTION) {
-        	System.exit(0);
-        }
+		// If this window is being closed, confirm closing
+		int confirm = JOptionPane.showConfirmDialog(null, "Are You Sure You Want to Close Application?",
+				"Exit Confirmation", JOptionPane.YES_NO_OPTION);
+		if (confirm == JOptionPane.YES_OPTION)
+		{
+			System.exit(0);
+		}
 		else
 		{
 			this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -477,27 +499,27 @@ public class TableGui extends State implements MouseListener, ActionListener, Wi
 	public void windowDeactivated(WindowEvent arg0)
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void windowDeiconified(WindowEvent arg0)
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void windowIconified(WindowEvent arg0)
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void windowOpened(WindowEvent arg0)
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 }

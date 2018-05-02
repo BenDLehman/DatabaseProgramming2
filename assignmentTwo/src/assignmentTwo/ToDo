@@ -2,4 +2,12 @@ Todo:
 
 11.	General testing
 17.	Clean up code (comments, remove unnecessary code etc)
+	- JDBC
+	- TableData
+	- Gui
+	- InsertGui
+	- JDBC
+	- ModifyGui
+	- QueryHelper
+	- State
 18. Change where windows initialize
