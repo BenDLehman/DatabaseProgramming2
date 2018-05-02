@@ -25,6 +25,11 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+
+/**
+ * The window that will assist the user updating values within the database, 
+ * or delete values from the database.
+ */
 public class ModifyGui extends State implements ActionListener
 {
 	private ArrayList<JTextField> whereFields;
