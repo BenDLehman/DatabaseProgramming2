@@ -1,7 +1,5 @@
 Todo:
 
 11.	General testing
-12.	Add "instructions" on all the pages
-14.	Remove Window Close confirmation 
 17.	Clean up code (comments, remove unnecessary code etc)
-	
+18. Change where windows initialize

@@ -92,7 +92,6 @@ public class ModifyGui extends State implements ActionListener
 		}
 		
 		JPanel pnlInstructions = new JPanel();
-		pnlInstructions.setBounds(702, 462, 300, 100);
 		pnlInstructions.setBackground(gui.TRANSPARENT_WHITE);
 		pnlInstructions.setBorder(new EmptyBorder(4,10,10,4));
 		pnlInstructions.setLayout(new GridLayout(4,0));
