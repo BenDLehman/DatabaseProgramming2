@@ -54,6 +54,7 @@ public class TableGui extends State implements MouseListener, ActionListener
 	private JLabel pnlResultsDefault;
 	private JLabel lblSelected;
 	private JLabel selected;
+	private JPanel pnlInstructions;
 	private JDBC jdbc;
 	private Gui gui;
 	public Runnable select;
@@ -123,7 +124,7 @@ public class TableGui extends State implements MouseListener, ActionListener
 		contentPane.add(lblEnterQueryTo);
 
 		query = new JTextField();
-		query.setBounds(10, 112, 601, 23);
+		query.setBounds(10, 112, 590, 23);
 		contentPane.add(query);
 		query.setColumns(10);
 
@@ -143,8 +144,20 @@ public class TableGui extends State implements MouseListener, ActionListener
 		pnlResultsDefault = new JLabel("Click 'Show Tables' to view tables in the database");
 		pnlResults.add(pnlResultsDefault);
 		pnlResults.setBackground(gui.TRANSPARENT_WHITE);
-		pnlResults.setBounds(10, 179, 705, 383);
+		pnlResults.setBounds(10, 179, 685, 383);
 		contentPane.add(pnlResults);
+		
+		pnlInstructions = new JPanel();
+		pnlInstructions.setBounds(702, 462, 300, 100);
+		pnlInstructions.setBackground(gui.TRANSPARENT_WHITE);
+		pnlInstructions.setBorder(new EmptyBorder(4,4,4,4));
+		pnlInstructions.setLayout(new GridLayout(4,0));
+		pnlInstructions.add(new JLabel("Show Tables - View all tables in database"));
+		pnlInstructions.add(new JLabel("Select - View the data within the selected table"));
+		pnlInstructions.add(new JLabel("Modify - Update/delete records in the selected table"));
+		pnlInstructions.add(new JLabel("Insert - Insert new records into the selected table"));
+		contentPane.add(pnlInstructions);
+		
 	}
 	
 	/**
@@ -172,7 +185,7 @@ public class TableGui extends State implements MouseListener, ActionListener
 		btnModify = new JButton("Modify");
 		btnModify.setEnabled(false);
 		btnModify.addActionListener(this);
-		btnModify.setBounds(616, 35, 89, 23);
+		btnModify.setBounds(509, 35, 89, 23);
 		btnModify.setBackground(gui.BACKGROUND_DARK);
 		btnModify.setForeground(gui.LABEL_FG_LIGHT);
 		btnModify.setFocusable(false);
@@ -181,7 +194,7 @@ public class TableGui extends State implements MouseListener, ActionListener
 		btnInsert = new JButton("Insert");
 		btnInsert.setEnabled(false);
 		btnInsert.addActionListener(this);
-		btnInsert.setBounds(711, 35, 89, 23);
+		btnInsert.setBounds(608, 35, 89, 23);
 		btnInsert.setBackground(gui.BACKGROUND_DARK);
 		btnInsert.setForeground(gui.LABEL_FG_LIGHT);
 		btnInsert.setFocusable(false);
@@ -189,7 +202,7 @@ public class TableGui extends State implements MouseListener, ActionListener
 		
 		btnCustomQuery = new JButton("Submit");
 		btnCustomQuery.addActionListener(this);
-		btnCustomQuery.setBounds(616, 112, 89, 23);
+		btnCustomQuery.setBounds(608, 112, 89, 23);
 		btnCustomQuery.setBackground(gui.BACKGROUND_DARK);
 		btnCustomQuery.setForeground(gui.LABEL_FG_LIGHT);
 		btnCustomQuery.setFocusable(false);
@@ -391,6 +404,10 @@ public class TableGui extends State implements MouseListener, ActionListener
 		
 		if(text.equals(btnShowTables.getText()))
 		{
+			if(gui.getActiveTable()!=null)
+			{
+				gui.setActiveTable(null);
+			}
 			lblSelected.setText("");
 			btnModify.setEnabled(false);
 			btnInsert.setEnabled(false);
