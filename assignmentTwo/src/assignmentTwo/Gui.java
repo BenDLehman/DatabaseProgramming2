@@ -1,5 +1,7 @@
 package assignmentTwo;
 
+import java.awt.Color;
+
 import javax.swing.JFrame;
 
 /**
@@ -17,6 +19,10 @@ public class Gui // implements TurnObserver
 	private State previousScreen;
 	private String activeTable;
 	boolean forcedSelect = false;
+	public static final Color TRANSPARENT_WHITE = new Color(255,255,255,175);
+	public static final Color LABEL_FG_LIGHT = Color.WHITE;
+	public static final Color LABEL_BG_DARK = Color.BLACK;
+	public static final Color BACKGROUND_DARK = Color.BLACK;
 
 	/**
 	 * For testing purposes

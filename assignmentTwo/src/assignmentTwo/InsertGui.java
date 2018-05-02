@@ -2,6 +2,7 @@ package assignmentTwo;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -29,6 +30,7 @@ public class InsertGui extends State implements ActionListener
 {
 	private ArrayList<JTextField> fields;
 	private ArrayList<JLabel> labels;
+	private JLabel contentPane;
 	private JButton btnInsert;
 	private Gui gui;
 	private JDBC jdbc;
@@ -68,6 +70,8 @@ public class InsertGui extends State implements ActionListener
 			e1.printStackTrace();
 		}
 		
+		contentPane = new JLabel(new ImageIcon("src\\assignmentTwo\\turtle2.png"));
+		setContentPane(contentPane);
 		getContentPane().setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 		c.weightx = 0;
@@ -88,20 +92,28 @@ public class InsertGui extends State implements ActionListener
 		// Add the insert button and the results panel
 		btnInsert = new JButton("INSERT");
 		btnInsert.addActionListener(this);
+		btnInsert.setBackground(gui.BACKGROUND_DARK);
+		btnInsert.setForeground(gui.LABEL_FG_LIGHT);
 		c.gridy = 1;
 		getContentPane().add(btnInsert, c);
 		
 		pnlResults = new JPanel();
 		pnlResults.setLayout(new GridLayout(2,0,0,4));
+		pnlResults.setBackground(gui.TRANSPARENT_WHITE);
+		pnlResults.setOpaque(true);
 		c.gridy = 2;
 		getContentPane().add(pnlResults, c);
 		
 		JLabel results = new JLabel("Results:"); // label for results
+		results.setForeground(gui.LABEL_BG_DARK);
+		results.setPreferredSize(new Dimension(300,20));
+		results.setBorder(new EmptyBorder(10,10,10,10));
 		pnlResults.add(results);
 		
 		lblResults = new JLabel(); // where user will be updated with success or fail
 		lblResults.setBorder(new EmptyBorder(10,10,10,10));
-		lblResults.setOpaque(true);
+		lblResults.setForeground(gui.LABEL_BG_DARK);
+		lblResults.setOpaque(false);
 		lblResults.setBackground(Color.GRAY);
 		
 		pnlResults.add(lblResults);
@@ -116,6 +128,8 @@ public class InsertGui extends State implements ActionListener
 	public JPanel createFields() throws SQLException, IOException
 	{
 		JPanel content = new JPanel(new GridBagLayout());
+		content.setBorder(new EmptyBorder(10,10,10,10));
+		content.setBackground(gui.TRANSPARENT_WHITE);
 		GridBagConstraints c = new GridBagConstraints();
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.weightx = 0.5;
@@ -128,6 +142,7 @@ public class InsertGui extends State implements ActionListener
 			JLabel l = new JLabel(data.get(0).getColumnLabel(j),SwingConstants.CENTER);
 			c.gridx = j+1;
 			l.setPreferredSize(new Dimension(100,20));
+			l.setForeground(gui.LABEL_BG_DARK);
 			labels.add(l);
 			content.add(l,c);
 		}
@@ -135,7 +150,9 @@ public class InsertGui extends State implements ActionListener
 		c.weightx = 0.0;
 		c.gridx = 0;
 		c.gridy = 1;
-		content.add(new JLabel("Enter Value: "),c);
+		JLabel valuesLabel = new JLabel("New Value: ");
+		valuesLabel.setForeground(gui.LABEL_BG_DARK);
+		content.add(valuesLabel,c);
 		
 		// Add the text fields
 		for (int i = 0; i < numColumns; i ++)
@@ -178,8 +195,7 @@ public class InsertGui extends State implements ActionListener
 			c.anchor = GridBagConstraints.NORTHWEST;
 			c.gridx = j + 1;
 			c.gridy = 3;
-			// l.setPreferredSize(new Dimension(150,150));
-			//labels.add(l);
+			l.setForeground(gui.LABEL_BG_DARK);
 			content.add(l, c);
 		}
 		
@@ -192,14 +208,15 @@ public class InsertGui extends State implements ActionListener
 	 */
 	public void updateResult(Boolean success)
 	{
+		lblResults.setOpaque(true);
 		if(success)
 		{
-			lblResults.setForeground(Color.GREEN);
+			lblResults.setBackground(new Color(164,245,121,70));
 			lblResults.setText("Insert was successful");
 		}
 		else
 		{
-			lblResults.setForeground(Color.RED);
+			lblResults.setBackground(new Color(245,121,121,70));
 			lblResults.setText("Insert failed");
 		}
 		

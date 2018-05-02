@@ -1,12 +1,14 @@
 package assignmentTwo;
 
 import java.awt.Color;
+import java.awt.Dimension;
 
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import com.mysql.jdbc.DatabaseMetaData;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
@@ -37,8 +39,7 @@ import javax.swing.JTextArea;
  */
 public class TableGui extends State implements MouseListener, ActionListener
 {
-
-	private JPanel contentPane;
+	private JLabel contentPane;
 	private JTextField query;
 	boolean tablesExist = true;
 	private JButton btnShowTables;
@@ -46,6 +47,7 @@ public class TableGui extends State implements MouseListener, ActionListener
 	private JButton btnModify;
 	private JButton btnInsert;
 	private JButton selection;
+	private JButton btnCustomQuery;
 	private JLabel lblEnterQueryTo;
 	private JLabel lblResults;
 	private JPanel pnlResults;
@@ -63,6 +65,7 @@ public class TableGui extends State implements MouseListener, ActionListener
 	public TableGui(Gui gui) throws Exception
 	{
 		this.gui = gui;
+		jdbc = new JDBC();
 	}
 	
 	/**
@@ -70,19 +73,12 @@ public class TableGui extends State implements MouseListener, ActionListener
 	 */
 	public void initialize()
 	{
-		contentPane = new JPanel();
+		this.setTitle("Flaming Turtle SQL Software");
+		contentPane = new JLabel(new ImageIcon("src\\assignmentTwo\\turtle.png"));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
-		try
-		{
-			prepareJDBC();
-		}
-		catch (Exception e2)
-		{
-			e2.printStackTrace();
-		}
+		contentPane.setVisible(true);
 		
 		WindowListener exitListener = new WindowAdapter() {
 
@@ -111,26 +107,7 @@ public class TableGui extends State implements MouseListener, ActionListener
 			createActionButtons();
 			
 			createDisplayLabels();
-		}
-		
-	}
-
-	/**
-	 * Allows JDBC methods to be called
-	 * @throws Exception
-	 */
-	private void prepareJDBC() throws Exception
-	{
-		jdbc = new JDBC();
-		/*if(tablesExist)
-			try {
-					jdbc.dropTables();
-			}
-		catch(SQLException e1) {
-			
-		}
-		jdbc.buildTables();
-		jdbc.populateTables();*/
+		}	
 	}
 	
 	/**
@@ -141,25 +118,28 @@ public class TableGui extends State implements MouseListener, ActionListener
 		lblEnterQueryTo = new JLabel("Enter query to see results below:");
 		lblEnterQueryTo.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lblEnterQueryTo.setBounds(10, 87, 218, 14);
+		lblEnterQueryTo.setForeground(gui.LABEL_FG_LIGHT);
 		contentPane.add(lblEnterQueryTo);
 
 		query = new JTextField();
-		query.setBounds(10, 112, 705, 20);
+		query.setBounds(10, 112, 601, 23);
 		contentPane.add(query);
 		query.setColumns(10);
 
 		lblResults = new JLabel("Results:");
 		lblResults.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lblResults.setBounds(10, 144, 63, 23);
+		lblResults.setForeground(gui.LABEL_FG_LIGHT);
 		contentPane.add(lblResults);
 		
 		lblSelected = new JLabel();
 		lblSelected.setBounds(80, 144, 550, 23);
 		lblSelected.setOpaque(false);
+		lblSelected.setForeground(gui.LABEL_FG_LIGHT);
 		contentPane.add(lblSelected);
 		
 		pnlResults = new JPanel();
-		pnlResults.setBackground(Color.lightGray);
+		pnlResults.setBackground(gui.TRANSPARENT_WHITE);
 		pnlResults.setBounds(10, 179, 705, 383);
 		contentPane.add(pnlResults);
 	}
@@ -172,25 +152,45 @@ public class TableGui extends State implements MouseListener, ActionListener
 		btnShowTables = new JButton("Show Tables");
 		btnShowTables.addActionListener(this);
 		btnShowTables.setBounds(10, 35, 108, 23);
+		btnShowTables.setForeground(gui.LABEL_FG_LIGHT);
+		btnShowTables.setBackground(gui.BACKGROUND_DARK);
+		btnShowTables.setFocusable(false);
 		contentPane.add(btnShowTables);
 
 		btnSelect = new JButton("Select");
 		btnSelect.setEnabled(false);
 		btnSelect.addActionListener(this);
 		btnSelect.setBounds(128, 35, 89, 23);
+		btnSelect.setBackground(gui.BACKGROUND_DARK);
+		btnSelect.setForeground(gui.LABEL_FG_LIGHT);
+		btnSelect.setFocusable(false);
 		contentPane.add(btnSelect);
 
 		btnModify = new JButton("Modify");
 		btnModify.setEnabled(false);
 		btnModify.addActionListener(this);
-		btnModify.setBounds(810, 35, 89, 23);
+		btnModify.setBounds(616, 35, 89, 23);
+		btnModify.setBackground(gui.BACKGROUND_DARK);
+		btnModify.setForeground(gui.LABEL_FG_LIGHT);
+		btnModify.setFocusable(false);
 		contentPane.add(btnModify);
 
 		btnInsert = new JButton("Insert");
 		btnInsert.setEnabled(false);
 		btnInsert.addActionListener(this);
 		btnInsert.setBounds(711, 35, 89, 23);
+		btnInsert.setBackground(gui.BACKGROUND_DARK);
+		btnInsert.setForeground(gui.LABEL_FG_LIGHT);
+		btnInsert.setFocusable(false);
 		contentPane.add(btnInsert);
+		
+		btnCustomQuery = new JButton("Submit");
+		btnCustomQuery.addActionListener(this);
+		btnCustomQuery.setBounds(616, 112, 89, 23);
+		btnCustomQuery.setBackground(gui.BACKGROUND_DARK);
+		btnCustomQuery.setForeground(gui.LABEL_FG_LIGHT);
+		btnCustomQuery.setFocusable(false);
+		contentPane.add(btnCustomQuery);
 	}
 	
 	/**
@@ -218,6 +218,7 @@ public class TableGui extends State implements MouseListener, ActionListener
 		for (String s : list)
 		{	
 			JLabel l = new JLabel(s, SwingConstants.CENTER);
+			l.setForeground(gui.LABEL_BG_DARK);
 			pnlResults.add(l);
 			l.addMouseListener(this);
 		}
@@ -237,7 +238,6 @@ public class TableGui extends State implements MouseListener, ActionListener
 		}
 		
 		int numColumns = list.get(0).getNumColums();
-		System.out.println(numColumns);
 		
 		// reset the grid size
 		pnlResults.setLayout(new GridLayout(0,numColumns));
@@ -246,6 +246,7 @@ public class TableGui extends State implements MouseListener, ActionListener
 		for(int x = 0; x < numColumns; x++)
 		{
 			JLabel l = new JLabel(list.get(0).getColumnLabel(x), SwingConstants.CENTER);
+			l.setForeground(gui.LABEL_BG_DARK);
 			pnlResults.add(l, x);
 		}
 		for(int x = 0; x < list.size(); x++)
@@ -284,6 +285,7 @@ public class TableGui extends State implements MouseListener, ActionListener
 				}
 				
 				l.setName(constraints);
+				l.setForeground(gui.LABEL_BG_DARK);
 				pnlResults.add(l);
 				l.addMouseListener(this); 
 			}
@@ -300,7 +302,7 @@ public class TableGui extends State implements MouseListener, ActionListener
 		}
 		else if (selected == null)
 		{
-			lblSelected.setText("");
+			lblSelected.setText("Showing '"+gui.getActiveTable()+"'");
 		}
 		else
 		{
@@ -325,7 +327,7 @@ public class TableGui extends State implements MouseListener, ActionListener
 		}
 		
 		selected = (JLabel) event.getSource();
-		selected.setBackground(Color.white);
+		selected.setBackground(Gui.TRANSPARENT_WHITE);
 		selected.setOpaque(true);
 		
 		System.out.println(selected.getText() + " was pressed");	
@@ -338,9 +340,8 @@ public class TableGui extends State implements MouseListener, ActionListener
 	}
 
 	@Override
-	public void mouseEntered(MouseEvent arg0)
+	public void mouseEntered(MouseEvent event)
 	{
-		// TODO Auto-generated method stub
 		
 	}
 
@@ -419,6 +420,18 @@ public class TableGui extends State implements MouseListener, ActionListener
 			btnModify.setEnabled(true);
 			btnInsert.setEnabled(true);
 		}
+		else if (text.equals(btnCustomQuery.getText()))
+		{
+			try
+			{
+				updateResultsData(jdbc.customQuery("SELECT * FROM TEST_DELETE"));
+			}
+			catch (SQLException | IOException e)
+			{
+				e.printStackTrace();
+			}
+			
+		}		
 		else if (text.equals(btnModify.getText()) || text.equals(btnInsert.getText()))
 		{
 			gui.setState(gui.getState(text.toLowerCase()));

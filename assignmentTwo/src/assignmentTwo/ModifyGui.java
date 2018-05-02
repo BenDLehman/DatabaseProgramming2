@@ -16,6 +16,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -29,6 +30,7 @@ public class ModifyGui extends State implements ActionListener
 	private ArrayList<JTextField> whereFields;
 	private ArrayList<JTextField> valueFields;
 	private ArrayList<JLabel> labels;
+	private JLabel contentPane;
 	private JButton btnUpdate;
 	private JButton btnDelete;
 	private Gui gui;
@@ -70,6 +72,8 @@ public class ModifyGui extends State implements ActionListener
 			e1.printStackTrace();
 		}	
 		
+		contentPane = new JLabel(new ImageIcon("src\\assignmentTwo\\turtle2.png"));
+		setContentPane(contentPane);
 		getContentPane().setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 		c.weightx = 0;
@@ -88,16 +92,21 @@ public class ModifyGui extends State implements ActionListener
 		}
 
 		JPanel controls = new JPanel(new GridBagLayout());
+		controls.setOpaque(false);
 		
 		// Add the update button and the results panel
 		btnUpdate = new JButton("UPDATE");
 		btnUpdate.addActionListener(this);
+		btnUpdate.setBackground(gui.BACKGROUND_DARK);
+		btnUpdate.setForeground(gui.LABEL_FG_LIGHT);
 		c.gridx = 0;
 		c.gridy = 0;
 		controls.add(btnUpdate, c);
 		
 		btnDelete = new JButton("DELETE");
 		btnDelete.addActionListener(this);
+		btnDelete.setBackground(gui.BACKGROUND_DARK);
+		btnDelete.setForeground(gui.LABEL_FG_LIGHT);
 		c.gridx = 1;
 		controls.add(btnDelete, c);
 		
@@ -107,18 +116,22 @@ public class ModifyGui extends State implements ActionListener
 		
 		pnlResults = new JPanel();
 		pnlResults.setLayout(new GridLayout(2,0,0,4));
+		pnlResults.setBackground(gui.TRANSPARENT_WHITE);
+		pnlResults.setOpaque(true);
 		c.gridx = 0;
 		c.gridy = 2;
 		getContentPane().add(pnlResults, c);
 		
 		JLabel results = new JLabel("Results:"); // label for results
+		results.setForeground(gui.LABEL_BG_DARK);
+		results.setPreferredSize(new Dimension(300,20));
+		results.setBorder(new EmptyBorder(10,10,10,10));
 		pnlResults.add(results);
 		
 		lblResults = new JLabel(); // where user will be updated with success or fail
 		lblResults.setBorder(new EmptyBorder(10,10,10,10));
-		lblResults.setOpaque(true);
-		lblResults.setBackground(Color.GRAY);
-		
+		lblResults.setForeground(gui.LABEL_BG_DARK);
+		lblResults.setOpaque(false);
 		pnlResults.add(lblResults);
 	}
 	
@@ -131,6 +144,8 @@ public class ModifyGui extends State implements ActionListener
 	public JPanel createFields() throws SQLException, IOException
 	{
 		JPanel content = new JPanel(new GridBagLayout());
+		content.setBorder(new EmptyBorder(10,10,10,10));
+		content.setBackground(gui.TRANSPARENT_WHITE);
 		GridBagConstraints c = new GridBagConstraints();
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.weightx = 0.5;
@@ -142,6 +157,7 @@ public class ModifyGui extends State implements ActionListener
 			JLabel l = new JLabel(data.get(0).getColumnLabel(j),SwingConstants.CENTER);
 			c.gridx = j+1;
 			l.setPreferredSize(new Dimension(100,20));
+			l.setForeground(gui.LABEL_BG_DARK);
 			labels.add(l);
 			content.add(l,c);
 		}
@@ -149,7 +165,9 @@ public class ModifyGui extends State implements ActionListener
 		c.weightx = 0.0;
 		c.gridx = 0;
 		c.gridy = 1;
-		content.add(new JLabel("New Value: "),c);
+		JLabel valuesLabel = new JLabel("New Value: ");
+		valuesLabel.setForeground(gui.LABEL_BG_DARK);
+		content.add(valuesLabel,c);
 		
 		// Add the text fields
 		for (int i = 0; i < numColumns; i ++)
@@ -162,7 +180,9 @@ public class ModifyGui extends State implements ActionListener
 		
 		c.gridx = 0;
 		c.gridy = 2;
-		content.add(new JLabel("Where: "),c);
+		JLabel wheresLabel = new JLabel("Where: ");
+		wheresLabel.setForeground(gui.LABEL_BG_DARK);
+		content.add(wheresLabel,c);
 		
 		for (int x = 0; x < numColumns; x ++)
 		{
@@ -205,8 +225,8 @@ public class ModifyGui extends State implements ActionListener
 			c.anchor = GridBagConstraints.NORTHWEST;
 			c.gridx = j+1;
 			c.gridy = 3;
-			//l.setPreferredSize(new Dimension(150,150));
 			labels.add(l);
+			l.setForeground(gui.LABEL_BG_DARK);
 			content.add(l,c);
 		}
 		
@@ -219,14 +239,15 @@ public class ModifyGui extends State implements ActionListener
 	 */
 	public void updateResult(Boolean success)
 	{
+		lblResults.setOpaque(true);
 		if(success)
 		{
-			lblResults.setForeground(Color.GREEN);
+			lblResults.setBackground(new Color(164,245,121,70));
 			lblResults.setText("Modify was successful");
 		}
 		else
 		{
-			lblResults.setForeground(Color.RED);
+			lblResults.setBackground(new Color(245,121,121,70));
 			lblResults.setText("Modify failed: "+jdbc.lastQueryWarning);
 		}
 		
@@ -274,61 +295,9 @@ public class ModifyGui extends State implements ActionListener
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			/*String setKey = new String();
-			String setValue = new String();
-			String whereKey = new String();
-			String whereValue = new String();
-			boolean execute = false;
-			
-			for(int x = 0; x < numColumns; x++)
-			{
-				if(!(valueFields.get(x).getText().equals("")))
-				{
-					setValue = valueFields.get(x).getText();
-					setKey = labels.get(x).getText();
-				}
-				if(!(whereFields.get(x).getText().equals("")))
-				{
-					whereValue = whereFields.get(x).getText();
-					whereKey = labels.get(x).getText();
-				}
-				
-				if(setValue.length()>0 && setKey.length()>0 &&
-						whereValue.length()>0 && whereKey.length()>0)
-				{
-					execute = true;
-				}
-			}		
-			
-			if(execute)
-			{
-				System.out.println(setKey + " " + setValue + " " + whereKey + " " + whereValue);
-				jdbc.update(tableName, setKey, setValue, whereKey, whereValue);
-			}*/
 		}
 		else if (source.equals(btnDelete.getText()))
 		{
-			/*String whereKey = new String();
-			String whereValue = new String();
-			int count = 0;
-			
-			for(int x = 0; x < numColumns; x++)
-			{
-				if(!(whereFields.get(x).getText().equals("")))
-				{
-					whereValue = whereFields.get(x).getText();
-					whereKey = labels.get(x).getText();
-				}
-			}
-			
-			try
-			{
-				jdbc.delete(tableName, whereKey, whereValue);
-			}
-			catch (SQLException | IOException e)
-			{
-				e.printStackTrace();
-			}*/
 			ArrayList<String> labelValues = new ArrayList<String>();
 			ArrayList<String> whereValues = new ArrayList<String>();
 			
@@ -342,11 +311,9 @@ public class ModifyGui extends State implements ActionListener
 				try {
 					jdbc.delete(tableName, labelValues, whereValues);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
