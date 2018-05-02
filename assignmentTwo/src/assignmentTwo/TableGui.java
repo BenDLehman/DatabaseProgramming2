@@ -424,7 +424,7 @@ public class TableGui extends State implements MouseListener, ActionListener, Wi
 				{
 					try
 					{
-						updateResultsData(jdbc.select("*", selected.getText(), null, null));
+						updateResultsData(jdbc.select("*", gui.getActiveTable(), null, null));
 					}
 					catch (SQLException | IOException e)
 					{

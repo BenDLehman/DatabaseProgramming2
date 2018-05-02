@@ -86,24 +86,6 @@ public class JDBC
 		return lastQuerySuccessful;
 	}
 
-	public static void main(String[] args)
-	{
-		JDBC j = new JDBC();
-		j.activateJDBC();
-		try
-		{
-			j.select("*", "TEST_DELETE", null, null);
-		}
-		catch (SQLException e)
-		{
-			e.printStackTrace();
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
-	}
-
 	/**
 	 * Used to select data from a table in the data base
 	 * @param what - What is to be selected from the database
